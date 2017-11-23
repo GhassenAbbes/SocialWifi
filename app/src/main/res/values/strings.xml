@@ -8,4 +8,7 @@
 
     <string name="facebook_app_id">1502334353182523</string>
     <string name="fb_login_protocol_scheme">fb1502334353182523</string>
+
+    <string name="access_token" translatable="false">sk.eyJ1IjoiYWhtZWRiaGQiLCJhIjoiY2phOGwxMXVrMDdkdjMzcW12bWxmN2hheiJ9.iQmq7wwYNkW6evHWGXE0WQ</string>
+    <string name="google_maps_key">AIzaSyBqj2-cF1YwdLUgRHCSpvCIUZhYE99bjiY</string>
 </resources>
