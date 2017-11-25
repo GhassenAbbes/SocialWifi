@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             fragment = new ProfilFragment();
         } else if (id == R.id.nav_gallery) {
-            fragment = new LocationsFragment();
+            fragment = new Map_Fragment();
 
         } else if (id == R.id.nav_slideshow) {
             fragment = new FavFragment();
