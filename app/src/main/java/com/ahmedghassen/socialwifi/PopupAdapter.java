@@ -1,18 +1,21 @@
 package com.ahmedghassen.socialwifi;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.model.Marker;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by LENOVO-Z510 on 13/11/2017.
  */
 
-public class PopupAdapter implements InfoWindowAdapter {
+public class PopupAdapter extends Application implements InfoWindowAdapter {
     private View popup=null;
     private LayoutInflater inflater=null;
 
@@ -33,11 +36,13 @@ public class PopupAdapter implements InfoWindowAdapter {
                 popup = inflater.inflate(R.layout.popup, null);
             }
 
+
+
             TextView tv = (TextView) popup.findViewById(R.id.desc_loc);
 
-            tv.setText(marker.getTitle());
+            tv.setText("3asba");
             tv = (TextView) popup.findViewById(R.id.pw_loc);
-            tv.setText(marker.getSnippet());
+            tv.setText("3asba");
 
         return(popup);
     }

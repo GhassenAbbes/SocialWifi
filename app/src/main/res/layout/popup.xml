@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="30dp"
+    android:layout_height="15dp"
     android:orientation="vertical"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:background="#887755">
 
 
 
-        <TextView
+
+    <TextView
             android:id="@+id/desc_loc"
-            android:layout_width="match_parent"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:textSize="25sp"
             android:textStyle="bold"
             android:text="desc"
-            android:gravity="center_horizontal"/>
+            android:gravity="center"
+            android:layout_centerInParent="true"
+         />
 
     <TextView
             android:id="@+id/pw_loc"
@@ -23,8 +27,23 @@
             android:textSize="25sp"
             android:textStyle="bold"
             android:text="pass"
-            android:gravity="center_horizontal"/>
+        android:paddingTop="20dp"
+        android:gravity="center"
+
+
+            android:layout_below="@id/desc_loc"
+        />
+
+    <ImageView
+        android:id="@+id/pic_loc"
+        android:layout_width="20dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_power_settings_new_black_24dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentLeft="true"
+
+        />
 
 
 
-</LinearLayout>
+</RelativeLayout>

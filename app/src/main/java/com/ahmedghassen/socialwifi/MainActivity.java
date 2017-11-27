@@ -1,6 +1,7 @@
 package com.ahmedghassen.socialwifi;
 
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.login.LoginManager;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity
@@ -62,21 +64,29 @@ public class MainActivity extends AppCompatActivity
 
         View hView =  navigationView.getHeaderView(0);
 
-        SharedPreferences pref = getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);;
+        SharedPreferences prefs = getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);;
+
+        Log.d("MainActivity", "Acces Tokken : "+prefs.getString("fb_access_token",null)+
+                "\n Shared Name : "+prefs.getString("fb_first_name",null)+
+                "\nLast Name : "+prefs.getString("fb_last_name",null)+
+                "\nEmail : "+prefs.getString("fb_email",null)+
+                "\nGender : "+prefs.getString("fb_gender",null)+
+                "\nProfile Pic : "+prefs.getString("fb_profileURL",null));
 
         //Set Profile Name
         TextView nav_user = (TextView)hView.findViewById(R.id.profile_name);
-        nav_user.setText(pref.getString("fb_first_name","Unknown")+ " " +pref.getString("fb_last_name","Unknown") );
+        nav_user.setText(prefs.getString("fb_first_name","Unknown")+ " " +prefs.getString("fb_last_name","Unknown") );
 
         //Set Profile Email
         TextView nav_email = (TextView)hView.findViewById(R.id.profile_email);
-        nav_email.setText(pref.getString("fb_email","Unknown") );
+        nav_email.setText(prefs.getString("fb_email","Unknown") );
 
         //Set Profile Picture
         ImageView nav_pic = (ImageView) hView.findViewById(R.id.profile_pic);
         Picasso.with(this)
-                .load(pref.getString("fb_profileURL",null))
+                .load(prefs.getString("fb_profileURL",null))
                 .into(nav_pic);
+
     }
 
     @Override
@@ -129,11 +139,14 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_manage) {
             fragment = new SettingsFragment();
-
-        } else if (id == R.id.nav_share) {
-
         } else if (id == R.id.nav_send) {
-
+            LoginManager.getInstance().logOut();
+            SharedPreferences pref = getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.clear();
+            editor.apply();
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
         }
         if (fragment != null) {
             FragmentManager manager = getSupportFragmentManager();
@@ -155,4 +168,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

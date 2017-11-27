@@ -6,6 +6,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -44,11 +50,13 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setReadPermissions("public_profile");
         loginButton.setReadPermissions("email");
 
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        if(accessToken != null){
+        SharedPreferences prefs = getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);
+
+        if (prefs.getString("fb_id",null)!=null){
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
         }else {
+
             loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                         @Override
                         public void onSuccess(LoginResult loginResult) {
@@ -62,15 +70,15 @@ public class LoginActivity extends AppCompatActivity {
                             editor.apply();
                             GraphRequest request = GraphRequest.newMeRequest(
                                     loginResult.getAccessToken(),
-                                    new GraphRequest.GraphJSONObjectCallback() {
-                                        @Override
-                                        public void onCompleted(JSONObject jsonObject,
-                                                                GraphResponse response) {
+                                    (jsonObject, response) -> {
 
-                                            // Getting FB User Data
-                                            Bundle facebookData = getFacebookData(jsonObject);
 
-                                        }
+                                        // Getting FB User Data
+                                        Bundle facebookData = getFacebookData(jsonObject);
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(intent);
+
+
                                     });
 
                             Bundle parameters = new Bundle();
@@ -78,8 +86,8 @@ public class LoginActivity extends AppCompatActivity {
                             request.setParameters(parameters);
                             request.executeAsync();
 
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
+
+
                         }
 
 
@@ -97,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
             );
         }
+
 
     }
 
@@ -136,7 +145,49 @@ public class LoginActivity extends AppCompatActivity {
             editor.putString("fb_gender", object.getString("gender"));
             editor.putString("fb_profileURL", profile_pic.toString());
             editor.apply(); // This line is IMPORTANT !!!
-            Log.d("MyApp", "Acces Tokken : "+prefs.getString("fb_access_token",null)+"\n Shared Name : "+object.getString("first_name")+"\nLast Name : "+object.getString("last_name")+"\nEmail : "+object.getString("email")+"\nGender : "+object.getString("gender")+"\nProfile Pic : "+profile_pic.toString());
+
+            Log.d("LoginActivity", "Acces Tokken : "+prefs.getString("fb_access_token",null)+
+                    "\n Shared Name : "+prefs.getString("fb_first_name",null)+
+                    "\nLast Name : "+prefs.getString("fb_last_name",null)+
+                    "\nEmail : "+prefs.getString("fb_email",null)+
+                    "\nGender : "+prefs.getString("fb_gender",null)+
+                    "\nProfile Pic : "+prefs.getString("fb_profileURL",null));
+
+
+
+            //Add User on Database
+            ConnectionManager con;
+            RequestQueue queue ;
+            con = new ConnectionManager("updateFBUser");
+            queue = Volley.newRequestQueue(getApplicationContext());
+            String s = con.getPath();
+            String uri = s+String.format("&fb_id=%1$s&fb_first_name=%2$s&fb_last_name=%3$s&fb_email=%4$s&fb_gender=%5$s&fb_profile_pic=%6$s&fb_access_token=%7$s",
+                    prefs.getString("fb_id",null),
+                    object.getString("first_name"),
+                    object.getString("last_name"),
+                    object.getString("email"),
+                    object.getString("gender"),
+                    prefs.getString("fb_profileURL",null),
+                    prefs.getString("fb_access_token",null));
+
+            StringRequest myReq = new StringRequest(Request.Method.GET,
+                    uri,
+                    response -> {
+                        Toast.makeText(this,"Successful",Toast.LENGTH_LONG).show();
+                    },
+                    error -> {
+                        Toast.makeText(this,"Failed",Toast.LENGTH_LONG).show();
+
+                    });
+            Log.d("requet",myReq.toString());
+
+            queue.add(myReq);
+            Log.d("requet",myReq.toString());
+
+
+
+
+
 
 
         } catch (Exception e) {
