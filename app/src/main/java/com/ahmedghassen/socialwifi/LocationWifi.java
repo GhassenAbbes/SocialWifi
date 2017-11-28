@@ -37,4 +37,16 @@ public class LocationWifi {
     public String getLng() {
         return lng;
     }
+
+
+    @Override
+    public String toString() {
+        return "LocationWifi{" +
+                "id=" + id +
+                ", desc='" + desc + '\'' +
+                ", wifi_pass='" + wifi_pass + '\'' +
+                ", lat='" + lat + '\'' +
+                ", lng='" + lng + '\'' +
+                '}';
+    }
 }

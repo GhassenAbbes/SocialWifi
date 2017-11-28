@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical" >
+
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/map"
         android:layout_width="match_parent"

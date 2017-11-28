@@ -2,8 +2,10 @@ package com.ahmedghassen.socialwifi;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -15,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +38,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.annotations.BaseMarkerOptions;
+import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.Marker;
 
 import com.mapbox.mapboxsdk.annotations.MarkerView;
@@ -62,6 +66,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static android.view.Gravity.*;
 
 
 public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
@@ -91,6 +97,9 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
     RequestQueue queue ;
     //SupportMapFragment mapFragment;
     MapView mapFragment;
+    String idloc="";
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -110,7 +119,6 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
 
         con = new ConnectionManager("selectloc");
         queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-        fetchLocations();
         GsonBuilder gsonBuilder = new GsonBuilder();
         //gsonBuilder.setDateFormat("M/d/yy hh:mm a");
         gson = gsonBuilder.create();
@@ -121,112 +129,8 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
 
         mapFragment = (MapView) root.findViewById(R.id.map);
         mapFragment.onCreate(savedInstanceState);
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(MapboxMap mapboxMap) {
+        fetchLocations();
 
-
-                mapboxMap.setStyleUrl(Style.MAPBOX_STREETS);
-
-                // Set the camera's starting position
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(36.8984, 10.1897)) // set the camera's center position
-                        .zoom(9)  // set the camera's zoom level
-                        .tilt(20)  // set the camera's tilt
-                        .build();
-
-                // Move the camera to that position
-                mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-
-
-                mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(@NonNull LatLng point) {
-                        MarkerViewOptions mark = new MarkerViewOptions().position(point);
-                        mapboxMap.addMarker(mark);
-                        marky = new MarkerView(new MarkerViewOptions().position(point));
-
-                        dialog = new Dialog(getActivity());
-                        dialog.setContentView(R.layout.popupadd);
-                        dialog.setTitle("Add Your WIFI Access Point");
-
-                        Log.d("marker", "click");
-                        // set the custom dialog components - text, image and button
-                        EditText desc = (EditText) dialog.findViewById(R.id.desc_loc_add);
-                        EditText pw = (EditText) dialog.findViewById(R.id.pw_loc_add);
-                        imageLoc = (ImageView) dialog.findViewById(R.id.pic_locc);
-
-                        imageLoc.setOnClickListener(v -> showPictureDialog());
-
-
-                        Button dialogButton = (Button) dialog.findViewById(R.id.add_loc);
-                        // if button is clicked, close the custom dialog
-                        dialogButton.setOnClickListener(v -> {
-                            con = new ConnectionManager("addloc");
-
-                            queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-
-
-
-
-                            String s = con.getPath();
-                            String uri = s+String.format("&desc=%1$s&pw=%2$s&lat=%3$s&lng=%4$s",
-                                    desc.getText().toString(),
-                                    pw.getText().toString(),
-                                    Double.toString(point.getLatitude()),
-                                    Double.toString(point.getLongitude()));
-
-                            StringRequest myReq = new StringRequest(Request.Method.GET,
-                                    uri,
-                                    response -> {
-                                        Toast.makeText(getActivity(),"Successful",Toast.LENGTH_LONG).show();
-                                    },
-                                    error -> {
-                                        Toast.makeText(getActivity(),"Failed",Toast.LENGTH_LONG).show();
-
-                                    });
-                            Log.d("requet",myReq.toString());
-
-                            queue.add(myReq);
-                            Log.d("requet",myReq.toString());
-
-                            dialog.dismiss();
-                        });
-
-                        dialog.show();
-                    }
-                });
-
-                mapboxMap.setInfoWindowAdapter(new MapboxMap.InfoWindowAdapter() {
-
-                    @Override
-                    public View getInfoWindow(@NonNull Marker marker) {
-
-                        View v = null;
-                        try {
-
-                            // Getting view from the layout file info_window_layout
-                            v = getLayoutInflater().inflate(R.layout.custom_infowindow, null);
-
-                            // Getting reference to the TextView to set latitude
-                            TextView wifiTxt = (TextView) v.findViewById(R.id.titleWifi);
-                            wifiTxt.setText(marker.getTitle());
-
-                            TextView passTxt = (TextView) v.findViewById(R.id.passworWifi);
-                            passTxt.setText(marker.getSnippet());
-
-                        } catch (Exception ev) {
-                            System.out.print(ev.getMessage());
-                        }
-
-                        return v;
-                    }
-                });
-
-
-            }
-        });
 
         return root;
     }
@@ -239,7 +143,7 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
         return false;
     }
 
-    private void addMarker(MapboxMap map, double lat, double lon,
+   /* private void addMarker(MapboxMap map, double lat, double lon,
                            String title, String snippet) {
         map.addMarker(new MarkerViewOptions()
                 .position(new LatLng(lat,lon))
@@ -247,7 +151,7 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                 .snippet(snippet)
 
         );
-    }
+    }*/
 
     private void fetchLocations() {
         StringRequest request = new StringRequest(Request.Method.GET, con.getPath(), onPostsLoaded, onPostsError);
@@ -283,17 +187,17 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                     for (LocationWifi loc : listlocations) {
                         LatLng sydney = new LatLng(Double.parseDouble(loc.getLat()), Double.parseDouble(loc.getLng()));
                         mapboxMap.addMarker(new MarkerViewOptions().position(sydney)
-                                .title(loc.getDesc())
+                                .title(loc.getDesc()+"/"+loc.getId())
                                 .snippet(loc.getWifi_pass()));
                     }
 
                     mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
                         @Override
                         public void onMapClick(@NonNull LatLng point) {
-                            MarkerViewOptions mark = new MarkerViewOptions().position(point);
+                           /* MarkerViewOptions mark = new MarkerViewOptions().position(point);
                             mapboxMap.addMarker(mark);
                             marky = new MarkerView(new MarkerViewOptions().position(point));
-
+*/
                             dialog = new Dialog(getActivity());
                             dialog.setContentView(R.layout.popupadd);
                             dialog.setTitle("Add Your WIFI Access Point");
@@ -306,39 +210,51 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
 
                             imageLoc.setOnClickListener(v -> showPictureDialog());
 
+                            Log.d("edittext",desc.getText().toString());
 
                             Button dialogButton = (Button) dialog.findViewById(R.id.add_loc);
                             // if button is clicked, close the custom dialog
                             dialogButton.setOnClickListener(v -> {
-                                con = new ConnectionManager("addloc");
 
-                                queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+                                Log.d("edittext",desc.getText().toString());
+
+                                if (desc.getText().equals("")||pw.getText().equals(""))
+                                    Toast.makeText(getActivity(),"The description and password cant be empty!",Toast.LENGTH_LONG).show();
+                                else {
+                                    MarkerViewOptions mark = new MarkerViewOptions().position(point) .title(desc.getText().toString())
+                                            .snippet(pw.getText().toString());
+                                    mapboxMap.addMarker(mark);
+
+                                    marky = new MarkerView(new MarkerViewOptions().position(point));
+
+                                    con = new ConnectionManager("addloc");
+
+                                    queue = Volley.newRequestQueue(getActivity().getApplicationContext());
 
 
+                                    String s = con.getPath();
+                                    String uri = s + String.format("&desc=%1$s&pw=%2$s&lat=%3$s&lng=%4$s",
+                                            desc.getText().toString(),
+                                            pw.getText().toString(),
+                                            Double.toString(point.getLatitude()),
+                                            Double.toString(point.getLongitude()));
 
+                                    StringRequest myReq = new StringRequest(Request.Method.GET,
+                                            uri,
+                                            response -> {
+                                                Toast.makeText(getActivity(), "Successful", Toast.LENGTH_LONG).show();
+                                            },
+                                            error -> {
+                                                Toast.makeText(getActivity(), "Failed", Toast.LENGTH_LONG).show();
 
-                                String s = con.getPath();
-                                String uri = s+String.format("&desc=%1$s&pw=%2$s&lat=%3$s&lng=%4$s",
-                                        desc.getText().toString(),
-                                        pw.getText().toString(),
-                                        Double.toString(point.getLatitude()),
-                                        Double.toString(point.getLongitude()));
+                                            });
+                                    Log.d("requet", myReq.toString());
 
-                                StringRequest myReq = new StringRequest(Request.Method.GET,
-                                        uri,
-                                        response -> {
-                                            Toast.makeText(getActivity(),"Successful",Toast.LENGTH_LONG).show();
-                                        },
-                                        error -> {
-                                            Toast.makeText(getActivity(),"Failed",Toast.LENGTH_LONG).show();
+                                    queue.add(myReq);
+                                    Log.d("requet", myReq.toString());
 
-                                        });
-                                Log.d("requet",myReq.toString());
-
-                                queue.add(myReq);
-                                Log.d("requet",myReq.toString());
-
-                                dialog.dismiss();
+                                    dialog.dismiss();
+                                }
                             });
 
                             dialog.show();
@@ -350,24 +266,43 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                         @Override
                         public View getInfoWindow(@NonNull Marker marker) {
 
-                            View v = null;
+                            View popup = null;
+                            String ch="";
+                            String d="";
+                            if (marker.getTitle().contains("/")) {
+                                ch = marker.getTitle();
+                                d = ch.substring(0, ch.indexOf("/"));
+                                idloc = ch.substring(ch.indexOf("/") + 1, ch.length());
+                                Log.d("Strings", d + "   " + idloc);
+                            }
+                            else {
+                                d=marker.getTitle();
+                            }
+
                             try {
 
                                 // Getting view from the layout file info_window_layout
-                                v = getLayoutInflater().inflate(R.layout.custom_infowindow, null);
-
+                                popup = getLayoutInflater().inflate(R.layout.custom_infowindow, null);
+                                popup.setClickable(true);
                                 // Getting reference to the TextView to set latitude
-                                TextView wifiTxt = (TextView) v.findViewById(R.id.titleWifi);
-                                wifiTxt.setText(marker.getTitle());
+                                TextView wifiTxt = (TextView) popup.findViewById(R.id.titleWifi);
+                                wifiTxt.setText(d);
 
-                                TextView passTxt = (TextView) v.findViewById(R.id.passworWifi);
+                                TextView passTxt = (TextView) popup.findViewById(R.id.passworWifi);
                                 passTxt.setText(marker.getSnippet());
+
+                                ImageView heart = (ImageView)popup.findViewById(R.id.addfavourite);
+
+                                heart.setOnClickListener(v -> {
+                                    addToFavourite(idloc);
+
+                                });
 
                             } catch (Exception ev) {
                                 System.out.print(ev.getMessage());
                             }
 
-                            return v;
+                            return popup;
                         }
                     });
 
@@ -470,6 +405,35 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
     }
 
 
+    private void addToFavourite(String id){
+
+        con = new ConnectionManager("addfavourite");
+
+        queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+
+        SharedPreferences prefs = getActivity().getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        String id_user = prefs.getString("fb_id",null);
+        Log.d("id_user",id_user);
+        String s = con.getPath();
+        String uri = s+String.format("&id_user=%1$s&id_loc=%2$s",
+                id_user,id);
+
+        StringRequest myReq = new StringRequest(Request.Method.GET,
+                uri,
+                response -> {
+                    Toast.makeText(getActivity(),"Successful",Toast.LENGTH_LONG).show();
+                },
+                error -> {
+                    Toast.makeText(getActivity(),"Failed",Toast.LENGTH_LONG).show();
+
+                });
+        Log.d("requet",myReq.toString());
+
+        queue.add(myReq);
+        Log.d("requet",myReq.toString());
+
+    }
 
 
 }

@@ -11,4 +11,7 @@
 
     <string name="access_token" translatable="false">sk.eyJ1IjoiYWhtZWRiaGQiLCJhIjoiY2phOGwxMXVrMDdkdjMzcW12bWxmN2hheiJ9.iQmq7wwYNkW6evHWGXE0WQ</string>
     <string name="google_maps_key">AIzaSyBqj2-cF1YwdLUgRHCSpvCIUZhYE99bjiY</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

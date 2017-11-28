@@ -2,13 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    tools:context="com.ahmedghassen.socialwifi.FavouriteMapFragment">
 
-    <ListView
-        android:id="@+id/flistfav"
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/mapfav"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp" />
+
+        />
 
 </FrameLayout>
