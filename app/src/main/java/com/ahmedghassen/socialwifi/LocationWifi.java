@@ -38,6 +38,25 @@ public class LocationWifi {
         return lng;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public void setWifi_pass(String wifi_pass) {
+        this.wifi_pass = wifi_pass;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
+    }
 
     @Override
     public String toString() {

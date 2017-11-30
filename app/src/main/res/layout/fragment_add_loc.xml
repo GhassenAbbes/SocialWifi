@@ -1,0 +1,56 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ahmedghassen.socialwifi.AddLocFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="5dp"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/addlocimage"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:src="@drawable/photos"
+            android:layout_marginBottom="5dp"/>
+
+        <EditText
+            android:id="@+id/ssidadd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="SSID"
+            android:layout_gravity="center"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="5dp"/>
+
+        <EditText
+            android:id="@+id/pwadd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="PASSWORD"
+            android:inputType="textPassword"
+            android:layout_marginBottom="5dp"/>
+
+        <com.mapbox.mapboxsdk.maps.MapView
+            android:id="@+id/addmaplayout"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+
+            />
+
+        <Button
+            android:id="@+id/ajouter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confime" />
+    </LinearLayout>
+
+</FrameLayout>

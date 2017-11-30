@@ -1,0 +1,56 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ahmedghassen.socialwifi.DetailLocFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="5dp"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/detlocimg"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:src="@drawable/photos"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/ssiddet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:id="@+id/pwdet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+
+            android:layout_marginBottom="5dp"/>
+
+        <com.mapbox.mapboxsdk.maps.MapView
+            android:id="@+id/detmaplayout"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+
+            />
+
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabdet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_menu_add" />
+</FrameLayout>

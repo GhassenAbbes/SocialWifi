@@ -14,7 +14,7 @@ public class ConnectionManager {
         path=p+"android/services.php?action=";
     }
     public ConnectionManager(String a){
-        String p="http://192.168.1.12/";
+        String p="http://192.168.1.3/";
         path=p+"android/services.php?action="+a;
     }
 

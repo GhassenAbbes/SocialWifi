@@ -1,5 +1,6 @@
 package com.ahmedghassen.socialwifi;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContextWrapper;
@@ -13,9 +14,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -116,6 +120,20 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
             listlocations = new ArrayList<LocationWifi>(alist);
         }*/
 
+        FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.fabadd);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+
+                AddLocFragment addfrag = new AddLocFragment() ;
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.content_frame, addfrag, "init");
+                transaction.commit();
+            }
+        });
 
         con = new ConnectionManager("selectloc");
         queue = Volley.newRequestQueue(getActivity().getApplicationContext());
@@ -191,13 +209,13 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                                 .snippet(loc.getWifi_pass()));
                     }
 
-                    mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
+                   /* mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
                         @Override
                         public void onMapClick(@NonNull LatLng point) {
-                           /* MarkerViewOptions mark = new MarkerViewOptions().position(point);
+                           *//* MarkerViewOptions mark = new MarkerViewOptions().position(point);
                             mapboxMap.addMarker(mark);
                             marky = new MarkerView(new MarkerViewOptions().position(point));
-*/
+*//*
                             dialog = new Dialog(getActivity());
                             dialog.setContentView(R.layout.popupadd);
                             dialog.setTitle("Add Your WIFI Access Point");
@@ -210,16 +228,16 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
 
                             imageLoc.setOnClickListener(v -> showPictureDialog());
 
-                            Log.d("edittext",desc.getText().toString());
 
                             Button dialogButton = (Button) dialog.findViewById(R.id.add_loc);
+
+
                             // if button is clicked, close the custom dialog
                             dialogButton.setOnClickListener(v -> {
 
-                                Log.d("edittext",desc.getText().toString());
 
-                                if (desc.getText().equals("")||pw.getText().equals(""))
-                                    Toast.makeText(getActivity(),"The description and password cant be empty!",Toast.LENGTH_LONG).show();
+                                if ( TextUtils.isEmpty(desc.getText())||TextUtils.isEmpty(pw.getText()))
+                                    Toast.makeText(getActivity(),"The description and password can not be empty!",Toast.LENGTH_LONG).show();
                                 else {
                                     MarkerViewOptions mark = new MarkerViewOptions().position(point) .title(desc.getText().toString())
                                             .snippet(pw.getText().toString());
@@ -259,10 +277,11 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
 
                             dialog.show();
                         }
-                    });
+                    });*/
 
                     mapboxMap.setInfoWindowAdapter(new MapboxMap.InfoWindowAdapter() {
 
+                        @SuppressLint("ClickableViewAccessibility")
                         @Override
                         public View getInfoWindow(@NonNull Marker marker) {
 
@@ -294,13 +313,36 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                                 ImageView heart = (ImageView)popup.findViewById(R.id.addfavourite);
 
                                 heart.setOnClickListener(v -> {
-                                    addToFavourite(idloc);
+                                    LocationWifi loca = new LocationWifi();
+                                    loca.setId(Integer.parseInt(idloc));
+                                    loca.setDesc(marker.getTitle());
+                                    loca.setWifi_pass(marker.getSnippet());
+                                    loca.setLat(String.valueOf(marker.getPosition().getLatitude()));
+                                    loca.setLng(String.valueOf(marker.getPosition().getLongitude()));
 
+                                    //addToFavourite(idloc);
+                                    FragmentManager manager = getActivity().getSupportFragmentManager();
+                                    Fragment fragment = new DetailLocFragment();
+                                    Bundle bundle2 = new Bundle();
+                                    bundle2.putString("myObject", new Gson().toJson(loca));
+
+                                    fragment.setArguments(bundle2);
+
+                                    FragmentTransaction transaction = manager.beginTransaction();
+                                    transaction.replace(R.id.content_frame, fragment, "SC");
+                                    transaction.addToBackStack("fav");
+                                    transaction.commit();
                                 });
 
                             } catch (Exception ev) {
                                 System.out.print(ev.getMessage());
                             }
+
+
+                           // popup.setClickable(true);
+                           /* LinearLayout popuplayout = (LinearLayout)popup.findViewById(R.id.popupid);
+                            popuplayout.setOnClickListener(v ->
+                                    Toast.makeText(getActivity(), "Popup clicked", Toast.LENGTH_LONG).show());*/
 
                             return popup;
                         }

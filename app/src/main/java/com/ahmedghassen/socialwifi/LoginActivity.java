@@ -151,7 +151,9 @@ public class LoginActivity extends AppCompatActivity {
                     "\nLast Name : "+prefs.getString("fb_last_name",null)+
                     "\nEmail : "+prefs.getString("fb_email",null)+
                     "\nGender : "+prefs.getString("fb_gender",null)+
-                    "\nProfile Pic : "+prefs.getString("fb_profileURL",null));
+                    "\nProfile Pic : "+prefs.getString("fb_profileURL",null+
+                    "\nid : "+prefs.getString("fb_id",null)
+            ));
 
 
 
@@ -169,7 +171,7 @@ public class LoginActivity extends AppCompatActivity {
                     object.getString("gender"),
                     prefs.getString("fb_profileURL",null),
                     prefs.getString("fb_access_token",null));
-
+            Log.d("uri",uri);
             StringRequest myReq = new StringRequest(Request.Method.GET,
                     uri,
                     response -> {

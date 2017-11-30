@@ -35,14 +35,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+
         FragmentManager manager = getSupportFragmentManager();
 
         LocationsFragment pf = new LocationsFragment();
@@ -135,10 +128,10 @@ public class MainActivity extends AppCompatActivity
             fragment = new Map_Fragment();
 
         } else if (id == R.id.nav_slideshow) {
-            fragment = new FavFragment();
+            fragment = new SettingsFragment();
 
         } else if (id == R.id.nav_manage) {
-            fragment = new SettingsFragment();
+            fragment = new FavFragment();
         } else if (id == R.id.nav_send) {
             LoginManager.getInstance().logOut();
             SharedPreferences pref = getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);
