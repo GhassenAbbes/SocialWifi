@@ -14,7 +14,7 @@ public class LocationWifi {
     private String wifi_pass;
     private String lat;
     private String lng;
-
+    private String img;
     public LocationWifi() {
     }
 
@@ -38,6 +38,10 @@ public class LocationWifi {
         return lng;
     }
 
+    public String getImg() {
+        return img;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -57,6 +61,13 @@ public class LocationWifi {
     public void setLng(String lng) {
         this.lng = lng;
     }
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+
+
+
 
     @Override
     public String toString() {
@@ -66,6 +77,7 @@ public class LocationWifi {
                 ", wifi_pass='" + wifi_pass + '\'' +
                 ", lat='" + lat + '\'' +
                 ", lng='" + lng + '\'' +
+                ", img='" + img + '\'' +
                 '}';
     }
 }

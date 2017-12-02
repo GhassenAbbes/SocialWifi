@@ -59,6 +59,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap.OnMarkerClickListener;
 import com.mapbox.mapboxsdk.maps.MapboxMapOptions;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.SupportMapFragment;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -102,7 +103,7 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
     //SupportMapFragment mapFragment;
     MapView mapFragment;
     String idloc="";
-
+    String imgloc="";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -180,10 +181,7 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
     private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
-            String ch=response;
-            List<LocationWifi> listlocations = Arrays.asList(gson.fromJson(response, LocationWifi[].class));
-            Log.i("PostActivity", listlocations.size() + " posts loaded.");
-            Log.d("string ",ch);
+
 
             mapFragment.getMapAsync(new OnMapReadyCallback() {
                 @Override
@@ -202,12 +200,20 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                     // Move the camera to that position
                     mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                    for (LocationWifi loc : listlocations) {
-                        LatLng sydney = new LatLng(Double.parseDouble(loc.getLat()), Double.parseDouble(loc.getLng()));
-                        mapboxMap.addMarker(new MarkerViewOptions().position(sydney)
-                                .title(loc.getDesc()+"/"+loc.getId())
-                                .snippet(loc.getWifi_pass()));
-                    }
+                    String ch=response;
+                    if (ch!="0 results") {
+
+                        List<LocationWifi> listlocations = Arrays.asList(gson.fromJson(response, LocationWifi[].class));
+                        Log.i("PostActivity", listlocations.size() + " posts loaded.");
+                        Log.d("string ",ch);
+                        for (LocationWifi loc : listlocations) {
+                            LatLng sydney = new LatLng(Double.parseDouble(loc.getLat()), Double.parseDouble(loc.getLng()));
+                            mapboxMap.addMarker(new MarkerViewOptions().position(sydney)
+                                    .title(loc.getDesc() + "/" + loc.getId() + "+" + loc.getImg())
+                                    .snippet(loc.getWifi_pass())
+                                    );
+                        }
+
 
                    /* mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
                         @Override
@@ -291,7 +297,8 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                             if (marker.getTitle().contains("/")) {
                                 ch = marker.getTitle();
                                 d = ch.substring(0, ch.indexOf("/"));
-                                idloc = ch.substring(ch.indexOf("/") + 1, ch.length());
+                                idloc = ch.substring(ch.indexOf("/") + 1, ch.indexOf("+")-1);
+                                imgloc = ch.substring(ch.indexOf("+") + 1, ch.length());
                                 Log.d("Strings", d + "   " + idloc);
                             }
                             else {
@@ -319,6 +326,7 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                                     loca.setWifi_pass(marker.getSnippet());
                                     loca.setLat(String.valueOf(marker.getPosition().getLatitude()));
                                     loca.setLng(String.valueOf(marker.getPosition().getLongitude()));
+                                    loca.setImg(imgloc);
 
                                     //addToFavourite(idloc);
                                     FragmentManager manager = getActivity().getSupportFragmentManager();
@@ -334,6 +342,11 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                                     transaction.commit();
                                 });
 
+                                ImageView imgWifi = (ImageView)popup.findViewById(R.id.clientPic);
+                                Picasso.with(getActivity())
+                                        .load(imgloc)
+                                        .into(imgWifi);
+
                             } catch (Exception ev) {
                                 System.out.print(ev.getMessage());
                             }
@@ -348,7 +361,7 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                         }
                     });
 
-
+                    }
                 }
             });
 
@@ -361,91 +374,6 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
             Log.e("PostActivity", error.toString());
         }
     };
-
-    private void showPictureDialog(){
-        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(getActivity());
-        pictureDialog.setTitle("Select Action");
-        String[] pictureDialogItems = {
-                "Select photo from gallery",
-                "Capture photo from camera" };
-        pictureDialog.setItems(pictureDialogItems,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                choosePhotoFromGallary();
-                                break;
-                            case 1:
-                                takePhotoFromCamera();
-                                break;
-                        }
-                    }
-                });
-        pictureDialog.show();
-    }
-
-    public void choosePhotoFromGallary() {
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        startActivityForResult(galleryIntent, GALLERY);
-    }
-
-    private void takePhotoFromCamera() {
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA);
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == getActivity().RESULT_OK) {
-            if (requestCode == GALLERY)
-                onSelectFromGalleryResult(data);
-            else if (requestCode == CAMERA)
-                onCaptureImageResult(data);
-        }
-    }
-
-    private void onSelectFromGalleryResult(Intent data) {
-        Bitmap bm=null;
-        if (data != null) {
-            try {
-                Uri uri = data.getData();
-                Log.d(TAG, "File Uri: " + uri.toString());
-                String path = uri.getPath();
-                Log.d(TAG, "File Path: " + path);
-                bm = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        imageLoc.setImageBitmap(bm);
-    }
-
-    private void onCaptureImageResult(Intent data) {
-
-        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File destination = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
-        FileOutputStream fo;
-        try {
-            destination.createNewFile();
-            fo = new FileOutputStream(destination);
-            fo.write(bytes.toByteArray());
-            fo.close();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Log.d( "File Path: ",thumbnail.toString());
-        imageLoc.setImageBitmap(thumbnail);
-    }
-
 
     private void addToFavourite(String id){
 
