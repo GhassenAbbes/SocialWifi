@@ -173,7 +173,7 @@ public class AddLocFragment extends Fragment {
                 StringRequest myReq = new StringRequest(Request.Method.GET,
                         uri,
                         response -> {
-                            Toast.makeText(getActivity(), "Successful", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity().getApplication().getBaseContext(), "Successful", Toast.LENGTH_LONG).show();
                         },
                         error -> {
                             Toast.makeText(getActivity(), "Failed", Toast.LENGTH_LONG).show();

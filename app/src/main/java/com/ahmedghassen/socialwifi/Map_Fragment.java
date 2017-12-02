@@ -201,7 +201,7 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                     mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                     String ch=response;
-                    if (ch!="0 results") {
+                    if (!ch.equals("[]")) {
 
                         List<LocationWifi> listlocations = Arrays.asList(gson.fromJson(response, LocationWifi[].class));
                         Log.i("PostActivity", listlocations.size() + " posts loaded.");
@@ -213,7 +213,11 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                                     .snippet(loc.getWifi_pass())
                                     );
                         }
+                    }
+                    else {
+                        Toast.makeText(getActivity(),"No WIFIS available :(",Toast.LENGTH_LONG).show();
 
+                    }
 
                    /* mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
                         @Override
@@ -361,7 +365,7 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                         }
                     });
 
-                    }
+
                 }
             });
 
