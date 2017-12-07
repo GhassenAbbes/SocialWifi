@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.squareup.picasso.Picasso;
 
 
 /**
@@ -85,7 +87,10 @@ public class DetailLocFragment extends Fragment {
 
         ssid.setText(p.getDesc());
         pw.setText(p.getWifi_pass());
-
+        ImageView imgWifi = (ImageView)root.findViewById(R.id.detlocimg);
+        Picasso.with(getActivity())
+                .load(p.getImg())
+                .into(imgWifi);
         Mapbox.getInstance(getActivity().getApplicationContext(), getString(R.string.access_token));
 
 

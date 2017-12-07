@@ -1,24 +1,20 @@
 package com.ahmedghassen.socialwifi;
 
 
-import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -28,11 +24,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -53,9 +47,6 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -75,7 +66,7 @@ public class AddLocFragment extends Fragment {
     private int GALLERY = 1, CAMERA = 2;
     EditText ssid;
 
-    String myurl = "http://192.168.141.1/AndroidUploadImage/uploadImage.php";
+    String myurl = "http://192.168.1.14/AndroidUploadImage/uploadImage.php";
     String imagePath="null";
     private static final String TAG = "LocationPickerActivity";
 
@@ -85,6 +76,11 @@ public class AddLocFragment extends Fragment {
     ConnectionManager con;
     RequestQueue queue ;
     Marker marky=null;
+    String wifiinfos;
+    WifiManager wifiManager;
+    WifiInfo wifiInfo;
+
+
 
     public AddLocFragment() {
         // Required empty public constructor
@@ -97,6 +93,7 @@ public class AddLocFragment extends Fragment {
         // Inflate the layout for this fragment
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_add_loc, null, false);
+
         ssid = (EditText) root.findViewById(R.id.ssidadd);
         EditText pw = (EditText)root.findViewById(R.id.pwadd);
         Button ajouter = (Button)root.findViewById(R.id.ajouter);
@@ -150,7 +147,14 @@ public class AddLocFragment extends Fragment {
             }
         });
 
+
+        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        wifiInfo = wifiManager.getConnectionInfo();
+        ssid.setText(wifiInfo.getSSID().replace("\"",""));
+
+
         ajouter.setOnClickListener(v -> {
+
             if ( TextUtils.isEmpty(ssid.getText())||TextUtils.isEmpty(pw.getText())||marky==null)
                 Toast.makeText(getActivity(),"You must complete the missing fields!",Toast.LENGTH_LONG).show();
             else {
@@ -160,29 +164,39 @@ public class AddLocFragment extends Fragment {
 
                 Log.d("Image Path ", imagePath);
                 String s = con.getPath();
-                String uri = s + String.format("&desc=%1$s&pw=%2$s&lat=%3$s&lng=%4$s&img=%5$s",
-                        ssid.getText().toString(),
+                String uri = s + String.format("&desc=%1$s&pw=%2$s&lat=%3$s&lng=%4$s&img=%5$s&mac=%6$s",
+                        ssid.getText().toString().replace(" ","_"),
                         pw.getText().toString(),
                         Double.toString(marky.getPosition().getLatitude()),
                         Double.toString(marky.getPosition().getLongitude()),
-                        imagePath
+                        imagePath,
+                        wifiInfo.getMacAddress()
                 );
 
 
 
-                StringRequest myReq = new StringRequest(Request.Method.GET,
-                        uri,
-                        response -> {
-                            Toast.makeText(getActivity().getApplication().getBaseContext(), "Successful", Toast.LENGTH_LONG).show();
-                        },
-                        error -> {
-                            Toast.makeText(getActivity(), "Failed", Toast.LENGTH_LONG).show();
+                // Request a string response
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, uri,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
 
-                        });
-                Log.d("requet", myReq.toString());
+                                // Result handling
+                                Toast.makeText(root.getContext(), ""+response, Toast.LENGTH_SHORT).show();
 
-                queue.add(myReq);
-                Log.d("requet", myReq.toString());
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        // Error handling
+                        Toast.makeText(getActivity(), "Something went wrong!", Toast.LENGTH_SHORT).show();
+                        error.printStackTrace();
+
+                    }
+                });
+                queue.add(stringRequest);
+                Log.d("requet", stringRequest.toString());
 
                 LocationsFragment locfrag = new LocationsFragment();
                 FragmentManager manager = getActivity().getSupportFragmentManager();
@@ -311,6 +325,7 @@ public class AddLocFragment extends Fragment {
                 String images = getStringImage(bitmap);
                 Log.i("Mynewsam",""+images);
                 param.put("image",images);
+                param.put("server",getString(R.string.serverip));
                 return param;
             }
         };
