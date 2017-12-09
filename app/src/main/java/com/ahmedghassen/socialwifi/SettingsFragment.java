@@ -1,10 +1,13 @@
 package com.ahmedghassen.socialwifi;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -51,21 +54,24 @@ public class SettingsFragment extends Fragment {
     private Gson gson;
      ListView list;
      int  frame;
+    List<LocationWifi> listlocations;
+    LocationsBDD locBDD;
+
+
     public SettingsFragment() {
         // Required empty public constructor
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);;
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        ;
 
-        list = (ListView)view.findViewById(R.id.flistfav);
+        list = (ListView) view.findViewById(R.id.flistfav);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             frame = bundle.getInt("container");
         }
-
-
 
 
         con = new ConnectionManager("selectfav");
@@ -75,17 +81,45 @@ public class SettingsFragment extends Fragment {
         SharedPreferences prefs = getActivity().getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);
 
         SharedPreferences.Editor editor = prefs.edit();
-        String id_user = prefs.getString("fb_id",null);
-        String s=con.getPath();
-        String uri = s+String.format("&id_user=%1$s",
+        String id_user = prefs.getString("fb_id", null);
+        String s = con.getPath();
+        String uri = s + String.format("&id_user=%1$s",
                 id_user);
         GsonBuilder gsonBuilder = new GsonBuilder();
         //gsonBuilder.setDateFormat("M/d/yy hh:mm a");
         gson = gsonBuilder.create();
-        Log.d("uri_fav",uri);
-        fetchLocations(uri);
+        Log.d("uri_fav", uri);
 
+        if (isNetworkAvailable()) {
+            fetchLocations(uri);
+        } else {
+            locBDD = new LocationsBDD(getActivity().getApplicationContext());
+            locBDD.open();
+            listlocations = locBDD.selectAll();
+            ArrayList<LocationWifi> plist = new ArrayList<>(listlocations);
+            FavouriteAdapter adapter = new FavouriteAdapter(getContext(), plist);
+            list.setAdapter(adapter);
+            list.setClickable(true);
+            list.setOnItemClickListener((parent, view1, position, id) -> {
+                Object o = list.getItemAtPosition(position);
+                view1.setBackgroundColor(Color.DKGRAY);
 
+                LocationWifi ch = (LocationWifi)o;
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                Fragment fragment = new FavouriteMapFragment();
+                Bundle bundle2 = new Bundle();
+                bundle2.putString("myObject", new Gson().toJson(ch));
+
+                fragment.setArguments(bundle2);
+
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(frame, fragment, "SC");
+                transaction.addToBackStack("fav");
+                transaction.commit();
+                Log.d("favourite",ch.toString());
+
+            });
+        }
 
         return view;
     }
@@ -100,9 +134,16 @@ public class SettingsFragment extends Fragment {
         @Override
         public void onResponse(String response) {
             //String ch=response;
-            List<LocationWifi> listlocations = Arrays.asList(gson.fromJson(response, LocationWifi[].class));
+            listlocations = Arrays.asList(gson.fromJson(response, LocationWifi[].class));
             /*Log.i("PostActivity", listlocations.size() + " posts loaded.");
             Log.d("string ",ch);*/
+            locBDD = new LocationsBDD(getActivity().getApplicationContext());
+            locBDD.open();
+            locBDD.removeAllLocations();
+            for ( LocationWifi l : listlocations) {
+                locBDD.insertTop(l);
+            }
+            locBDD.close();
 
             ArrayList<LocationWifi> plist = new ArrayList<>(listlocations);
             FavouriteAdapter adapter = new FavouriteAdapter(getContext(), plist);
@@ -116,12 +157,6 @@ public class SettingsFragment extends Fragment {
                     view.setBackgroundColor(Color.DKGRAY);
 
                     LocationWifi ch = (LocationWifi)o;
-                    /*Intent mIntent = new Intent(getActivity().getApplicationContext(), Detail_Player.class);
-                    Bundle mBundle = new Bundle();
-                    mIntent.putExtra("myObject", new Gson().toJson(ch));
-                    mIntent.putExtras(mBundle);
-                    startActivity(mIntent);*/
-
                     FragmentManager manager = getActivity().getSupportFragmentManager();
                     Fragment fragment = new FavouriteMapFragment();
                     Bundle bundle2 = new Bundle();
@@ -149,4 +184,11 @@ public class SettingsFragment extends Fragment {
             Log.e("PostActivity", error.toString());
         }
     };
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

@@ -15,6 +15,8 @@ public class LocationWifi {
     private String lat;
     private String lng;
     private String img;
+    private String mac;
+
     public LocationWifi() {
     }
 
@@ -40,6 +42,14 @@ public class LocationWifi {
 
     public String getImg() {
         return img;
+    }
+
+    public String getMac() {
+        return mac;
+    }
+
+    public void setMac(String mac) {
+        this.mac = mac;
     }
 
     public void setId(int id) {
@@ -78,6 +88,7 @@ public class LocationWifi {
                 ", lat='" + lat + '\'' +
                 ", lng='" + lng + '\'' +
                 ", img='" + img + '\'' +
+                ", mac='" + mac + '\'' +
                 '}';
     }
 }

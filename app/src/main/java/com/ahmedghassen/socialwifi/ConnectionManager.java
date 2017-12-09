@@ -1,5 +1,9 @@
 package com.ahmedghassen.socialwifi;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 /**
  * Created by LENOVO-Z510 on 10/11/2017.
  */
@@ -14,11 +18,13 @@ public class ConnectionManager {
         path=p+"android/services.php?action=";
     }
     public ConnectionManager(String a){
-        String p="http://192.168.1.14/";
+        String p="http://192.168.1.2/";
         path=p+"android/services.php?action="+a;
     }
 
     public String getPath() {
         return path;
     }
+
+
 }
