@@ -170,7 +170,7 @@ public class AddLocFragment extends Fragment {
                         Double.toString(marky.getPosition().getLatitude()),
                         Double.toString(marky.getPosition().getLongitude()),
                         imagePath,
-                        wifiInfo.getMacAddress()
+                        wifiInfo.getBSSID()
                 );
 
 

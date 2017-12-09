@@ -189,6 +189,8 @@ public class SettingsFragment extends Fragment {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        boolean test = activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        Log.d("CONNECTION TEST ",Boolean.toString(test));
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

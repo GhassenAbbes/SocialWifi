@@ -3,6 +3,7 @@ package com.ahmedghassen.socialwifi;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -53,7 +54,6 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
 
     private static final String TAG = "LocationPickerActivity";
 
-    ArrayList<LocationWifi> listlocations = new ArrayList<LocationWifi>();
     private Gson gson;
     static final String TAG_ERROR_DIALOG_FRAGMENT = "errorDialog";
     private static final String STATE_IN_PERMISSION = "inPermission";
@@ -72,8 +72,10 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
     RequestQueue queue ;
     //SupportMapFragment mapFragment;
     MapView mapFragment;
-    String idloc="";
-    String imgloc="";
+    String indexloc="";
+    List<LocationWifi> listlocations;
+    LocationWifi loca = new LocationWifi();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -150,16 +152,20 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                     String ch=response;
 
 
-                    List<LocationWifi> listlocations = Arrays.asList(gson.fromJson(response, LocationWifi[].class));
+                    listlocations = Arrays.asList(gson.fromJson(response, LocationWifi[].class));
                     Log.i("PostActivity", listlocations.size() + " posts loaded.");
                     Log.d("string ",ch);
+
+                    int i =0;
                     for (LocationWifi loc : listlocations) {
                         LatLng sydney = new LatLng(Double.parseDouble(loc.getLat()), Double.parseDouble(loc.getLng()));
                         mapboxMap.addMarker(new MarkerViewOptions().position(sydney)
-                                .title(loc.getDesc() + "/" + loc.getId() + "+" + loc.getImg())
+                                .title(loc.getDesc() + "/"+i)
                                 .snippet(loc.getWifi_pass())
                         );
+                        i++;
                     }
+
                     mapboxMap.setInfoWindowAdapter(new MapboxMap.InfoWindowAdapter() {
 
                         @SuppressLint("ClickableViewAccessibility")
@@ -169,16 +175,12 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                             View popup = null;
                             String ch="";
                             String d="";
-                            if (marker.getTitle().contains("/")) {
+
                                 ch = marker.getTitle();
                                 d = ch.substring(0, ch.indexOf("/"));
-                                idloc = ch.substring(ch.indexOf("/") + 1, ch.indexOf("+"));
-                                imgloc = ch.substring(ch.indexOf("+") + 1, ch.length());
-                                Log.d("Strings", d + "   " + idloc);
-                            }
-                            else {
-                                d=marker.getTitle();
-                            }
+                                indexloc = ch.substring(ch.indexOf("/") + 1, ch.length());
+                                Log.d("Strings", d + "   " + indexloc);
+
 
                             try {
 
@@ -194,16 +196,18 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
 
                                 ImageView heart = (ImageView)popup.findViewById(R.id.addfavourite);
 
-                                heart.setOnClickListener(v -> {
-                                    LocationWifi loca = new LocationWifi();
-                                    loca.setId(Integer.parseInt(idloc));
-                                    loca.setDesc(marker.getTitle().substring(0, marker.getTitle().indexOf("/")));
-                                    loca.setWifi_pass(marker.getSnippet());
-                                    loca.setLat(String.valueOf(marker.getPosition().getLatitude()));
-                                    loca.setLng(String.valueOf(marker.getPosition().getLongitude()));
-                                    loca.setImg(imgloc);
+                                loca = listlocations.get(Integer.valueOf(indexloc));
 
-                                    //addToFavourite(idloc);
+                                heart.setOnClickListener(v -> {
+                                    addToFavourite(Integer.toString(loca.getId()));
+
+                                });
+
+                                ImageView imgWifi = (ImageView)popup.findViewById(R.id.clientPic);
+
+                                imgWifi.setClickable(true);
+                                imgWifi.setOnClickListener(v -> {
+
                                     FragmentManager manager = getActivity().getSupportFragmentManager();
                                     Fragment fragment = new DetailLocFragment();
                                     Bundle bundle2 = new Bundle();
@@ -217,9 +221,9 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
                                     transaction.commit();
                                 });
 
-                                ImageView imgWifi = (ImageView)popup.findViewById(R.id.clientPic);
+
                                 Picasso.with(getActivity())
-                                        .load(imgloc)
+                                        .load(loca.getImg())
                                         .into(imgWifi);
 
                             } catch (Exception ev) {

@@ -24,7 +24,6 @@ public class DBHelper extends SQLiteOpenHelper{
 								WIFI_PASS + " TEXT, "+
 								LAT + " TEXT, "+
 								LNG + " TEXT, "+
-								LNG + " TEXT, "+
 								IMG + " TEXT, "+
 								MAC + " BLOB);";
 
