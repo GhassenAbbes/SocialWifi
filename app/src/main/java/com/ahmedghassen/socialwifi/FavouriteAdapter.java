@@ -1,12 +1,17 @@
 package com.ahmedghassen.socialwifi;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -33,11 +38,13 @@ public class FavouriteAdapter extends ArrayAdapter<LocationWifi> {
         TextView tvpw = (TextView) convertView.findViewById(R.id.favpw);
 
         ImageView tvHome = (ImageView) convertView.findViewById(R.id.favimg);
+
         // Populate the data into the template view using the data object
         tvdesc.setText(p.getDesc());
         //tvHome.setImageResource(p.imageressource);
         tvpw.setText(p.getWifi_pass());
         // Return the completed view to render on screen
+
         return convertView;
     }
 }

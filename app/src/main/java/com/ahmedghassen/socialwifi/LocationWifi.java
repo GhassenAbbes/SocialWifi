@@ -15,7 +15,6 @@ public class LocationWifi {
     private String lat;
     private String lng;
     private String img;
-    @SerializedName("MAC")
     private String mac;
 
     public LocationWifi() {
