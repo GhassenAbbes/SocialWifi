@@ -1,20 +1,27 @@
 package com.ahmedghassen.socialwifi;
 
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.NetworkInfo;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -53,6 +60,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
@@ -66,7 +74,7 @@ public class AddLocFragment extends Fragment {
     private int GALLERY = 1, CAMERA = 2;
     EditText ssid;
 
-    String myurl = "http://192.168.1.14/AndroidUploadImage/uploadImage.php";
+    String myurl = "http://172.19.12.34/AndroidUploadImage/uploadImage.php";
     String imagePath="null";
     private static final String TAG = "LocationPickerActivity";
 
@@ -79,7 +87,8 @@ public class AddLocFragment extends Fragment {
     String wifiinfos;
     WifiManager wifiManager;
     WifiInfo wifiInfo;
-
+    EditText pw;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
 
     public AddLocFragment() {
@@ -95,7 +104,7 @@ public class AddLocFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_add_loc, null, false);
 
         ssid = (EditText) root.findViewById(R.id.ssidadd);
-        EditText pw = (EditText)root.findViewById(R.id.pwadd);
+        pw = (EditText)root.findViewById(R.id.pwadd);
         Button ajouter = (Button)root.findViewById(R.id.ajouter);
         imageLoc = (ImageView) root.findViewById(R.id.addlocimage);
         con = new ConnectionManager("selectloc");
@@ -148,63 +157,99 @@ public class AddLocFragment extends Fragment {
         });
 
 
-        wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        /*
         wifiInfo = wifiManager.getConnectionInfo();
-        ssid.setText(wifiInfo.getSSID().replace("\"",""));
-
-
-        ajouter.setOnClickListener(v -> {
-
-            if ( TextUtils.isEmpty(ssid.getText())||TextUtils.isEmpty(pw.getText())||marky==null)
-                Toast.makeText(getActivity(),"You must complete the missing fields!",Toast.LENGTH_LONG).show();
-            else {
-                con = new ConnectionManager("addloc");
-
-                queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-
-                Log.d("Image Path ", imagePath);
-                String s = con.getPath();
-                String uri = s + String.format("&desc=%1$s&pw=%2$s&lat=%3$s&lng=%4$s&img=%5$s&mac=%6$s",
-                        ssid.getText().toString().replace(" ","_"),
-                        pw.getText().toString(),
-                        Double.toString(marky.getPosition().getLatitude()),
-                        Double.toString(marky.getPosition().getLongitude()),
-                        imagePath,
-                        wifiInfo.getBSSID()
-                );
 
 
 
-                // Request a string response
-                StringRequest stringRequest = new StringRequest(Request.Method.GET, uri,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
+*/
+        WifiManager mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (mWifiManager.isWifiEnabled()) {
+            WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
+            if (wifiInfo != null) {
+                NetworkInfo.DetailedState state = WifiInfo.getDetailedStateOf(wifiInfo.getSupplicantState());
+                if (state == NetworkInfo.DetailedState.CONNECTED || state == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
+                    ssid.setText(wifiInfo.getSSID().replace("\"",""));
+                    ajouter.setOnClickListener(v -> {
 
-                                // Result handling
-                                Toast.makeText(root.getContext(), ""+response, Toast.LENGTH_SHORT).show();
+                        if ( TextUtils.isEmpty(ssid.getText())||TextUtils.isEmpty(pw.getText())||marky==null)
+                            Toast.makeText(getActivity(),"You must complete the missing fields!",Toast.LENGTH_LONG).show();
+                        else {
 
+                            if (ContextCompat.checkSelfPermission(getActivity(),
+                                    Manifest.permission.ACCESS_FINE_LOCATION)
+                                    != PackageManager.PERMISSION_GRANTED
+                                    &&
+                                    ContextCompat.checkSelfPermission(getActivity(),
+                                            Manifest.permission.ACCESS_COARSE_LOCATION)
+                                            != PackageManager.PERMISSION_GRANTED) {
+                                askForLocationPermissions();
+                            } else {
+                                Log.d("OUr BSSID ", wifiInfo.getBSSID());
+                                if (ExistingBSSID(wifiInfo.getBSSID())==true) {
+
+                                    if( connectToWifi(ssid.getText().toString(), pw.getText().toString()))
+                                    {
+                                        con = new ConnectionManager("addloc");
+
+                                        queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+
+                                        Log.d("Image Path ", imagePath);
+                                        String s = con.getPath();
+                                        String uri = s + String.format("&desc=%1$s&pw=%2$s&lat=%3$s&lng=%4$s&img=%5$s&mac=%6$s",
+                                                ssid.getText().toString().replace(" ","_"),
+                                                pw.getText().toString(),
+                                                Double.toString(marky.getPosition().getLatitude()),
+                                                Double.toString(marky.getPosition().getLongitude()),
+                                                imagePath,
+                                                wifiInfo.getBSSID()
+                                        );
+
+
+
+                                        // Request a string response
+                                        StringRequest stringRequest = new StringRequest(Request.Method.GET, uri,
+                                                new Response.Listener<String>() {
+                                                    @Override
+                                                    public void onResponse(String response) {
+
+                                                        // Result handling
+                                                        Toast.makeText(root.getContext(), ""+response, Toast.LENGTH_SHORT).show();
+
+                                                    }
+                                                }, new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+
+                                                // Error handling
+                                                Toast.makeText(getActivity(), "Something went wrong!", Toast.LENGTH_SHORT).show();
+                                                error.printStackTrace();
+
+                                            }
+                                        });
+                                        queue.add(stringRequest);
+                                        Log.d("requet", stringRequest.toString());
+
+                                        LocationsFragment locfrag = new LocationsFragment();
+                                        FragmentManager manager = getActivity().getSupportFragmentManager();
+                                        FragmentTransaction transaction = manager.beginTransaction();
+                                        transaction.replace(R.id.content_frame, locfrag, "init");
+                                        transaction.commit();
+                                    }
+                                    else {
+                                        Toast.makeText(getContext(),"Invailed password",Toast.LENGTH_LONG).show();
+                                    }
+                                }else{
+                                    Toast.makeText(getContext(),"Invailed Wifi",Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
 
-                        // Error handling
-                        Toast.makeText(getActivity(), "Something went wrong!", Toast.LENGTH_SHORT).show();
-                        error.printStackTrace();
-
-                    }
-                });
-                queue.add(stringRequest);
-                Log.d("requet", stringRequest.toString());
-
-                LocationsFragment locfrag = new LocationsFragment();
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.content_frame, locfrag, "init");
-                transaction.commit();
+                        }
+                    });
+                }
             }
-        });
+        }
+
 
         return root;
     }
@@ -314,7 +359,7 @@ public class AddLocFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("Mysmart",""+error);
-                Toast.makeText(getActivity(), ""+error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), ""+error, Toast.LENGTH_SHORT).show();
 
             }
         }){
@@ -344,6 +389,151 @@ public class AddLocFragment extends Fragment {
 
 
         return temp;
+    }
+
+    public boolean connectToWifi(String SSID, String PASSWORD){
+        try{
+            WifiManager mWifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(android.content.Context.WIFI_SERVICE);
+            //If Wifi is not enabled, enable it
+            if (!mWifiManager.isWifiEnabled()) {
+                Log.v("Log_TGS_Wifi", "Wifi is not enabled, enable it");
+                mWifiManager.setWifiEnabled(true);
+            }
+            WifiConfiguration config = new WifiConfiguration();
+            config.SSID = "\""+SSID+"\"";
+            // if key is empty means it is open network-- I am considering like this
+            if(PASSWORD.isEmpty()){
+                config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+            } else {
+                config.preSharedKey = "\""+PASSWORD+"\"";
+            }
+
+            int networkId = mWifiManager.addNetwork(config);
+            Log.d("netId",String.valueOf(networkId));
+            // it will return -1 if the config is already saved..
+            if(networkId == -1){
+                networkId = getExistingNetworkId(config.SSID);
+            }
+
+            mWifiManager.saveConfiguration();
+
+            mWifiManager.disconnect();
+            // giving time to disconnect here.
+            Thread.sleep(3*1000);
+            mWifiManager.enableNetwork(networkId, true);
+            mWifiManager.reconnect();
+            Thread.sleep(3*1000);
+
+            if (mWifiManager.isWifiEnabled()) {
+                WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
+                if (wifiInfo != null) {
+                    NetworkInfo.DetailedState state = WifiInfo.getDetailedStateOf(wifiInfo.getSupplicantState());
+                    if (state == NetworkInfo.DetailedState.CONNECTED || state == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
+                        Log.d("Wifi info : ", wifiInfo.toString());
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+
+
+    private int getExistingNetworkId(String SSID) {
+        WifiManager mWifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(android.content.Context.WIFI_SERVICE);
+        List<WifiConfiguration> configuredNetworks = mWifiManager.getConfiguredNetworks();
+
+        if (configuredNetworks != null) {
+            for (WifiConfiguration existingConfig : configuredNetworks) {
+                if (SSID.equalsIgnoreCase(existingConfig.SSID)) {
+                    mWifiManager.removeNetwork(existingConfig.networkId-1);
+                    return existingConfig.networkId;
+                }
+            }
+        }
+        return -1;
+    }
+
+    public boolean ExistingBSSID (String BSSID) {
+
+        WifiManager mWifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(android.content.Context.WIFI_SERVICE);
+        List<ScanResult> mScanResults = mWifiManager.getScanResults();
+
+        for (ScanResult wifiInfo:mScanResults){
+            Log.d("Wifi ssid : ", wifiInfo.BSSID);
+            if (wifiInfo.BSSID.equals(BSSID))
+                return true;
+        }
+
+        return false;
+    }
+
+    private void askForLocationPermissions() {
+
+        // Should we show an explanation?
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+            new android.support.v7.app.AlertDialog.Builder(getActivity())
+                    .setTitle("Location permessions needed")
+                    .setMessage("you need to allow this permission!")
+                    .setPositiveButton("Sure", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(getActivity(),
+                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                    LOCATION_PERMISSION_REQUEST_CODE);
+                        }
+                    })
+                    .setNegativeButton("Not now", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+//                                        //Do nothing
+                        }
+                    })
+                    .show();
+
+            // Show an expanation to the user *asynchronously* -- don't block
+            // this thread waiting for the user's response! After the user
+            // sees the explanation, try again to request the permission.
+
+        } else {
+
+            // No explanation needed, we can request the permission.
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
+
+            // MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+        }
+    }
+
+    public static boolean isPermissionGranted(@NonNull String[] grantPermissions, @NonNull int[] grantResults,
+                                              @NonNull String permission) {
+        for (int i = 0; i < grantPermissions.length; i++) {
+            if (permission.equals(grantPermissions[i])) {
+                return grantResults[i] == PackageManager.PERMISSION_GRANTED;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE:
+                if (isPermissionGranted(permissions, grantResults, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    //Do you work
+                } else {
+                    Toast.makeText(getContext(), "Can not proceed! i need permission" , Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 
 }
