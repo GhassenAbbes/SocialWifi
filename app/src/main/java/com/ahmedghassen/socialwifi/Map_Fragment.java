@@ -8,12 +8,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -25,6 +28,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,20 +41,31 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.places.PlaceManager;
+import com.facebook.places.internal.LocationPackageRequestParams;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import android.location.Location;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.annotations.Marker;
-import com.mapbox.mapboxsdk.annotations.MarkerView;
-import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.constants.Style;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.MapboxMap.OnInfoWindowClickListener;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+
+
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -57,14 +73,20 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
+public class Map_Fragment extends Fragment implements
+        OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener,
+        OnInfoWindowClickListener
 {
+
+
+
 
     private ImageView imageLoc;
     private int GALLERY = 1, CAMERA = 2;
 
     private static final String TAG = "LocationPickerActivity";
-
+    String ch="";
     private Gson gson;
     static final String TAG_ERROR_DIALOG_FRAGMENT = "errorDialog";
     private static final String STATE_IN_PERMISSION = "inPermission";
@@ -73,27 +95,151 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
     private boolean isInPermission = false;
     //GoogleMap m;
 
-    private Mapbox mapView;
-    private MapboxMap mapboxMap ;
-    private com.mapbox.mapboxsdk.annotations.Marker droppedMarker;
+    //private Mapbox mapView;
+   // private com.mapbox.mapboxsdk.annotations.Marker droppedMarker;
+    MapView mMapView;
+    private GoogleMap googleMap;
+
     private ImageView hoveringMarker;
     Dialog dialog ;
-    MarkerView marky;
+    Marker marky;
     ConnectionManager con;
     RequestQueue queue ;
     //SupportMapFragment mapFragment;
-    MapView mapFragment;
+
     String indexloc="";
     List<LocationWifi> listlocations;
     LocationWifi loca = new LocationWifi();
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+
+    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+    private static final float DEFAULT_ZOOM = 15f;
+
+    //vars
+    private Boolean mLocationPermissionsGranted = false;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
 
 
     @Override
+    public boolean onMarkerClick(Marker marker) {
+        final Handler handler = new Handler();
+        final long start = SystemClock.uptimeMillis();
+        final long duration = 1500;
+
+        final Interpolator interpolator = new BounceInterpolator();
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                long elapsed = SystemClock.uptimeMillis() - start;
+                float t = Math.max(
+                        1 - interpolator.getInterpolation((float) elapsed / duration), 0);
+                marker.setAnchor(0.5f, 1.0f + 2 * t);
+
+                if (t > 0.0) {
+                    // Post again 16ms later.
+                    handler.postDelayed(this, 16);
+                }
+            }
+        });
+        return false;
+    }
+
+
+
+
+            class CustomInfoWindowAdapter implements InfoWindowAdapter {
+        private View popup=null;
+        private LayoutInflater inflater=null;
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            return null;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+
+            String ch="";
+            String d="";
+
+            ch = marker.getTitle();
+            d = ch.substring(0, ch.indexOf("/"));
+            String indexloc = ch.substring(ch.indexOf("/") + 1, ch.length());
+            Log.d("Strings", d + "   " + indexloc);
+
+
+            try {
+
+                // Getting view from the layout file info_window_layout
+                popup = getLayoutInflater().inflate(R.layout.custom_infowindow, null);
+                popup.setClickable(true);
+                // Getting reference to the TextView to set latitude
+                TextView wifiTxt = (TextView) popup.findViewById(R.id.titleWifi);
+                wifiTxt.setText(d);
+
+                TextView passTxt = (TextView) popup.findViewById(R.id.passworWifi);
+                passTxt.setText(marker.getSnippet());
+
+                ImageView heart = (ImageView)popup.findViewById(R.id.addfavourite);
+
+                loca = listlocations.get(Integer.valueOf(indexloc));
+
+                heart.setOnClickListener(v -> {
+                    addToFavourite(Integer.toString(loca.getId()));
+
+                });
+
+                ImageView imgWifi = (ImageView)popup.findViewById(R.id.clientPic);
+
+                imgWifi.setClickable(true);
+                imgWifi.setOnClickListener(v -> {
+
+
+                });
+
+                Button connect = (Button)popup.findViewById(R.id.toconnect);
+                connect.setOnClickListener(v -> {
+
+                    if (ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED
+                            &&
+                            ContextCompat.checkSelfPermission(getActivity(),
+                                    Manifest.permission.ACCESS_COARSE_LOCATION)
+                                    != PackageManager.PERMISSION_GRANTED) {
+                        askForLocationPermissions();
+                    } else {
+
+                        if (ExistingBSSID(wifiTxt.getText().toString())==true) {
+                            Toast.makeText(getContext(), "Wifi Connected :" +
+                                    connectToWifi(wifiTxt.getText().toString(), passTxt.getText().toString()), Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(getContext(),"Invailed Wifi",Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                });
+
+                Picasso.with(getActivity())
+                        .load(loca.getImg())
+                        .into(imgWifi);
+
+            } catch (Exception ev) {
+                System.out.print(ev.getMessage());
+            }
+
+            return popup;
+        }
+    }
+
+
+        @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_map_, null, false);
-
+        root.setScrollContainer(false);
         FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.fabadd);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,12 +259,12 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
         gson = gsonBuilder.create();
 
 
-        Mapbox.getInstance(getActivity().getApplicationContext(), getString(R.string.access_token));
+        //Mapbox.getInstance(getActivity().getApplicationContext(), getString(R.string.access_token));
 
+            mMapView = (MapView) root.findViewById(R.id.map);
 
-        mapFragment = (MapView) root.findViewById(R.id.map);
-        mapFragment.onCreate(savedInstanceState);
-        fetchLocations();
+            mMapView.onCreate(savedInstanceState);
+            getLocationPermission();
 
 
         return root;
@@ -127,9 +273,20 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
 
 
     @Override
-    public boolean onInfoWindowClick(Marker marker) {
-        Toast.makeText(getActivity().getApplicationContext(), marker.getTitle(), Toast.LENGTH_LONG).show();
-        return false;
+    public void onInfoWindowClick(Marker marker) {
+
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        Fragment fragment = new DetailLocFragment();
+        Bundle bundle2 = new Bundle();
+        bundle2.putString("myObject", new Gson().toJson(loca));
+
+        fragment.setArguments(bundle2);
+
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.content_frame, fragment, "SC");
+        transaction.addToBackStack("fav");
+        transaction.commit();
+
     }
 
 
@@ -142,135 +299,21 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
     private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
         @Override
         public void onResponse(String response) {
+             ch=response;
+            mMapView.onResume();
+             listlocations = Arrays.asList(gson.fromJson(ch, LocationWifi[].class));
+            Log.i("PostActivity", listlocations.size() + " posts loaded.");
+            Log.d("string ",ch);
 
-
-            mapFragment.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(MapboxMap mapboxMap) {
-
-
-                    mapboxMap.setStyleUrl(Style.MAPBOX_STREETS);
-
-                    // Set the camera's starting position
-                    CameraPosition cameraPosition = new CameraPosition.Builder()
-                            .target(new LatLng(36.8984, 10.1897)) // set the camera's center position
-                            .zoom(9)  // set the camera's zoom level
-                            .tilt(20)  // set the camera's tilt
-                            .build();
-
-                    // Move the camera to that position
-                    mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                    String ch=response;
-
-
-                    listlocations = Arrays.asList(gson.fromJson(response, LocationWifi[].class));
-                    Log.i("PostActivity", listlocations.size() + " posts loaded.");
-                    Log.d("string ",ch);
-
-                    int i =0;
-                    for (LocationWifi loc : listlocations) {
-                        LatLng sydney = new LatLng(Double.parseDouble(loc.getLat()), Double.parseDouble(loc.getLng()));
-                        mapboxMap.addMarker(new MarkerViewOptions().position(sydney)
-                                .title(loc.getDesc() + "/"+i)
-                                .snippet(loc.getWifi_pass())
-                        );
-                        i++;
-                    }
-
-                    mapboxMap.setInfoWindowAdapter(new MapboxMap.InfoWindowAdapter() {
-
-                        @SuppressLint("ClickableViewAccessibility")
-                        @Override
-                        public View getInfoWindow(@NonNull Marker marker) {
-
-                            View popup = null;
-                            String ch="";
-                            String d="";
-
-                                ch = marker.getTitle();
-                                d = ch.substring(0, ch.indexOf("/"));
-                                indexloc = ch.substring(ch.indexOf("/") + 1, ch.length());
-                                Log.d("Strings", d + "   " + indexloc);
-
-
-                            try {
-
-                                // Getting view from the layout file info_window_layout
-                                popup = getLayoutInflater().inflate(R.layout.custom_infowindow, null);
-                                popup.setClickable(true);
-                                // Getting reference to the TextView to set latitude
-                                TextView wifiTxt = (TextView) popup.findViewById(R.id.titleWifi);
-                                wifiTxt.setText(d);
-
-                                TextView passTxt = (TextView) popup.findViewById(R.id.passworWifi);
-                                passTxt.setText(marker.getSnippet());
-
-                                ImageView heart = (ImageView)popup.findViewById(R.id.addfavourite);
-
-                                loca = listlocations.get(Integer.valueOf(indexloc));
-
-                                heart.setOnClickListener(v -> {
-                                    addToFavourite(Integer.toString(loca.getId()));
-
-                                });
-
-                                ImageView imgWifi = (ImageView)popup.findViewById(R.id.clientPic);
-
-                                imgWifi.setClickable(true);
-                                imgWifi.setOnClickListener(v -> {
-
-                                    FragmentManager manager = getActivity().getSupportFragmentManager();
-                                    Fragment fragment = new DetailLocFragment();
-                                    Bundle bundle2 = new Bundle();
-                                    bundle2.putString("myObject", new Gson().toJson(loca));
-
-                                    fragment.setArguments(bundle2);
-
-                                    FragmentTransaction transaction = manager.beginTransaction();
-                                    transaction.replace(R.id.content_frame, fragment, "SC");
-                                    transaction.addToBackStack("fav");
-                                    transaction.commit();
-                                });
-
-                                Button connect = (Button)popup.findViewById(R.id.toconnect);
-                                connect.setOnClickListener(v -> {
-
-                                    if (ContextCompat.checkSelfPermission(getActivity(),
-                                            Manifest.permission.ACCESS_FINE_LOCATION)
-                                            != PackageManager.PERMISSION_GRANTED
-                                            &&
-                                            ContextCompat.checkSelfPermission(getActivity(),
-                                                    Manifest.permission.ACCESS_COARSE_LOCATION)
-                                                    != PackageManager.PERMISSION_GRANTED) {
-                                        askForLocationPermissions();
-                                    } else {
-
-                                        if (ExistingBSSID(wifiTxt.getText().toString())==true) {
-                                            Toast.makeText(getContext(), "Wifi Connected :" +
-                                                    connectToWifi(wifiTxt.getText().toString(), passTxt.getText().toString()), Toast.LENGTH_LONG).show();
-                                        }else{
-                                            Toast.makeText(getContext(),"Invailed Wifi",Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-
-                                });
-                                Picasso.with(getActivity())
-                                        .load(loca.getImg())
-                                        .into(imgWifi);
-
-                            } catch (Exception ev) {
-                                System.out.print(ev.getMessage());
-                            }
-
-                            return popup;
-                        }
-                    });
-
-                }
-
-            });
-
+            int i =0;
+            for (LocationWifi loc : listlocations) {
+                LatLng sydney = new LatLng(Double.parseDouble(loc.getLat()), Double.parseDouble(loc.getLng()));
+                googleMap.addMarker(new MarkerOptions().position(sydney)
+                        .title(loc.getDesc() + "/"+i)
+                        .snippet(loc.getWifi_pass())
+                );
+                i++;
+            }
         }
     };
 
@@ -440,16 +483,134 @@ public class Map_Fragment extends Fragment implements OnInfoWindowClickListener
         return false;
     }
 
+
+
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE:
-                if (isPermissionGranted(permissions, grantResults, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    //Do you work
-                } else {
-                    Toast.makeText(getContext(), "Can not proceed! i need permission" , Toast.LENGTH_SHORT).show();
+    public void onMapReady(GoogleMap mapboxMap) {
+
+
+
+            //mapboxMap.setStyleUrl(Style.MAPBOX_STREETS);
+
+            // Set the camera's starting position
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(36.8984, 10.1897)) // set the camera's center position
+                    .zoom(9)  // set the camera's zoom level
+                    .tilt(20)  // set the camera's tilt
+                    .build();
+
+            // Move the camera to that position
+            mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+            mapboxMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+            mapboxMap.setOnMarkerClickListener(this);
+            mapboxMap.setOnInfoWindowClickListener(this);
+            if (mLocationPermissionsGranted) {
+                getDeviceLocation();
+
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
                 }
-                break;
+                mapboxMap.setMyLocationEnabled(true);
+                mapboxMap.getUiSettings().setMyLocationButtonEnabled(true);
+            }
+            googleMap = mapboxMap;
+
+              fetchLocations();
+
+        }
+
+
+
+
+    private void getDeviceLocation(){
+        Log.d(TAG, "getDeviceLocation: getting the devices current location");
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        try{
+            if(mLocationPermissionsGranted){
+
+                final Task location = mFusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if(task.isSuccessful()){
+                            Log.d(TAG, "onComplete: found location!");
+                            Location currentLocation = (Location) task.getResult();
+
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                    DEFAULT_ZOOM);
+
+                        }else{
+                            Log.d(TAG, "onComplete: current location is null");
+                            Toast.makeText(getContext(), "unable to get current location", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        }catch (SecurityException e){
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+        }
+    }
+
+    private void moveCamera(LatLng latLng, float zoom){
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+    }
+
+    private void initMap(){
+        Log.d(TAG, "initMap: initializing map");
+        mMapView.getMapAsync(this);
+    }
+
+    private void getLocationPermission(){
+        Log.d(TAG, "getLocationPermission: getting location permissions");
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION};
+
+        if(ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            if(ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                mLocationPermissionsGranted = true;
+                initMap();
+            }else{
+                ActivityCompat.requestPermissions(getActivity(),
+                        permissions,
+                        LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        }else{
+            ActivityCompat.requestPermissions(getActivity(),
+                    permissions,
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionsResult: called.");
+        mLocationPermissionsGranted = false;
+
+        switch(requestCode){
+            case LOCATION_PERMISSION_REQUEST_CODE:{
+                if(grantResults.length > 0){
+                    for(int i = 0; i < grantResults.length; i++){
+                        if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
+                            mLocationPermissionsGranted = false;
+                            Log.d(TAG, "onRequestPermissionsResult: permission failed");
+                            return;
+                        }
+                    }
+                    Log.d(TAG, "onRequestPermissionsResult: permission granted");
+                    mLocationPermissionsGranted = true;
+                    //initialize our map
+                    initMap();
+                }
+            }
         }
     }
 

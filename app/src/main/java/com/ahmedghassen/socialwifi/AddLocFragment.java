@@ -40,19 +40,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.annotations.Marker;
-import com.mapbox.mapboxsdk.annotations.MarkerView;
-import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.constants.Style;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+
+
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -63,13 +62,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddLocFragment extends Fragment {
+public class AddLocFragment extends Fragment implements OnMapReadyCallback {
     private ImageView imageLoc;
     private int GALLERY = 1, CAMERA = 2;
     EditText ssid;
@@ -79,7 +77,7 @@ public class AddLocFragment extends Fragment {
     private static final String TAG = "LocationPickerActivity";
 
     private Gson gson;
-    private MapboxMap mapboxMap ;
+    private GoogleMap mapboxMap ;
     MapView mapFragment;
     ConnectionManager con;
     RequestQueue queue ;
@@ -116,54 +114,15 @@ public class AddLocFragment extends Fragment {
 
 
         imageLoc.setOnClickListener(v -> showPictureDialog());
-        Mapbox.getInstance(getActivity().getApplicationContext(), getString(R.string.access_token));
 
 
         mapFragment = (MapView) root.findViewById(R.id.addmaplayout);
         mapFragment.onCreate(savedInstanceState);
 
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(MapboxMap mapboxMap) {
-
-                mapboxMap.setStyleUrl(Style.MAPBOX_STREETS);
-
-                // Set the camera's starting position
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(36.8984, 10.1897)) // set the camera's center position
-                        .zoom(9)  // set the camera's zoom level
-                        .tilt(20)  // set the camera's tilt
-                        .build();
-
-                // Move the camera to that position
-                mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                mapboxMap.setOnMapClickListener(new MapboxMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(@NonNull LatLng point) {
-                        MarkerViewOptions mark = new MarkerViewOptions().position(point);
-                        mapboxMap.addMarker(mark);
-                        marky = new MarkerView(new MarkerViewOptions().position(point));
-                    }
-                });
-
-                mapboxMap.setInfoWindowAdapter ((Marker marker) -> {
-                    marker.setTitle("Marker Deleted!");
-                    marky=null;
-                    marker.remove();
-                    return null;
-                });
-            }
-        });
+        mapFragment.getMapAsync(this);
 
 
-        /*
-        wifiInfo = wifiManager.getConnectionInfo();
-
-
-
-*/
-        WifiManager mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+          WifiManager mWifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (mWifiManager.isWifiEnabled()) {
             WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
             if (wifiInfo != null) {
@@ -199,8 +158,8 @@ public class AddLocFragment extends Fragment {
                                         String uri = s + String.format("&desc=%1$s&pw=%2$s&lat=%3$s&lng=%4$s&img=%5$s&mac=%6$s",
                                                 ssid.getText().toString().replace(" ","_"),
                                                 pw.getText().toString(),
-                                                Double.toString(marky.getPosition().getLatitude()),
-                                                Double.toString(marky.getPosition().getLongitude()),
+                                                Double.toString(marky.getPosition().latitude),
+                                                Double.toString(marky.getPosition().longitude),
                                                 imagePath,
                                                 wifiInfo.getBSSID()
                                         );
@@ -536,4 +495,29 @@ public class AddLocFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
+        // mapboxMap.setStyleUrl(Style.MAPBOX_STREETS);
+
+        // Set the camera's starting position
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(36.8984, 10.1897)) // set the camera's center position
+                .zoom(9)  // set the camera's zoom level
+                .tilt(20)  // set the camera's tilt
+                .build();
+
+        // Move the camera to that position
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng point) {
+                MarkerOptions mark = new MarkerOptions().position(point);
+                marky = googleMap.addMarker(mark);
+
+
+            }
+        });
+    }
 }

@@ -39,7 +39,7 @@
             android:inputType="textPassword"
             android:layout_marginBottom="5dp"/>
 
-        <com.mapbox.mapboxsdk.maps.MapView
+        <com.google.android.gms.maps.MapView
             android:id="@+id/addmaplayout"
             android:layout_width="match_parent"
             android:layout_height="250dp"

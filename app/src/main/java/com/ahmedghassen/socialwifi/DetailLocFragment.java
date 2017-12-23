@@ -6,11 +6,13 @@ import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -34,19 +36,27 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.annotations.Marker;
-import com.mapbox.mapboxsdk.annotations.MarkerView;
-import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
-import com.mapbox.mapboxsdk.camera.CameraPosition;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.constants.Style;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -55,17 +65,41 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DetailLocFragment extends Fragment {
+public class DetailLocFragment extends Fragment implements
+        OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener,
+        GoogleMap.OnMarkerClickListener{
 
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     private Gson gson;
-    private MapboxMap mapboxMap ;
-    MapView mapFragment;
+    private GoogleMap googleMap ;
+    MapView mMapView;
     ConnectionManager con;
     RequestQueue queue ;
     Marker marky=null;
     LocationWifi p;
+    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+    private static final float DEFAULT_ZOOM = 15f;
+    private static final String TAG = "LocationPickerActivity";
+
+    //vars
+    private Boolean mLocationPermissionsGranted = false;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+
+
+    GoogleApiClient mGoogleApiClient;
+    Location mLastLocation;
+    Marker mCurrLocationMarker;
+    LocationRequest mLocationRequest;
+    int PROXIMITY_RADIUS = 10000;
+    double latitude, longitude;
+    double end_latitude, end_longitude;
+
+
     public DetailLocFragment() {
         // Required empty public constructor
     }
@@ -89,7 +123,11 @@ public class DetailLocFragment extends Fragment {
         }
         p= new Gson().fromJson(jsonMyObject, LocationWifi.class);
 
+        end_latitude = Double.parseDouble(p.getLat());
+        end_longitude =  Double.parseDouble(p.getLng());
 
+        Log.d("end_lat",""+end_latitude);
+        Log.d("end_lng",""+end_longitude);
 
         TextView ssid = (TextView) root.findViewById(R.id.ssiddet);
         TextView pw = (TextView)root.findViewById(R.id.pwdet);
@@ -106,32 +144,26 @@ public class DetailLocFragment extends Fragment {
         Picasso.with(getActivity())
                 .load(p.getImg())
                 .into(imgWifi);
-        Mapbox.getInstance(getActivity().getApplicationContext(), getString(R.string.access_token));
 
 
-        mapFragment = (MapView) root.findViewById(R.id.detmaplayout);
-        mapFragment.onCreate(savedInstanceState);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkLocationPermission();
+        }
 
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(MapboxMap mapboxMap) {
+        //Check if Google Play Services Available or not
+        if (!CheckGooglePlayServices()) {
+            Log.d("onCreate", "Finishing test case since Google Play Services are not available");
+           // finish();
+        }
+        else {
+            Log.d("onCreate","Google Play Services available.");
+        }
 
-                mapboxMap.setStyleUrl(Style.MAPBOX_STREETS);
 
-                // Set the camera's starting position
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(Double.parseDouble(p.getLng()), Double.parseDouble(p.getLng()))) // set the camera's center position
-                        .zoom(9)  // set the camera's zoom level
-                        .tilt(20)  // set the camera's tilt
-                        .build();
+        mMapView = (MapView) root.findViewById(R.id.detmaplayout);
+        mMapView.onCreate(savedInstanceState);
 
-                // Move the camera to that position
-                mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                MarkerViewOptions mark = new MarkerViewOptions().position(new LatLng(Double.parseDouble(p.getLng()), Double.parseDouble(p.getLng())));
-                mapboxMap.addMarker(mark);
-
-            }
-        });
+        getLocationPermission();
 
         fab.setOnClickListener(v -> {
                 addToFavourite();
@@ -327,17 +359,295 @@ public class DetailLocFragment extends Fragment {
         return false;
     }
 
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE:
-                if (isPermissionGranted(permissions, grantResults, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    //Do you work
-                } else {
-                    Toast.makeText(getContext(), "Can not proceed! i need permission" , Toast.LENGTH_SHORT).show();
-                }
-                break;
+    public void onMapReady(GoogleMap mapboxMap) {
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(Double.parseDouble(p.getLng()), Double.parseDouble(p.getLng()))) // set the camera's center position
+                .zoom(9)  // set the camera's zoom level
+                .tilt(20)  // set the camera's tilt
+                .build();
+
+        // Move the camera to that position
+        mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        MarkerOptions mark = new MarkerOptions().position(new LatLng(Double.parseDouble(p.getLng()), Double.parseDouble(p.getLng())));
+        if (mLocationPermissionsGranted) {
+            getDeviceLocation();
+
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            mapboxMap.setMyLocationEnabled(true);
+            mapboxMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mapboxMap.getUiSettings().setZoomControlsEnabled(true);
+        }
+        mapboxMap.setOnMarkerClickListener(this);
+        mapboxMap.addMarker(mark);
+
+        googleMap = mapboxMap;
+    }
+
+
+
+    private void getDeviceLocation(){
+        Log.d(TAG, "getDeviceLocation: getting the devices current location");
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        try{
+            if(mLocationPermissionsGranted){
+
+                final Task location = mFusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(new OnCompleteListener() {
+                    @Override
+                    public void onComplete(@NonNull Task task) {
+                        if(task.isSuccessful()){
+                            Log.d(TAG, "onComplete: found location!");
+                            Location currentLocation = (Location) task.getResult();
+
+                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                    DEFAULT_ZOOM);
+
+                        }else{
+                            Log.d(TAG, "onComplete: current location is null");
+                            Toast.makeText(getContext(), "unable to get current location", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        }catch (SecurityException e){
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
         }
     }
+
+    private void moveCamera(LatLng latLng, float zoom){
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+    }
+
+    private void initMap(){
+        Log.d(TAG, "initMap: initializing map");
+        mMapView.getMapAsync(this);
+    }
+
+    private void getLocationPermission(){
+        Log.d(TAG, "getLocationPermission: getting location permissions");
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION};
+
+        if(ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            if(ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                mLocationPermissionsGranted = true;
+                initMap();
+            }else{
+                ActivityCompat.requestPermissions(getActivity(),
+                        permissions,
+                        LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        }else{
+            ActivityCompat.requestPermissions(getActivity(),
+                    permissions,
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+
+
+    private boolean CheckGooglePlayServices() {
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+        int result = googleAPI.isGooglePlayServicesAvailable(getActivity());
+        if(result != ConnectionResult.SUCCESS) {
+            if(googleAPI.isUserResolvableError(result)) {
+                googleAPI.getErrorDialog(getActivity(), result,
+                        0).show();
+            }
+            return false;
+        }
+        return true;
+    }
+
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+
+    private String getDirectionsUrl()
+    {
+        StringBuilder googleDirectionsUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
+        googleDirectionsUrl.append("origin="+latitude+","+longitude);
+        googleDirectionsUrl.append("&destination="+end_latitude+","+end_longitude);
+        googleDirectionsUrl.append("&key="+"AIzaSyCAcfy-02UHSu2F6WeQ1rhQhkCr51eBL9g");
+
+        return googleDirectionsUrl.toString();
+    }
+
+    private String getUrl(double latitude, double longitude, String nearbyPlace)
+    {
+        StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlacesUrl.append("location=" + latitude + "," + longitude);
+        googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
+        googlePlacesUrl.append("&type=" + nearbyPlace);
+        googlePlacesUrl.append("&sensor=true");
+        googlePlacesUrl.append("&key=" + "AIzaSyBREtn6nqkJHlgdRqa7Wqu97KSMnwXuOk4");
+        Log.d("getUrl", googlePlacesUrl.toString());
+        return (googlePlacesUrl.toString());
+    }
+
+
+
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
+    }
+
+
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d("onLocationChanged", "entered");
+
+        mLastLocation = location;
+        if (mCurrLocationMarker != null) {
+            mCurrLocationMarker.remove();
+        }
+
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+
+
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.draggable(true);
+        markerOptions.title("Current Position");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        mCurrLocationMarker = googleMap.addMarker(markerOptions);
+
+        //move map camera
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+
+
+        Toast.makeText(getContext(),"Your Current Location", Toast.LENGTH_LONG).show();
+
+
+        //stop location updates
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            Log.d("onLocationChanged", "Removing Location Updates");
+        }
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    public boolean checkLocationPermission(){
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Asking user if explanation is needed
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+                //Prompt the user once explanation has been shown
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted. Do the
+                    // contacts-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        if (mGoogleApiClient == null) {
+                            buildGoogleApiClient();
+                        }
+                        googleMap.setMyLocationEnabled(true);
+                    }
+
+                } else {
+
+                    // Permission denied, Disable the functionality that depends on this permission.
+                    Toast.makeText(getContext(), "permission denied", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other permissions this app might request.
+            // You can add here other case statements according to your requirement.
+        }
+    }
+
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        Object dataTransfer[] = new Object[2];
+        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+        dataTransfer = new Object[3];
+        String url = getDirectionsUrl();
+        GetDirectionsData getDirectionsData = new GetDirectionsData();
+        dataTransfer[0] = googleMap;
+        dataTransfer[1] = url;
+        dataTransfer[2] = new LatLng(end_latitude, end_longitude);
+        getDirectionsData.execute(dataTransfer);
+        return false;
+    }
+
 
 }
