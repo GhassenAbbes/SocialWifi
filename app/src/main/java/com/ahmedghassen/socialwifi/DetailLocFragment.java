@@ -129,10 +129,10 @@ public class DetailLocFragment extends Fragment implements
         Log.d("end_lat",""+end_latitude);
         Log.d("end_lng",""+end_longitude);
 
-        TextView ssid = (TextView) root.findViewById(R.id.ssiddet);
-        TextView pw = (TextView)root.findViewById(R.id.pwdet);
-        FloatingActionButton fab = (FloatingActionButton)root.findViewById(R.id.fabdet);
-        FloatingActionButton connecttowifi = (FloatingActionButton)root.findViewById(R.id.cnctwifi);
+        TextView ssid =  root.findViewById(R.id.ssiddet);
+        TextView pw = root.findViewById(R.id.pwdet);
+        FloatingActionButton fab = root.findViewById(R.id.fabdet);
+        FloatingActionButton connecttowifi =root.findViewById(R.id.cnctwifi);
 
         con = new ConnectionManager("selectloc");
         queue = Volley.newRequestQueue(getActivity().getApplicationContext());
@@ -160,9 +160,9 @@ public class DetailLocFragment extends Fragment implements
         }
 
 
-        mMapView = (MapView) root.findViewById(R.id.detmaplayout);
+        mMapView =  root.findViewById(R.id.detmaplayout);
         mMapView.onCreate(savedInstanceState);
-
+        mMapView.getMapAsync(this);
         getLocationPermission();
 
         fab.setOnClickListener(v -> {
@@ -400,20 +400,17 @@ public class DetailLocFragment extends Fragment implements
             if(mLocationPermissionsGranted){
 
                 final Task location = mFusedLocationProviderClient.getLastLocation();
-                location.addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if(task.isSuccessful()){
-                            Log.d(TAG, "onComplete: found location!");
-                            Location currentLocation = (Location) task.getResult();
+                location.addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        Log.d(TAG, "onComplete: found location!");
+                        Location currentLocation = (Location) task.getResult();
 
-                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                    DEFAULT_ZOOM);
+                       /* moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                DEFAULT_ZOOM);*/
 
-                        }else{
-                            Log.d(TAG, "onComplete: current location is null");
-                            Toast.makeText(getContext(), "unable to get current location", Toast.LENGTH_SHORT).show();
-                        }
+                    }else{
+                        Log.d(TAG, "onComplete: current location is null");
+                        Toast.makeText(getContext(), "unable to get current location", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -442,7 +439,7 @@ public class DetailLocFragment extends Fragment implements
             if(ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
                     COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
                 mLocationPermissionsGranted = true;
-                initMap();
+               // initMap();
             }else{
                 ActivityCompat.requestPermissions(getActivity(),
                         permissions,
@@ -601,8 +598,7 @@ public class DetailLocFragment extends Fragment implements
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
@@ -637,8 +633,8 @@ public class DetailLocFragment extends Fragment implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Object dataTransfer[] = new Object[2];
-        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+        Object dataTransfer[] ;
+        //GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
         dataTransfer = new Object[3];
         String url = getDirectionsUrl();
         GetDirectionsData getDirectionsData = new GetDirectionsData();
@@ -651,3 +647,5 @@ public class DetailLocFragment extends Fragment implements
 
 
 }
+
+

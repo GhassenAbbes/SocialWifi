@@ -129,7 +129,9 @@ class DataParser {
 
         try {
             jsonObject = new JSONObject(jsonData);
+            Log.d("jsonData",jsonData);
             jsonArray = jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
+            Log.d("jsonarray",jsonArray.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
