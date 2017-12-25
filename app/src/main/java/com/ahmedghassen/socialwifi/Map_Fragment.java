@@ -161,8 +161,8 @@ public class Map_Fragment extends Fragment implements
                 }
             }
         });
-
-        origin= new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
+        Log.d("current location",currentLocation.getLatitude()+""+currentLocation.getLongitude());
+        origin= new LatLng( 36.170544, 10.170545*);
         destination = marker.getPosition();
         requestDirection();
 
@@ -171,8 +171,7 @@ public class Map_Fragment extends Fragment implements
 
 
 
-
-            class CustomInfoWindowAdapter implements InfoWindowAdapter {
+    class CustomInfoWindowAdapter implements InfoWindowAdapter {
         private View popup=null;
         private LayoutInflater inflater=null;
 
