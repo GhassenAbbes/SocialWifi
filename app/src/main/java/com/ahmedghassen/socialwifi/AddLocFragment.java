@@ -94,7 +94,7 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
     private Boolean mLocationPermissionsGranted = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     Location currentLocation;
-
+    GoogleMap meMap;
 
     public AddLocFragment() {
         // Required empty public constructor
@@ -524,12 +524,12 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            mapboxMap.getUiSettings().setZoomControlsEnabled(true);
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
 
-            mapboxMap.setMyLocationEnabled(true);
-            mapboxMap.getUiSettings().setMyLocationButtonEnabled(true);
+            googleMap.setMyLocationEnabled(true);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
         }
-        googleMap = mapboxMap;
+        meMap = mapboxMap;
 
 
     }
