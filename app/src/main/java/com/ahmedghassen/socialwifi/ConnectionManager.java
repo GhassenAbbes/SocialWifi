@@ -10,16 +10,14 @@ import android.net.NetworkInfo;
 
 public class ConnectionManager {
     String path;
-
+    public static String ip = "http://192.168.1.3/";
 
 
     public ConnectionManager(){
-        String p="http://172.19.1.5/";
-        path=p+"android/services.php?action=";
+        path=ip+"android/services.php?action=";
     }
     public ConnectionManager(String a){
-        String p="http://192.168.1.3/";
-        path=p+"android/services.php?action="+a;
+        path=ip+"android/services.php?action="+a;
     }
 
     public String getPath() {

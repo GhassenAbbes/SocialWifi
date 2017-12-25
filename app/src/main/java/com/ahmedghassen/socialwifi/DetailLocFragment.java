@@ -633,15 +633,7 @@ public class DetailLocFragment extends Fragment implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Object dataTransfer[] ;
-        //GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
-        dataTransfer = new Object[3];
-        String url = getDirectionsUrl();
-        GetDirectionsData getDirectionsData = new GetDirectionsData();
-        dataTransfer[0] = googleMap;
-        dataTransfer[1] = url;
-        dataTransfer[2] = new LatLng(end_latitude, end_longitude);
-        getDirectionsData.execute(dataTransfer);
+
         return false;
     }
 
