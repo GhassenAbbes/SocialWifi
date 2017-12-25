@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
@@ -40,6 +41,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -48,6 +51,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -87,6 +91,9 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
     WifiInfo wifiInfo;
     EditText pw;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private Boolean mLocationPermissionsGranted = false;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    Location currentLocation;
 
 
     public AddLocFragment() {
@@ -158,8 +165,8 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
                                         String uri = s + String.format("&desc=%1$s&pw=%2$s&lat=%3$s&lng=%4$s&img=%5$s&mac=%6$s",
                                                 ssid.getText().toString().replace(" ","_"),
                                                 pw.getText().toString(),
-                                                Double.toString(marky.getPosition().latitude),
-                                                Double.toString(marky.getPosition().longitude),
+                                                Double.toString(currentLocation.getLatitude()),
+                                                Double.toString(currentLocation.getLongitude()),
                                                 imagePath,
                                                 wifiInfo.getBSSID()
                                         );
@@ -509,15 +516,50 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
 
         // Move the camera to that position
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        if (mLocationPermissionsGranted) {
+            getDeviceLocation();
 
-        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(@NonNull LatLng point) {
-                MarkerOptions mark = new MarkerOptions().position(point);
-                marky = googleMap.addMarker(mark);
-
-
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
             }
-        });
+            mapboxMap.getUiSettings().setZoomControlsEnabled(true);
+
+            mapboxMap.setMyLocationEnabled(true);
+            mapboxMap.getUiSettings().setMyLocationButtonEnabled(true);
+        }
+        googleMap = mapboxMap;
+
+
     }
+
+    private void getDeviceLocation(){
+        Log.d(TAG, "getDeviceLocation: getting the devices current location");
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        try{
+            if(mLocationPermissionsGranted){
+
+                final Task location = mFusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        Log.d(TAG, "onComplete: found location!");
+                        currentLocation = (Location) task.getResult();
+
+                       /* moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                DEFAULT_ZOOM);*/
+
+                    }else{
+                        Log.d(TAG, "onComplete: current location is null");
+                        Toast.makeText(getContext(), "unable to get current location", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }catch (SecurityException e){
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+        }
+    }
+
 }

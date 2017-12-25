@@ -162,7 +162,7 @@ public class Map_Fragment extends Fragment implements
             }
         });
         Log.d("current location",currentLocation.getLatitude()+""+currentLocation.getLongitude());
-        origin= new LatLng( 36.170544, 10.170545*);
+        origin= new LatLng( 36.170544, 10.170545);
         destination = marker.getPosition();
         requestDirection();
 
@@ -528,6 +528,7 @@ public class Map_Fragment extends Fragment implements
             mapboxMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
             mapboxMap.setOnMarkerClickListener(this);
             mapboxMap.setOnInfoWindowClickListener(this);
+
             if (mLocationPermissionsGranted) {
                 getDeviceLocation();
 
