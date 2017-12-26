@@ -161,8 +161,10 @@ public class Map_Fragment extends Fragment implements
                 }
             }
         });
+        getDeviceLocation();
         Log.d("current location",currentLocation.getLatitude()+""+currentLocation.getLongitude());
-        origin= new LatLng( 36.170544, 10.170545);
+        //origin= new LatLng( 36.170544, 10.170545);
+        origin= new LatLng( currentLocation.getLatitude(),currentLocation.getLongitude());
         destination = marker.getPosition();
         requestDirection();
 
@@ -282,7 +284,7 @@ public class Map_Fragment extends Fragment implements
 
 
         //Mapbox.getInstance(getActivity().getApplicationContext(), getString(R.string.access_token));
-
+            CheckGooglePlayServices();
             mMapView = (MapView) root.findViewById(R.id.map);
 
             mMapView.onCreate(savedInstanceState);
@@ -509,7 +511,7 @@ public class Map_Fragment extends Fragment implements
 
 
     @Override
-    public void onMapReady(GoogleMap mapboxMap) {
+    public void onMapReady(GoogleMap mMap) {
 
 
 
@@ -523,11 +525,12 @@ public class Map_Fragment extends Fragment implements
                     .build();
 
             // Move the camera to that position
-            mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-            mapboxMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
-            mapboxMap.setOnMarkerClickListener(this);
-            mapboxMap.setOnInfoWindowClickListener(this);
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+        mMap.setOnMarkerClickListener(this);
+
+        mMap.setOnInfoWindowClickListener(this);
 
             if (mLocationPermissionsGranted) {
                 getDeviceLocation();
@@ -537,12 +540,12 @@ public class Map_Fragment extends Fragment implements
                         Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
-                mapboxMap.getUiSettings().setZoomControlsEnabled(true);
+                mMap.getUiSettings().setZoomControlsEnabled(true);
 
-                mapboxMap.setMyLocationEnabled(true);
-                mapboxMap.getUiSettings().setMyLocationButtonEnabled(true);
+                mMap.setMyLocationEnabled(true);
+                mMap.getUiSettings().setMyLocationButtonEnabled(true);
             }
-            googleMap = mapboxMap;
+            googleMap = mMap;
 
               fetchLocations();
 
@@ -710,6 +713,8 @@ public class Map_Fragment extends Fragment implements
     @Override
     public void onDirectionSuccess(Direction direction, String rawBody) {
         //Snackbar.make(btnRequestDirection, "Success with status : " + direction.getStatus(), Snackbar.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Searching for directions", Toast.LENGTH_SHORT).show();
+
         if (direction.isOK()) {
             Route route = direction.getRouteList().get(0);
             googleMap.addMarker(new MarkerOptions().position(origin));
@@ -722,6 +727,8 @@ public class Map_Fragment extends Fragment implements
             //btnRequestDirection.setVisibility(View.GONE);
         } else {
            // Snackbar.make(btnRequestDirection, direction.getStatus(), Snackbar.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "No directions found!", Toast.LENGTH_SHORT).show();
+
         }
     }
 

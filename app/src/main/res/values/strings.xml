@@ -5,8 +5,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="serverip">172.19.12.34</string>
-    <string name="facebook_app_id">1502334353182523</string>
+    <string name="serverip">192.168.1.4</string>
+    <string name="facebook_app_id">1758142487814095</string>
     <string name="fb_login_protocol_scheme">fb1502334353182523</string>
 
     <string name="access_token" translatable="false">sk.eyJ1IjoiYWhtZWRiaGQiLCJhIjoiY2phOGwxMXVrMDdkdjMzcW12bWxmN2hheiJ9.iQmq7wwYNkW6evHWGXE0WQ</string>

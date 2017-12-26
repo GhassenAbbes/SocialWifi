@@ -7,6 +7,7 @@ import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
@@ -32,30 +33,44 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.googledirection.DirectionCallback;
+import com.akexorcist.googledirection.GoogleDirection;
+import com.akexorcist.googledirection.constant.TransportMode;
+import com.akexorcist.googledirection.model.Direction;
+import com.akexorcist.googledirection.model.Route;
+import com.akexorcist.googledirection.util.DirectionConverter;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class FavouriteMapFragment extends Fragment implements
         OnMapReadyCallback ,
         GoogleMap.OnMarkerClickListener,
-        GoogleMap.OnInfoWindowClickListener
+        GoogleMap.OnInfoWindowClickListener,
+        DirectionCallback
 {
 
 
@@ -66,6 +81,20 @@ public class FavouriteMapFragment extends Fragment implements
     //SupportMapFragment mapFragment;
     MapView mapFragment;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+
+    private static final String TAG = "LocationPickerActivity";
+
+    private Boolean mLocationPermissionsGranted = false;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    Location currentLocation;
+    private String serverKey = "AIzaSyCw125M5v_sa7jtKYAdYFVXYASws5RPvT4";
+    private LatLng origin = new LatLng(37.7849569, -122.4068855);
+    private LatLng destination = new LatLng(37.7814432, -122.4460177);
+    MapView mMapView;
+    private GoogleMap googleMap;
+    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+
 
     public FavouriteMapFragment() {
         // Required empty public constructor
@@ -163,11 +192,11 @@ public class FavouriteMapFragment extends Fragment implements
 
 
 
-        mapFragment = (MapView) root.findViewById(R.id.mapfav);
-        mapFragment.onCreate(savedInstanceState);
+        mMapView = (MapView) root.findViewById(R.id.mapfav);
+        mMapView.onCreate(savedInstanceState);
 
 
-        mapFragment.getMapAsync(this);
+        mMapView.getMapAsync(this);
 
 
         return root;
@@ -346,7 +375,7 @@ public class FavouriteMapFragment extends Fragment implements
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap mMap) {
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(new LatLng(36.8984, 10.1897)) // set the camera's center position
                 .zoom(9)  // set the camera's zoom level
@@ -354,15 +383,31 @@ public class FavouriteMapFragment extends Fragment implements
                 .build();
 
         // Move the camera to that position
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
 
         LatLng sydney = new LatLng(Double.parseDouble(p.getLat()), Double.parseDouble(p.getLng()));
-        googleMap.addMarker(new MarkerOptions().position(sydney)
+        mMap.addMarker(new MarkerOptions().position(sydney)
                 .title(p.getDesc()+"/"+p.getId())
                 .snippet(p.getWifi_pass()));
+        if (mLocationPermissionsGranted) {
+            getDeviceLocation();
 
-        googleMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        }
+        mMap.setOnMarkerClickListener(this);
+
+        googleMap = mMap;
+
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
 
     }
 
@@ -393,9 +438,184 @@ public class FavouriteMapFragment extends Fragment implements
                 }
             }
         });
+
+        Log.d("current location",currentLocation.getLatitude()+""+currentLocation.getLongitude());
+        //origin= new LatLng( 36.170544, 10.170545);
+        origin= new LatLng( currentLocation.getLatitude(),currentLocation.getLongitude());
+        destination = marker.getPosition();
+        requestDirection();
         return false;
     }
 
+
+
+    private void getDeviceLocation(){
+        Log.d(TAG, "getDeviceLocation: getting the devices current location");
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        try{
+            if(mLocationPermissionsGranted){
+
+                final Task location = mFusedLocationProviderClient.getLastLocation();
+                location.addOnCompleteListener(task -> {
+                    if(task.isSuccessful()){
+                        Log.d(TAG, "onComplete: found location!");
+                        currentLocation = (Location) task.getResult();
+
+                       /* moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
+                                DEFAULT_ZOOM);*/
+
+                    }else{
+                        Log.d(TAG, "onComplete: current location is null");
+                        Toast.makeText(getContext(), "unable to get current location", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }catch (SecurityException e){
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+        }
+    }
+
+    private void moveCamera(LatLng latLng, float zoom){
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+    }
+
+    private void initMap(){
+        Log.d(TAG, "initMap: initializing map");
+        mMapView.getMapAsync(this);
+    }
+
+    private void getLocationPermission(){
+        Log.d(TAG, "getLocationPermission: getting location permissions");
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION};
+
+        if(ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            if(ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                mLocationPermissionsGranted = true;
+                initMap();
+            }else{
+                ActivityCompat.requestPermissions(getActivity(),
+                        permissions,
+                        LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        }else{
+            ActivityCompat.requestPermissions(getActivity(),
+                    permissions,
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+
+
+
+
+
+    private boolean CheckGooglePlayServices() {
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+        int result = googleAPI.isGooglePlayServicesAvailable(getActivity());
+        if(result != ConnectionResult.SUCCESS) {
+            if(googleAPI.isUserResolvableError(result)) {
+                googleAPI.getErrorDialog(getActivity(), result,
+                        0).show();
+            }
+            return false;
+        }
+        return true;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    public boolean checkLocationPermission(){
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Asking user if explanation is needed
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+                //Prompt the user once explanation has been shown
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    public void requestDirection() {
+        //Snackbar.make(btnRequestDirection, "Direction Requesting...", Snackbar.LENGTH_SHORT).show();
+        GoogleDirection.withServerKey(serverKey)
+                .from(origin)
+                .to(destination)
+                .transportMode(TransportMode.DRIVING)
+                .execute(this);
+    }
+
+    @Override
+    public void onDirectionSuccess(Direction direction, String rawBody) {
+        //Snackbar.make(btnRequestDirection, "Success with status : " + direction.getStatus(), Snackbar.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Searching for directions", Toast.LENGTH_SHORT).show();
+
+        if (direction.isOK()) {
+            Route route = direction.getRouteList().get(0);
+            googleMap.addMarker(new MarkerOptions().position(origin));
+            googleMap.addMarker(new MarkerOptions().position(destination));
+
+            ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
+            googleMap.addPolyline(DirectionConverter.createPolyline(getActivity(), directionPositionList, 5, Color.RED));
+            setCameraWithCoordinationBounds(route);
+
+            //btnRequestDirection.setVisibility(View.GONE);
+        } else {
+            // Snackbar.make(btnRequestDirection, direction.getStatus(), Snackbar.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "No directions found!", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    @Override
+    public void onDirectionFailure(Throwable t) {
+        //Snackbar.make(btnRequestDirection, t.getMessage(), Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void setCameraWithCoordinationBounds(Route route) {
+        LatLng southwest = route.getBound().getSouthwestCoordination().getCoordination();
+        LatLng northeast = route.getBound().getNortheastCoordination().getCoordination();
+        LatLngBounds bounds = new LatLngBounds(southwest, northeast);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+    }
 
 
 }

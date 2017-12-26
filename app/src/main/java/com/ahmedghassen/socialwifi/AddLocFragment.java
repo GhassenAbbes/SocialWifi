@@ -159,7 +159,7 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
                                         con = new ConnectionManager("addloc");
 
                                         queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-
+                                        getDeviceLocation();
                                         Log.d("Image Path ", imagePath);
                                         String s = con.getPath();
                                         String uri = s + String.format("&desc=%1$s&pw=%2$s&lat=%3$s&lng=%4$s&img=%5$s&mac=%6$s",
