@@ -70,8 +70,7 @@ public class FavouriteMapFragment extends Fragment implements
         OnMapReadyCallback ,
         GoogleMap.OnMarkerClickListener,
         GoogleMap.OnInfoWindowClickListener,
-        DirectionCallback
-{
+        DirectionCallback {
 
 
     ConnectionManager con;
@@ -79,7 +78,6 @@ public class FavouriteMapFragment extends Fragment implements
     private Gson gson;
     RequestQueue queue ;
     //SupportMapFragment mapFragment;
-    MapView mapFragment;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     private static final String TAG = "LocationPickerActivity";
@@ -173,6 +171,7 @@ public class FavouriteMapFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_favouritemap, null, false);
+        root.setScrollContainer(false);
 
         Bundle bundle = this.getArguments();
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -192,12 +191,12 @@ public class FavouriteMapFragment extends Fragment implements
 
 
 
-        mMapView = (MapView) root.findViewById(R.id.mapfav);
+        mMapView =  root.findViewById(R.id.mapfav);
         mMapView.onCreate(savedInstanceState);
 
 
-        mMapView.getMapAsync(this);
-
+        //mMapView.getMapAsync(this);
+        getLocationPermission();
 
         return root;
     }
@@ -390,6 +389,12 @@ public class FavouriteMapFragment extends Fragment implements
         mMap.addMarker(new MarkerOptions().position(sydney)
                 .title(p.getDesc()+"/"+p.getId())
                 .snippet(p.getWifi_pass()));
+
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+        mMap.setOnMarkerClickListener(this);
+
+        Log.d("mLocation", mLocationPermissionsGranted.toString());
         if (mLocationPermissionsGranted) {
             getDeviceLocation();
 
@@ -398,16 +403,14 @@ public class FavouriteMapFragment extends Fragment implements
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            mMap.getUiSettings().setZoomControlsEnabled(true);
 
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
         }
-        mMap.setOnMarkerClickListener(this);
+
 
         googleMap = mMap;
 
-        mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
 
     }
 
@@ -439,6 +442,7 @@ public class FavouriteMapFragment extends Fragment implements
             }
         });
 
+        getDeviceLocation();
         Log.d("current location",currentLocation.getLatitude()+""+currentLocation.getLongitude());
         //origin= new LatLng( 36.170544, 10.170545);
         origin= new LatLng( currentLocation.getLatitude(),currentLocation.getLongitude());
@@ -618,4 +622,24 @@ public class FavouriteMapFragment extends Fragment implements
     }
 
 
+
+    @Override
+    public void onResume() {
+        mMapView.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+
+        mMapView.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+
+        mMapView.onLowMemory();
+        super.onLowMemory();
+    }
 }

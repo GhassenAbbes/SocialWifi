@@ -176,7 +176,7 @@ public class DetailLocFragment extends Fragment implements
 
         mMapView =  root.findViewById(R.id.detmaplayout);
         mMapView.onCreate(savedInstanceState);
-        mMapView.getMapAsync(this);
+        //mMapView.getMapAsync(this);
         getLocationPermission();
 
         fab.setOnClickListener(v -> {
@@ -453,7 +453,7 @@ public class DetailLocFragment extends Fragment implements
             if(ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
                     COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
                 mLocationPermissionsGranted = true;
-               // initMap();
+                initMap();
             }else{
                 ActivityCompat.requestPermissions(getActivity(),
                         permissions,
@@ -629,6 +629,27 @@ public class DetailLocFragment extends Fragment implements
         LatLng northeast = route.getBound().getNortheastCoordination().getCoordination();
         LatLngBounds bounds = new LatLngBounds(southwest, northeast);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+    }
+
+
+    @Override
+    public void onResume() {
+        mMapView.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+
+        mMapView.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+
+        mMapView.onLowMemory();
+        super.onLowMemory();
     }
 }
 

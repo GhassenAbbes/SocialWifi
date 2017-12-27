@@ -264,17 +264,17 @@ public class Map_Fragment extends Fragment implements
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_map_, null, false);
         root.setScrollContainer(false);
-        FloatingActionButton fab = (FloatingActionButton) root.findViewById(R.id.fabadd);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        FloatingActionButton fab = root.findViewById(R.id.fabadd);
+        fab.setOnClickListener(view -> {
 
-                AddLocFragment addfrag = new AddLocFragment() ;
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.content_frame, addfrag, "init");
-                transaction.commit();
-            }
+            FragmentManager manager = getActivity().getSupportFragmentManager();
+            Fragment fragment = new AddLocFragment();
+
+
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.content_frame, fragment, "SC");
+            transaction.addToBackStack("fav");
+            transaction.commit();
         });
 
         con = new ConnectionManager("selectloc");
@@ -285,7 +285,7 @@ public class Map_Fragment extends Fragment implements
 
         //Mapbox.getInstance(getActivity().getApplicationContext(), getString(R.string.access_token));
             CheckGooglePlayServices();
-            mMapView = (MapView) root.findViewById(R.id.map);
+            mMapView =  root.findViewById(R.id.map);
 
             mMapView.onCreate(savedInstanceState);
             getLocationPermission();
@@ -529,7 +529,7 @@ public class Map_Fragment extends Fragment implements
 
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
         mMap.setOnMarkerClickListener(this);
-
+        mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setOnInfoWindowClickListener(this);
 
             if (mLocationPermissionsGranted) {
@@ -540,7 +540,7 @@ public class Map_Fragment extends Fragment implements
                         Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
-                mMap.getUiSettings().setZoomControlsEnabled(true);
+
 
                 mMap.setMyLocationEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -745,4 +745,25 @@ public class Map_Fragment extends Fragment implements
     }
 
 
+
+
+    @Override
+    public void onResume() {
+        mMapView.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+
+        mMapView.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+
+        mMapView.onLowMemory();
+        super.onLowMemory();
+    }
 }

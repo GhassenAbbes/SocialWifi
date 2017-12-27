@@ -76,12 +76,11 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
     private int GALLERY = 1, CAMERA = 2;
     EditText ssid;
 
-    String myurl = "http://172.19.12.34/AndroidUploadImage/uploadImage.php";
+    String myurl = new ConnectionManager().ip+"AndroidUploadImage/uploadImage.php";
     String imagePath="null";
     private static final String TAG = "LocationPickerActivity";
 
     private Gson gson;
-    private GoogleMap mapboxMap ;
     MapView mapFragment;
     ConnectionManager con;
     RequestQueue queue ;
@@ -95,7 +94,8 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
     private FusedLocationProviderClient mFusedLocationProviderClient;
     Location currentLocation;
     GoogleMap meMap;
-
+    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     public AddLocFragment() {
         // Required empty public constructor
     }
@@ -107,11 +107,12 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_add_loc, null, false);
+        root.setScrollContainer(false);
 
-        ssid = (EditText) root.findViewById(R.id.ssidadd);
-        pw = (EditText)root.findViewById(R.id.pwadd);
-        Button ajouter = (Button)root.findViewById(R.id.ajouter);
-        imageLoc = (ImageView) root.findViewById(R.id.addlocimage);
+        ssid = root.findViewById(R.id.ssidadd);
+        pw = root.findViewById(R.id.pwadd);
+        Button ajouter = root.findViewById(R.id.ajouter);
+        imageLoc =  root.findViewById(R.id.addlocimage);
         con = new ConnectionManager("selectloc");
         queue = Volley.newRequestQueue(getActivity().getApplicationContext());
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -123,11 +124,11 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
         imageLoc.setOnClickListener(v -> showPictureDialog());
 
 
-        mapFragment = (MapView) root.findViewById(R.id.addmaplayout);
+        mapFragment = root.findViewById(R.id.addmaplayout);
         mapFragment.onCreate(savedInstanceState);
 
-        mapFragment.getMapAsync(this);
-
+        //mapFragment.getMapAsync(this);
+        getLocationPermission();
 
           WifiManager mWifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (mWifiManager.isWifiEnabled()) {
@@ -138,7 +139,10 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
                     ssid.setText(wifiInfo.getSSID().replace("\"",""));
                     ajouter.setOnClickListener(v -> {
 
-                        if ( TextUtils.isEmpty(ssid.getText())||TextUtils.isEmpty(pw.getText())||marky==null)
+                        getDeviceLocation();
+                        Log.d("Image Path ",Double.toString(currentLocation.getLatitude()));
+
+                        if ( TextUtils.isEmpty(ssid.getText())||TextUtils.isEmpty(pw.getText()))
                             Toast.makeText(getActivity(),"You must complete the missing fields!",Toast.LENGTH_LONG).show();
                         else {
 
@@ -154,13 +158,16 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
                                 Log.d("OUr BSSID ", wifiInfo.getBSSID());
                                 if (ExistingBSSID(wifiInfo.getBSSID())==true) {
 
+
                                     if( connectToWifi(ssid.getText().toString(), pw.getText().toString()))
                                     {
                                         con = new ConnectionManager("addloc");
 
                                         queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-                                        getDeviceLocation();
+
+
                                         Log.d("Image Path ", imagePath);
+
                                         String s = con.getPath();
                                         String uri = s + String.format("&desc=%1$s&pw=%2$s&lat=%3$s&lng=%4$s&img=%5$s&mac=%6$s",
                                                 ssid.getText().toString().replace(" ","_"),
@@ -479,28 +486,8 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public static boolean isPermissionGranted(@NonNull String[] grantPermissions, @NonNull int[] grantResults,
-                                              @NonNull String permission) {
-        for (int i = 0; i < grantPermissions.length; i++) {
-            if (permission.equals(grantPermissions[i])) {
-                return grantResults[i] == PackageManager.PERMISSION_GRANTED;
-            }
-        }
-        return false;
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE:
-                if (isPermissionGranted(permissions, grantResults, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    //Do you work
-                } else {
-                    Toast.makeText(getContext(), "Can not proceed! i need permission" , Toast.LENGTH_SHORT).show();
-                }
-                break;
-        }
-    }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -516,6 +503,8 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
 
         // Move the camera to that position
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
         if (mLocationPermissionsGranted) {
             getDeviceLocation();
 
@@ -524,12 +513,12 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            googleMap.getUiSettings().setZoomControlsEnabled(true);
+
 
             googleMap.setMyLocationEnabled(true);
             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
         }
-        meMap = mapboxMap;
+        meMap = googleMap;
 
 
     }
@@ -562,4 +551,82 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+
+
+
+
+    private void initMap(){
+        Log.d(TAG, "initMap: initializing map");
+        mapFragment.getMapAsync(this);
+    }
+
+    private void getLocationPermission(){
+        Log.d(TAG, "getLocationPermission: getting location permissions");
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION};
+
+        if(ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            if(ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                mLocationPermissionsGranted = true;
+                initMap();
+            }else{
+                ActivityCompat.requestPermissions(getActivity(),
+                        permissions,
+                        LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        }else{
+            ActivityCompat.requestPermissions(getActivity(),
+                    permissions,
+                    LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG, "onRequestPermissionsResult: called.");
+        mLocationPermissionsGranted = false;
+
+        switch(requestCode){
+            case LOCATION_PERMISSION_REQUEST_CODE:{
+                if(grantResults.length > 0){
+                    for(int i = 0; i < grantResults.length; i++){
+                        if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
+                            mLocationPermissionsGranted = false;
+                            Log.d(TAG, "onRequestPermissionsResult: permission failed");
+                            return;
+                        }
+                    }
+                    Log.d(TAG, "onRequestPermissionsResult: permission granted");
+                    mLocationPermissionsGranted = true;
+                    //initialize our map
+                    initMap();
+                }
+            }
+        }
+    }
+
+
+
+    @Override
+    public void onResume() {
+        mapFragment.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+
+        mapFragment.onDestroy();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+
+        mapFragment.onLowMemory();
+        super.onLowMemory();
+    }
 }
