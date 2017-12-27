@@ -1,0 +1,72 @@
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="5dp"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Add WIFI"
+            android:textSize="30dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="5dp"/>
+
+        <ImageView
+            android:id="@+id/addlocimage_d"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:src="@drawable/photos"
+            android:layout_marginBottom="5dp"/>
+
+        <EditText
+            android:id="@+id/ssidadd_d"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:ems="10"
+            android:hint="SSID"
+            android:layout_gravity="center"
+            android:inputType="textPersonName"
+            android:layout_marginBottom="5dp"/>
+
+        <EditText
+            android:id="@+id/pwadd_d"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:ems="10"
+            android:hint="PASSWORD"
+            android:inputType="textPassword"
+            android:layout_marginBottom="5dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="5dp">
+
+        <Button
+                android:id="@+id/ajouter_d"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confime" />
+        <Button
+            android:id="@+id/canceladd_d"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
+    </LinearLayout>
+
+</LinearLayout>
+

@@ -113,8 +113,8 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
         pw = root.findViewById(R.id.pwadd);
         Button ajouter = root.findViewById(R.id.ajouter);
         imageLoc =  root.findViewById(R.id.addlocimage);
-        con = new ConnectionManager("selectloc");
-        queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+       /* con = new ConnectionManager("addloc");
+        queue = Volley.newRequestQueue(getActivity().getApplicationContext());*/
         GsonBuilder gsonBuilder = new GsonBuilder();
         //gsonBuilder.setDateFormat("M/d/yy hh:mm a");
         gson = gsonBuilder.create();
@@ -130,7 +130,7 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
         //mapFragment.getMapAsync(this);
         getLocationPermission();
 
-          WifiManager mWifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiManager mWifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         if (mWifiManager.isWifiEnabled()) {
             WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
             if (wifiInfo != null) {
