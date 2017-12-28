@@ -343,7 +343,8 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
                 String images = getStringImage(bitmap);
                 Log.i("Mynewsam",""+images);
                 param.put("image",images);
-                param.put("server",getString(R.string.serverip));
+                new ConnectionManager();
+                param.put("server", ConnectionManager.ip);
                 return param;
             }
         };

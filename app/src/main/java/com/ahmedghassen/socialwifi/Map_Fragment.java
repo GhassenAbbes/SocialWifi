@@ -155,7 +155,8 @@ public class Map_Fragment extends Fragment implements
     private LatLng destination = new LatLng(37.7814432, -122.4460177);
     GsonBuilder gsonBuilder;
     // ADD LOCATION VARIABLES
-    String myurl = new ConnectionManager().ip+"AndroidUploadImage/uploadImage.php";
+
+    String myurl = con.ip+"AndroidUploadImage/uploadImage.php";
     String imagePath="null";
 
     /////////////////////////////
@@ -198,12 +199,12 @@ public class Map_Fragment extends Fragment implements
         private LayoutInflater inflater=null;
 
         @Override
-        public View getInfoWindow(Marker marker) {
+        public View getInfoContents(Marker marker) {
             return null;
         }
 
         @Override
-        public View getInfoContents(Marker marker) {
+        public View getInfoWindow(Marker marker) {
 
             String ch="";
             String d="";
@@ -220,13 +221,13 @@ public class Map_Fragment extends Fragment implements
                 popup = getLayoutInflater().inflate(R.layout.custom_infowindow, null);
                 popup.setClickable(true);
                 // Getting reference to the TextView to set latitude
-                TextView wifiTxt = (TextView) popup.findViewById(R.id.titleWifi);
+                TextView wifiTxt = popup.findViewById(R.id.titleWifi);
                 wifiTxt.setText(d);
 
-                TextView passTxt = (TextView) popup.findViewById(R.id.passworWifi);
+                TextView passTxt = popup.findViewById(R.id.passworWifi);
                 passTxt.setText(marker.getSnippet());
 
-                ImageView heart = (ImageView)popup.findViewById(R.id.addfavourite);
+                ImageView heart = popup.findViewById(R.id.addfavourite);
 
                 loca = listlocations.get(Integer.valueOf(indexloc));
 
@@ -235,7 +236,7 @@ public class Map_Fragment extends Fragment implements
 
                 });
 
-                ImageView imgWifi = (ImageView)popup.findViewById(R.id.clientPic);
+                ImageView imgWifi = popup.findViewById(R.id.clientPic);
 
                 imgWifi.setClickable(true);
                 imgWifi.setOnClickListener(v -> {
@@ -243,7 +244,7 @@ public class Map_Fragment extends Fragment implements
 
                 });
 
-                Button connect = (Button)popup.findViewById(R.id.toconnect);
+                Button connect = popup.findViewById(R.id.toconnect);
                 connect.setOnClickListener(v -> {
 
                     if (ContextCompat.checkSelfPermission(getActivity(),
@@ -998,7 +999,8 @@ public class Map_Fragment extends Fragment implements
                 String images = getStringImage(bitmap);
                 Log.i("Mynewsam",""+images);
                 param.put("image",images);
-                param.put("server",getString(R.string.serverip));
+                new ConnectionManager();
+                param.put("server",ConnectionManager.ip);
                 return param;
             }
         };

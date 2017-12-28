@@ -154,7 +154,7 @@ public class DetailLocFragment extends Fragment implements
 
         ssid.setText(p.getDesc());
         pw.setText(p.getWifi_pass());
-        ImageView imgWifi = (ImageView)root.findViewById(R.id.detlocimg);
+        ImageView imgWifi = root.findViewById(R.id.detlocimg);
         Picasso.with(getActivity())
                 .load(p.getImg())
                 .into(imgWifi);
