@@ -12,22 +12,23 @@ import java.util.List;
  * Created by ESPRIT on 09/12/2017.
  */
 
-public class LocationsBDD  {
-    private static final int VERSION_BDD = 2;
-    private static final String NAME_BDD = "locations.db";
+public class FavouritesBDD {
+    private static final int VERSION_BDD = 1;
+    private static final String NAME_BDD = "favourites.db";
 
     private SQLiteDatabase bdd;
     Context context;
-    private DBHelper DbHelper;
+    private FavDBHelper favDbHelper;
 
-    public LocationsBDD(Context context) {
+    public FavouritesBDD(Context context) {
         super();
-        DbHelper = new DBHelper(context, NAME_BDD, null, VERSION_BDD);
-    }
-    public void open(){
-        bdd = DbHelper.getWritableDatabase();
+        favDbHelper = new FavDBHelper(context, NAME_BDD, null, VERSION_BDD);
     }
 
+
+    public void open(){
+        bdd = favDbHelper.getWritableDatabase();
+    }
     public void close(){
         bdd.close();
     }

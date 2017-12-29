@@ -20,6 +20,8 @@ import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -112,7 +114,6 @@ public class FavouriteMapFragment extends Fragment implements
         @Override
         public View getInfoContents(Marker marker) {
 
-            View popup = null;
             String ch = marker.getTitle();
             String d = ch.substring(0,ch.indexOf("/"));
             String idloc = ch.substring(ch.indexOf("/")+1,ch.length());
@@ -131,33 +132,11 @@ public class FavouriteMapFragment extends Fragment implements
                 TextView passTxt = (TextView) popup.findViewById(R.id.passworWifi);
                 passTxt.setText(marker.getSnippet());
 
-                ImageView heart = (ImageView)popup.findViewById(R.id.addfavourite);
-                Button connect = (Button)popup.findViewById(R.id.toconnect);
-                connect.setOnClickListener(v -> {
 
-                    if (ContextCompat.checkSelfPermission(getActivity(),
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED
-                            &&
-                            ContextCompat.checkSelfPermission(getActivity(),
-                                    Manifest.permission.ACCESS_COARSE_LOCATION)
-                                    != PackageManager.PERMISSION_GRANTED) {
-                        askForLocationPermissions();
-                    } else {
-
-                        if (ExistingBSSID(wifiTxt.getText().toString())==true) {
-                            Toast.makeText(getContext(), "Wifi Connected :" +
-                                    connectToWifi(wifiTxt.getText().toString(), passTxt.getText().toString()), Toast.LENGTH_LONG).show();
-                        }else{
-                            Toast.makeText(getContext(),"Invailed Wifi",Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                });
-                heart.setOnClickListener(v -> {
+               /* heart.setOnClickListener(v -> {
                     DelFavourite(idloc);
 
-                });
+                });*/
 
             } catch (Exception ev) {
                 System.out.print(ev.getMessage());
@@ -201,8 +180,29 @@ public class FavouriteMapFragment extends Fragment implements
         return root;
     }
 
+    @Override
+    public void onInfoWindowClick(Marker marker) {
 
-    private void DelFavourite(String id){
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                &&
+                ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            askForLocationPermissions();
+        } else {
+
+            if (ExistingBSSID(p.getSsid())==true) {
+                Toast.makeText(getContext(), "Wifi Connected :" +
+                        connectToWifi(p.getSsid(), p.getWifi_pass()), Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(getContext(),"Invailed Wifi",Toast.LENGTH_LONG).show();
+            }
+        }
+
+    }
+    /*private void DelFavourite(String id){
 
         con = new ConnectionManager("delfavourite");
 
@@ -227,7 +227,7 @@ public class FavouriteMapFragment extends Fragment implements
         queue.add(myReq);
         Log.d("requet",myReq.toString());
 
-    }
+    }*/
 
 
 
@@ -303,7 +303,7 @@ public class FavouriteMapFragment extends Fragment implements
 
         for (ScanResult wifiInfo:mScanResults){
             Log.d("Wifi ssid : ", wifiInfo.SSID);
-            if (wifiInfo.SSID.equals(BSSID))
+            if (wifiInfo.BSSID.equals(BSSID))
                 return true;
         }
 
@@ -387,7 +387,7 @@ public class FavouriteMapFragment extends Fragment implements
 
         LatLng sydney = new LatLng(Double.parseDouble(p.getLat()), Double.parseDouble(p.getLng()));
         mMap.addMarker(new MarkerOptions().position(sydney)
-                .title(p.getDesc()+"/"+p.getId())
+                .title(p.getSsid()+"/"+p.getId())
                 .snippet(p.getWifi_pass()));
 
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -414,10 +414,7 @@ public class FavouriteMapFragment extends Fragment implements
 
     }
 
-    @Override
-    public void onInfoWindowClick(Marker marker) {
 
-    }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -594,8 +591,8 @@ public class FavouriteMapFragment extends Fragment implements
 
         if (direction.isOK()) {
             Route route = direction.getRouteList().get(0);
-            googleMap.addMarker(new MarkerOptions().position(origin));
-            googleMap.addMarker(new MarkerOptions().position(destination));
+            /*googleMap.addMarker(new MarkerOptions().position(origin));
+            googleMap.addMarker(new MarkerOptions().position(destination));*/
 
             ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
             googleMap.addPolyline(DirectionConverter.createPolyline(getActivity(), directionPositionList, 5, Color.RED));

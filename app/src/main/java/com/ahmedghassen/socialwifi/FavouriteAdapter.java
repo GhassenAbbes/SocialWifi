@@ -40,7 +40,7 @@ public class FavouriteAdapter extends ArrayAdapter<LocationWifi> {
         ImageView tvHome = (ImageView) convertView.findViewById(R.id.favimg);
 
         // Populate the data into the template view using the data object
-        tvdesc.setText(p.getDesc());
+        tvdesc.setText(p.getSsid());
         //tvHome.setImageResource(p.imageressource);
         tvpw.setText(p.getWifi_pass());
         // Return the completed view to render on screen

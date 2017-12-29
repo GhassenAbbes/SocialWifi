@@ -114,7 +114,7 @@ public class ListViewAdapter extends BaseSwipeAdapter {
         ImageView tvHome = (ImageView) convertView.findViewById(R.id.favimg_s);
 
         // Populate the data into the template view using the data object
-        tvdesc.setText(p.getDesc());
+        tvdesc.setText(p.getSsid());
         //tvHome.setImageResource(p.imageressource);
         tvpw.setText(p.getWifi_pass());
     }

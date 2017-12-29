@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
+
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity
@@ -61,7 +62,8 @@ public class MainActivity extends AppCompatActivity
         View hView =  navigationView.getHeaderView(0);
 
         SharedPreferences prefs = getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);;
-
+        /*SuperActivityToast.create(this, "Hello world!", SuperToast.Duration.LONG,
+                Style.getStyle(Style.GREEN, SuperToast.Animations.FLYIN)).show();*/
         Log.d("MainActivity", "Acces Tokken : "+prefs.getString("fb_access_token",null)+
                 "\n Shared Name : "+prefs.getString("fb_first_name",null)+
                 "\nLast Name : "+prefs.getString("fb_last_name",null)+

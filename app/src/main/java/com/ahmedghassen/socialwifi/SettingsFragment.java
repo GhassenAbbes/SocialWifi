@@ -38,10 +38,16 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.util.Attributes;
+import com.github.johnpersano.supertoasts.SuperCardToast;
+import com.github.johnpersano.supertoasts.SuperToast;
+
+import com.github.johnpersano.supertoasts.util.Style;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,8 +58,7 @@ public class SettingsFragment extends Fragment {
     RequestQueue queue ;
 
      ListView list;
-    List<LocationWifi> listlocations;
-    LocationsBDD locBDD;
+    FavouritesBDD locBDD;
     private ListViewAdapter mAdapter;
     private Context mContext = getContext();
     GsonBuilder gsonBuilder = new GsonBuilder();
@@ -98,34 +103,27 @@ public class SettingsFragment extends Fragment {
         if (isNetworkAvailable()) {
             fetchLocations(uri);
         } else {
-            locBDD = new LocationsBDD(getActivity().getApplicationContext());
+            Toast.makeText(getContext(), "No Network Available", Toast.LENGTH_LONG).show();
+
+            locBDD = new FavouritesBDD(getActivity().getApplicationContext());
             locBDD.open();
-            listlocations = locBDD.selectAll();
+            List<LocationWifi>listlocations = locBDD.selectAll();
+            locBDD.close();
+/*
             ArrayList<LocationWifi> plist = new ArrayList<>(listlocations);
-            FavouriteAdapter adapter = new FavouriteAdapter(getContext(), plist);
+*/
+            Log.d("offline list favs",listlocations.toString());
 
-            /*list.setAdapter(adapter);
-            list.setClickable(true);
-            list.setOnItemClickListener((parent, view1, position, id) -> {
-                Object o = list.getItemAtPosition(position);
-                view1.setBackgroundColor(Color.DKGRAY);
+            /*SuperActivityToast.create(getActivity(), new Style(), Style.TYPE_BUTTON)
+                    .setButtonText("UNDO")
 
-                LocationWifi ch = (LocationWifi)o;
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                Fragment fragment = new FavouriteMapFragment();
-                Bundle bundle2 = new Bundle();
-                bundle2.putString("myObject", new Gson().toJson(ch));
-
-                fragment.setArguments(bundle2);
-
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.content_frame, fragment, "SC");
-                transaction.addToBackStack("fav");
-                transaction.commit();
-                Log.d("favourite",ch.toString());
-
-            });*/
-
+                    .setProgressBarColor(Color.WHITE)
+                    .setText("Email deleted")
+                    .setDuration(Style.DURATION_LONG)
+                    .setFrame(Style.FRAME_LOLLIPOP)
+                    .setColor(PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_PURPLE))
+                    .setAnimations(Style.ANIMATIONS_POP).show();
+*/
             mAdapter = new ListViewAdapter(getContext(),listlocations,getActivity().getSupportFragmentManager());
             list.setAdapter(mAdapter);
             mAdapter.setMode(Attributes.Mode.Single);
@@ -138,6 +136,8 @@ public class SettingsFragment extends Fragment {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                     Toast.makeText(mContext, "OnItemLongClickListener", Toast.LENGTH_SHORT).show();
+                    SuperToast.create(getActivity().getApplication().getApplicationContext(), "Hello world!", SuperToast.Duration.LONG,
+                            Style.getStyle(Style.GREEN, SuperToast.Animations.FLYIN)).show();
                     return true;
                 }
             });
@@ -181,9 +181,10 @@ public class SettingsFragment extends Fragment {
             //String ch=response;
              String ch=response;
             // mMapView.onResume();
-            listlocations = Arrays.asList(gson.fromJson(ch, LocationWifi[].class));
+            Type listType = new TypeToken<ArrayList<LocationWifi>>(){}.getType();
+            List<LocationWifi> listlocations = new Gson().fromJson(ch, listType);
 
-            locBDD = new LocationsBDD(getActivity().getApplicationContext());
+            locBDD = new FavouritesBDD(getActivity().getApplicationContext());
             locBDD.open();
             locBDD.removeAllLocations();
             for ( LocationWifi l : listlocations) {
@@ -229,7 +230,16 @@ public class SettingsFragment extends Fragment {
             list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    Toast.makeText(mContext, "OnItemLongClickListener", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "OnItemLongClickListener", Toast.LENGTH_SHORT).show();
+                    /*SuperToast(getActivity())
+                            .setText("SuperToast")
+                            .setDuration(AttributeUtils.getDuration(getActivity()))
+                            .setFrame(AttributeUtils.getFrame(getActivity()))
+                            .setColor(AttributeUtils.getColor(getActivity()))
+                            .setAnimations(AttributeUtils.getAnimations(getActivity()))
+                            .setColor(AttributeUtils.getColor(getActivity())).show();
+*/
+
                     return true;
                 }
             });

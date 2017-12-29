@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:src="@drawable/photos"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="10dp"
+            />
 
         <TextView
             android:id="@+id/ssiddet"
@@ -26,6 +27,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:layout_gravity="center"
+            android:textSize="20dp"
             android:layout_marginBottom="5dp"/>
 
         <TextView
@@ -33,15 +35,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-
+            android:layout_gravity="center"
+            android:textSize="20dp"
             android:layout_marginBottom="5dp"/>
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/detmaplayout"
-            android:layout_width="match_parent"
+            android:layout_width="250dp"
             android:layout_height="250dp"
-
+            android:layout_gravity="center"
             />
+
+        <Button
+            android:id="@+id/toconnect"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFC300"
+            android:background="@drawable/com_facebook_tooltip_black_background"
+            android:text="Connect"
+            android:layout_gravity="center"/>
 
 
     </LinearLayout>
@@ -54,11 +67,11 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_menu_add" />
 
-    <android.support.design.widget.FloatingActionButton
+    <!--<android.support.design.widget.FloatingActionButton
         android:id="@+id/cnctwifi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/arrow_down_float" />
+        app:srcCompat="@android:drawable/arrow_down_float" />-->
 </FrameLayout>

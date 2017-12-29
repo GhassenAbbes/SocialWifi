@@ -7,10 +7,10 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class LocationWifi {
-    @SerializedName("id_loc")
+
     private int id_loc;
     @SerializedName("desc_loc")
-    private String desc;
+    private String ssid;
     private String wifi_pass;
     private String lat;
     private String lng;
@@ -24,8 +24,8 @@ public class LocationWifi {
         return id_loc;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getSsid() {
+        return ssid;
     }
 
     public String getWifi_pass() {
@@ -56,8 +56,8 @@ public class LocationWifi {
         this.id_loc = id;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setSsid(String ssid) {
+        this.ssid = ssid;
     }
 
     public void setWifi_pass(String wifi_pass) {
@@ -83,7 +83,7 @@ public class LocationWifi {
     public String toString() {
         return "LocationWifi{" +
                 "id_loc=" + id_loc +
-                ", desc='" + desc + '\'' +
+                ", desc='" + ssid + '\'' +
                 ", wifi_pass='" + wifi_pass + '\'' +
                 ", lat='" + lat + '\'' +
                 ", lng='" + lng + '\'' +

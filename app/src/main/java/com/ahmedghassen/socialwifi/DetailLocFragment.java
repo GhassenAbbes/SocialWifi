@@ -137,6 +137,8 @@ public class DetailLocFragment extends Fragment implements
         }
         p= new Gson().fromJson(jsonMyObject, LocationWifi.class);
 
+        Log.d("detail location",p.toString());
+
         end_latitude = Double.parseDouble(p.getLat());
         end_longitude =  Double.parseDouble(p.getLng());
 
@@ -146,19 +148,41 @@ public class DetailLocFragment extends Fragment implements
         TextView ssid =  root.findViewById(R.id.ssiddet);
         TextView pw = root.findViewById(R.id.pwdet);
         FloatingActionButton fab = root.findViewById(R.id.fabdet);
-        FloatingActionButton connecttowifi =root.findViewById(R.id.cnctwifi);
+       // FloatingActionButton connecttowifi =root.findViewById(R.id.cnctwifi);
 
-        con = new ConnectionManager("selectloc");
-        queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+       /* con = new ConnectionManager("selectloc");
+        queue = Volley.newRequestQueue(getActivity().getApplicationContext());*/
         //gsonBuilder.setDateFormat("M/d/yy hh:mm a");
 
-        ssid.setText(p.getDesc());
+        ssid.setText(p.getSsid());
         pw.setText(p.getWifi_pass());
         ImageView imgWifi = root.findViewById(R.id.detlocimg);
         Picasso.with(getActivity())
                 .load(p.getImg())
                 .into(imgWifi);
 
+        Button connect = root.findViewById(R.id.toconnect);
+        connect.setOnClickListener(v -> {
+
+            if (ContextCompat.checkSelfPermission(getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED
+                    &&
+                    ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.ACCESS_COARSE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                askForLocationPermissions();
+            } else {
+
+                if (ExistingBSSID(p.getMac())==true) {
+                    Toast.makeText(getContext(), "Wifi Connected :" +
+                            connectToWifi(ssid.getText().toString(), pw.getText().toString()), Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(getContext(),"Invailed Wifi",Toast.LENGTH_LONG).show();
+                }
+            }
+
+        });
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -188,27 +212,7 @@ public class DetailLocFragment extends Fragment implements
                 transaction.commit();
 
         });
-        connecttowifi.setOnClickListener(v -> {
 
-            if (ContextCompat.checkSelfPermission(getActivity(),
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED
-                    &&
-                    ContextCompat.checkSelfPermission(getActivity(),
-                            Manifest.permission.ACCESS_COARSE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED) {
-                askForLocationPermissions();
-            } else {
-
-                if (ExistingBSSID(p.getMac())==true) {
-                    Toast.makeText(getContext(), "Wifi Connected :" +
-                            connectToWifi(ssid.getText().toString(), pw.getText().toString()), Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(getContext(),"Invailed Wifi",Toast.LENGTH_LONG).show();
-                }
-            }
-
-        });
         return root;
     }
 
@@ -604,8 +608,8 @@ public class DetailLocFragment extends Fragment implements
 
         if (direction.isOK()) {
             Route route = direction.getRouteList().get(0);
-            googleMap.addMarker(new MarkerOptions().position(origin));
-            googleMap.addMarker(new MarkerOptions().position(destination));
+            /*googleMap.addMarker(new MarkerOptions().position(origin));
+            googleMap.addMarker(new MarkerOptions().position(destination));*/
 
             ArrayList<LatLng> directionPositionList = route.getLegList().get(0).getDirectionPoint();
             googleMap.addPolyline(DirectionConverter.createPolyline(getActivity(), directionPositionList, 5, Color.RED));
@@ -622,6 +626,8 @@ public class DetailLocFragment extends Fragment implements
     @Override
     public void onDirectionFailure(Throwable t) {
         //Snackbar.make(btnRequestDirection, t.getMessage(), Snackbar.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "No directions found!", Toast.LENGTH_SHORT).show();
+
     }
 
     private void setCameraWithCoordinationBounds(Route route) {
