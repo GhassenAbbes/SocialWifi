@@ -1,5 +1,6 @@
 package com.ahmedghassen.socialwifi;
 
+import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -8,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -15,8 +17,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,12 +29,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ahmedghassen.socialwifi.Adapters.ListViewAdapter;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.util.Attributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -43,12 +50,14 @@ import java.util.List;
 public class SettingsFragment extends Fragment {
     ConnectionManager con;
     RequestQueue queue ;
-    private Gson gson;
+
      ListView list;
-     int  frame;
     List<LocationWifi> listlocations;
     LocationsBDD locBDD;
-
+    private ListViewAdapter mAdapter;
+    private Context mContext = getContext();
+    GsonBuilder gsonBuilder = new GsonBuilder();
+    private Gson gson = gsonBuilder.create();
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -59,15 +68,19 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ;
 
-        list = (ListView) view.findViewById(R.id.flistfav);
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            frame = bundle.getInt("container");
+        list = view.findViewById(R.id.flistfav);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            ActionBar actionBar = getActivity().getActionBar();
+            if (actionBar != null) {
+                actionBar.setTitle("Favourites");
+            }
         }
+
 
 
         con = new ConnectionManager("selectfav");
         queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+
 
 
         SharedPreferences prefs = getActivity().getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);
@@ -90,7 +103,8 @@ public class SettingsFragment extends Fragment {
             listlocations = locBDD.selectAll();
             ArrayList<LocationWifi> plist = new ArrayList<>(listlocations);
             FavouriteAdapter adapter = new FavouriteAdapter(getContext(), plist);
-            list.setAdapter(adapter);
+
+            /*list.setAdapter(adapter);
             list.setClickable(true);
             list.setOnItemClickListener((parent, view1, position, id) -> {
                 Object o = list.getItemAtPosition(position);
@@ -105,11 +119,50 @@ public class SettingsFragment extends Fragment {
                 fragment.setArguments(bundle2);
 
                 FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(frame, fragment, "SC");
+                transaction.replace(R.id.content_frame, fragment, "SC");
                 transaction.addToBackStack("fav");
                 transaction.commit();
                 Log.d("favourite",ch.toString());
 
+            });*/
+
+            mAdapter = new ListViewAdapter(getContext(),listlocations,getActivity().getSupportFragmentManager());
+            list.setAdapter(mAdapter);
+            mAdapter.setMode(Attributes.Mode.Single);
+            list.setOnItemClickListener((parent, view1, position, id) -> ((SwipeLayout)(list.getChildAt(position - list.getFirstVisiblePosition()))).open(true));
+            list.setOnTouchListener((v, event) -> {
+                Log.e("ListView", "OnTouch");
+                return false;
+            });
+            list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(mContext, "OnItemLongClickListener", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
+            list.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    Log.e("ListView", "onScrollStateChanged");
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                }
+            });
+
+            list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Log.e("ListView", "onItemSelected:" + position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    Log.e("ListView", "onNothingSelected:");
+                }
             });
         }
 
@@ -126,9 +179,10 @@ public class SettingsFragment extends Fragment {
         @Override
         public void onResponse(String response) {
             //String ch=response;
-            listlocations = Arrays.asList(gson.fromJson(response, LocationWifi[].class));
-            /*Log.i("PostActivity", listlocations.size() + " posts loaded.");
-            Log.d("string ",ch);*/
+             String ch=response;
+            // mMapView.onResume();
+            listlocations = Arrays.asList(gson.fromJson(ch, LocationWifi[].class));
+
             locBDD = new LocationsBDD(getActivity().getApplicationContext());
             locBDD.open();
             locBDD.removeAllLocations();
@@ -137,34 +191,70 @@ public class SettingsFragment extends Fragment {
             }
             locBDD.close();
 
-            ArrayList<LocationWifi> plist = new ArrayList<>(listlocations);
-            FavouriteAdapter adapter = new FavouriteAdapter(getContext(), plist);
-            list.setAdapter(adapter);
+
+            Log.d("string fev ",ch);
+
+            Log.d("list fev ",listlocations.toString());
+
+            /*list.setAdapter(adapter);
             list.setClickable(true);
-            list.setOnItemClickListener(new  AdapterView.OnItemClickListener() {
+            list.setOnItemClickListener((parent, view, position, id) -> {
+                Object o = list.getItemAtPosition(position);
+                view.setBackgroundColor(Color.DKGRAY);
 
+                LocationWifi ch = (LocationWifi)o;
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                Fragment fragment = new FavouriteMapFragment();
+                Bundle bundle2 = new Bundle();
+                bundle2.putString("myObject", new Gson().toJson(ch));
+
+                fragment.setArguments(bundle2);
+
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.content_frame, fragment, "SC");
+                transaction.addToBackStack("fav");
+                transaction.commit();
+                Log.d("favourite",ch.toString());
+
+            });*/
+
+            mAdapter = new ListViewAdapter(getContext(),listlocations,getActivity().getSupportFragmentManager());
+            list.setAdapter(mAdapter);
+            mAdapter.setMode(Attributes.Mode.Single);
+            list.setOnItemClickListener((parent, view1, position, id) -> ((SwipeLayout)(list.getChildAt(position - list.getFirstVisiblePosition()))).open(true));
+            list.setOnTouchListener((v, event) -> {
+                Log.e("ListView", "OnTouch");
+                return false;
+            });
+            list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Object o = list.getItemAtPosition(position);
-                    view.setBackgroundColor(Color.DKGRAY);
-
-                    LocationWifi ch = (LocationWifi)o;
-                    FragmentManager manager = getActivity().getSupportFragmentManager();
-                    Fragment fragment = new FavouriteMapFragment();
-                    Bundle bundle2 = new Bundle();
-                    bundle2.putString("myObject", new Gson().toJson(ch));
-
-                    fragment.setArguments(bundle2);
-
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(frame, fragment, "SC");
-                    transaction.addToBackStack("fav");
-                    transaction.commit();
-                    Log.d("favourite",ch.toString());
-
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(mContext, "OnItemLongClickListener", Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
+            list.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                    Log.e("ListView", "onScrollStateChanged");
                 }
 
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
+                }
+            });
+
+            list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Log.e("ListView", "onItemSelected:" + position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    Log.e("ListView", "onNothingSelected:");
+                }
             });
 
         }

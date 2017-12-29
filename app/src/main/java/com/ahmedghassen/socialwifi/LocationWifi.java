@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class LocationWifi {
     @SerializedName("id_loc")
-    private int id;
+    private int id_loc;
     @SerializedName("desc_loc")
     private String desc;
     private String wifi_pass;
@@ -21,7 +21,7 @@ public class LocationWifi {
     }
 
     public int getId() {
-        return id;
+        return id_loc;
     }
 
     public String getDesc() {
@@ -53,7 +53,7 @@ public class LocationWifi {
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.id_loc = id;
     }
 
     public void setDesc(String desc) {
@@ -82,7 +82,7 @@ public class LocationWifi {
     @Override
     public String toString() {
         return "LocationWifi{" +
-                "id=" + id +
+                "id_loc=" + id_loc +
                 ", desc='" + desc + '\'' +
                 ", wifi_pass='" + wifi_pass + '\'' +
                 ", lat='" + lat + '\'' +

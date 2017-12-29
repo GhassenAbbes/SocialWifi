@@ -118,26 +118,16 @@ public class Map_Fragment extends Fragment implements
     private static final String TAG = "LocationPickerActivity";
     String ch="";
     private Gson gson;
-    static final String TAG_ERROR_DIALOG_FRAGMENT = "errorDialog";
-    private static final String STATE_IN_PERMISSION = "inPermission";
-    private static final int REQUEST_PERMS = 1337;
-    private boolean needsInit = false;
-    private boolean isInPermission = false;
-    //GoogleMap m;
 
-    //private Mapbox mapView;
-   // private com.mapbox.mapboxsdk.annotations.Marker droppedMarker;
+
     MapView mMapView;
     private GoogleMap googleMap;
 
-    private ImageView hoveringMarker;
     Dialog dialog ;
-    Marker marky;
     ConnectionManager con;
     RequestQueue queue ;
-    //SupportMapFragment mapFragment;
+    GsonBuilder gsonBuilder;
 
-    String indexloc="";
     List<LocationWifi> listlocations;
     LocationWifi loca = new LocationWifi();
 
@@ -153,7 +143,6 @@ public class Map_Fragment extends Fragment implements
     private String serverKey = "AIzaSyCw125M5v_sa7jtKYAdYFVXYASws5RPvT4";
     private LatLng origin = new LatLng(37.7849569, -122.4068855);
     private LatLng destination = new LatLng(37.7814432, -122.4460177);
-    GsonBuilder gsonBuilder;
     // ADD LOCATION VARIABLES
 
     String myurl = con.ip+"AndroidUploadImage/uploadImage.php";
@@ -212,7 +201,7 @@ public class Map_Fragment extends Fragment implements
             ch = marker.getTitle();
             d = ch.substring(0, ch.indexOf("/"));
             String indexloc = ch.substring(ch.indexOf("/") + 1, ch.length());
-            Log.d("Strings", d + "   " + indexloc);
+            //Log.d("Strings", d + "   " + indexloc);
 
 
             try {
@@ -361,7 +350,7 @@ public class Map_Fragment extends Fragment implements
                                                 if( connectToWifi(ssid.getText().toString(), pw.getText().toString()))
                                                 {
                                                     getDeviceLocation();
-                                                    Log.d("Image Path ",Double.toString(currentLocation.getLatitude()));
+                                                    Log.d("currentLocation",Double.toString(currentLocation.getLatitude()));
 
                                                     con = new ConnectionManager("addloc");
 
@@ -456,10 +445,10 @@ public class Map_Fragment extends Fragment implements
         @Override
         public void onResponse(String response) {
              ch=response;
-            mMapView.onResume();
+           // mMapView.onResume();
              listlocations = Arrays.asList(gson.fromJson(ch, LocationWifi[].class));
-            Log.i("PostActivity", listlocations.size() + " posts loaded.");
-            Log.d("string ",ch);
+
+            Log.d("string ",listlocations.toString());
 
             int i =0;
             for (LocationWifi loc : listlocations) {

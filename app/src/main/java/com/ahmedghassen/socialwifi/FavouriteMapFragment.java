@@ -376,7 +376,7 @@ public class FavouriteMapFragment extends Fragment implements
     @Override
     public void onMapReady(GoogleMap mMap) {
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(36.8984, 10.1897)) // set the camera's center position
+                .target(new LatLng(Double.parseDouble(p.getLat()), Double.parseDouble(p.getLng()))) // set the camera's center position
                 .zoom(9)  // set the camera's zoom level
                 .tilt(20)  // set the camera's tilt
                 .build();
