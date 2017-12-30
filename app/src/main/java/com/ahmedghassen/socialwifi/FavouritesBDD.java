@@ -13,7 +13,7 @@ import java.util.List;
  */
 
 public class FavouritesBDD {
-    private static final int VERSION_BDD = 1;
+    private static final int VERSION_BDD = 2;
     private static final String NAME_BDD = "favourites.db";
 
     private SQLiteDatabase bdd;
@@ -39,7 +39,7 @@ public class FavouritesBDD {
 
     public long insertTop(LocationWifi wifi){
         Cursor cursor = bdd.rawQuery("select max("+ FavDBHelper.ID_LOC+") from "+ FavDBHelper.TABLE_LOCATIONS, null);
-        if (cursor.moveToFirst()) wifi.setId(cursor.getInt(0)+1);
+        if (cursor.moveToFirst()) wifi.setId((cursor.getInt(0)+1));
         else wifi.setId(1);
 
         ContentValues values = new ContentValues();
@@ -60,8 +60,8 @@ public class FavouritesBDD {
         return bdd.delete(FavDBHelper.TABLE_LOCATIONS, "`"+ FavDBHelper.ID_LOC+"`=?", new String[] {String.valueOf(index)});
     }
 
-    public List<LocationWifi> selectAll() {
-        List<LocationWifi> list = new ArrayList<LocationWifi>();
+    public ArrayList<LocationWifi> selectAll() {
+        ArrayList<LocationWifi> list = new ArrayList<LocationWifi>();
         Cursor cursor = this.bdd.query(FavDBHelper.TABLE_LOCATIONS,new String[] {"*"},
                 null, null, null, null, null);
         if (cursor.moveToFirst()) {

@@ -92,6 +92,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -131,9 +135,11 @@ public class Map_Fragment extends Fragment implements
     RequestQueue queue ;
     GsonBuilder gsonBuilder;
 
+    ArrayList<Wifi> listlocations2 = new ArrayList<Wifi>();
     List<LocationWifi> listlocations=null;
+    int id_location=0;
     LocationWifi loca = new LocationWifi();
-
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
@@ -221,9 +227,9 @@ public class Map_Fragment extends Fragment implements
                 TextView passTxt = popup.findViewById(R.id.passworWifi);
                 passTxt.setText(marker.getSnippet());
 
-
-                loca = listlocations.get(Integer.valueOf(indexloc));
-
+                Wifi test = listlocations2.get(Integer.valueOf(indexloc));
+                loca = new LocationWifi(Integer.parseInt(test.getId_loc()),test.getSsid(),test.getWifi_pass(),test.getLat(),test.getLng(),test.getImg(),test.getMac());
+               /* loca.setId(id_location);*/
 
 
                 ImageView imgWifi = popup.findViewById(R.id.clientPic);
@@ -252,17 +258,7 @@ public class Map_Fragment extends Fragment implements
         root.setScrollContainer(false);
         FloatingActionButton fab = root.findViewById(R.id.fabadd);
 
-        /*fab.setOnClickListener(view -> {
 
-            FragmentManager manager = getActivity().getSupportFragmentManager();
-            Fragment fragment = new AddLocFragment();
-
-
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.content_frame, fragment, "SC");
-            transaction.addToBackStack("fav");
-            transaction.commit();
-        });*/
 
         con = new ConnectionManager("selectloc");
         queue = Volley.newRequestQueue(getActivity().getApplicationContext());
@@ -270,7 +266,7 @@ public class Map_Fragment extends Fragment implements
         gson = gsonBuilder.create();
 
 
-        CheckGooglePlayServices();
+        //CheckGooglePlayServices();
         mMapView =  root.findViewById(R.id.map);
 
         mMapView.onCreate(savedInstanceState);
@@ -423,23 +419,50 @@ public class Map_Fragment extends Fragment implements
         public void onResponse(String response) {
              ch=response;
            // mMapView.onResume();
-            Type listType = new TypeToken<ArrayList<LocationWifi>>(){}.getType();
-            listlocations = new Gson().fromJson(ch, listType);
+            Type listType = new TypeToken<List<LocationWifi>>(){}.getType();
+            List<LocationWifi> locations = new Gson().fromJson(ch, listType);
+            listlocations = locations;
+
+            Log.d("list all ",locations.toString());
+
+            int [] tab = new int[locations.size()];
+            JSONArray jsonArray = new JSONArray();
+            JSONObject objJson = new JSONObject();
+            try {
+                jsonArray = new JSONArray(ch);
 
 
-            locBDD = new LocationsBDD(getContext());
+            for (int i = 0; i < jsonArray.length(); i++) {
 
-            locBDD.open();
-            locBDD.removeAllLocations();
-            for ( LocationWifi l : listlocations) {
-                locBDD.insertTop(l);
+                objJson = jsonArray.getJSONObject(i);
+
+                // here you can get id,name,city...
+                int id = objJson.getInt("id_loc");
+                tab[i]=id;
+
+                LocationWifi test = locations.get(i);
+
+                Log.d("test",test.toString());
+                Wifi Stringtest = new Wifi(Integer.toString(test.getId()),test.getSsid(),test.getWifi_pass(),test.getLat(),test.getLng(),test.getImg(),test.getMac());
+                listlocations2.add(Stringtest);
             }
-            locBDD.close();
-
-            Log.d("list all ",listlocations.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             int i =0;
-            for (LocationWifi loc : listlocations) {
+            for (LocationWifi l : listlocations){
+                l.setId(tab[i]);
+                i++;
+            }
+            i=0;
+            for (Wifi l : listlocations2){
+                l.setId_loc(Integer.toString(tab[i]));
+                i++;
+            }
+
+            i =0;
+            for (LocationWifi loc : locations) {
                 LatLng sydney = new LatLng(Double.parseDouble(loc.getLat()), Double.parseDouble(loc.getLng()));
                 googleMap.addMarker(new MarkerOptions().position(sydney)
                         .title(loc.getSsid() + "/"+i)
@@ -447,6 +470,16 @@ public class Map_Fragment extends Fragment implements
                 );
                 i++;
             }
+            locBDD = new LocationsBDD(getActivity().getApplicationContext());
+
+            locBDD.open();
+            locBDD.removeAllLocations();
+            for ( LocationWifi l : locations) {
+                locBDD.insertTop(l);
+            }
+            locBDD.close();
+
+
         }
     };
 
@@ -667,6 +700,15 @@ public class Map_Fragment extends Fragment implements
             locBDD.open();
             listlocations = locBDD.selectAll();
             locBDD.close();
+            for (int i =0 ; i<listlocations.size();i++){
+                LocationWifi test = listlocations.get(i);
+
+                Log.d("test",test.toString());
+                Wifi Stringtest = new Wifi(Integer.toString(test.getId()),test.getSsid(),test.getWifi_pass(),test.getLat(),test.getLng(),test.getImg(),test.getMac());
+                listlocations2.add(Stringtest);
+            }
+
+
             int i =0;
             for (LocationWifi loc : listlocations) {
                 LatLng sydney = new LatLng(Double.parseDouble(loc.getLat()), Double.parseDouble(loc.getLng()));
@@ -878,6 +920,10 @@ public class Map_Fragment extends Fragment implements
     }
 
     private void takePhotoFromCamera() {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
+        }
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA);
     }

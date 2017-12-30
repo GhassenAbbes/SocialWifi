@@ -47,6 +47,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,6 +67,8 @@ public class SettingsFragment extends Fragment {
     private Context mContext = getContext();
     GsonBuilder gsonBuilder = new GsonBuilder();
     private Gson gson = gsonBuilder.create();
+    ArrayList<Wifi> listlocations2 = new ArrayList<Wifi>();
+    List<LocationWifi> listlocations;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -81,17 +87,17 @@ public class SettingsFragment extends Fragment {
             }
         }
 
-
+        SharedPreferences prefs = getActivity().getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        String id_user = prefs.getString("fb_id",null);
+        Log.d("id_user",id_user);
 
         con = new ConnectionManager("selectfav");
         queue = Volley.newRequestQueue(getActivity().getApplicationContext());
 
 
 
-        SharedPreferences prefs = getActivity().getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);
 
-        SharedPreferences.Editor editor = prefs.edit();
-        String id_user = prefs.getString("fb_id", null);
         String s = con.getPath();
         String uri = s + String.format("&id_user=%1$s",
                 id_user);
@@ -107,12 +113,21 @@ public class SettingsFragment extends Fragment {
 
             locBDD = new FavouritesBDD(getActivity().getApplicationContext());
             locBDD.open();
-            List<LocationWifi>listlocations = locBDD.selectAll();
+            listlocations = locBDD.selectAll();
             locBDD.close();
+
+            for (int i =0 ; i<listlocations.size();i++){
+                LocationWifi test = listlocations.get(i);
+
+                Log.d("test",test.toString());
+                Wifi Stringtest = new Wifi(Integer.toString(test.getId()),test.getSsid(),test.getWifi_pass(),test.getLat(),test.getLng(),test.getImg(),test.getMac());
+                listlocations2.add(Stringtest);
+            }
 /*
             ArrayList<LocationWifi> plist = new ArrayList<>(listlocations);
 */
             Log.d("offline list favs",listlocations.toString());
+
 
             /*SuperActivityToast.create(getActivity(), new Style(), Style.TYPE_BUTTON)
                     .setButtonText("UNDO")
@@ -124,7 +139,7 @@ public class SettingsFragment extends Fragment {
                     .setColor(PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_PURPLE))
                     .setAnimations(Style.ANIMATIONS_POP).show();
 */
-            mAdapter = new ListViewAdapter(getContext(),listlocations,getActivity().getSupportFragmentManager());
+            mAdapter = new ListViewAdapter(getContext(),listlocations2,getActivity().getSupportFragmentManager());
             list.setAdapter(mAdapter);
             mAdapter.setMode(Attributes.Mode.Single);
             list.setOnItemClickListener((parent, view1, position, id) -> ((SwipeLayout)(list.getChildAt(position - list.getFirstVisiblePosition()))).open(true));
@@ -181,45 +196,61 @@ public class SettingsFragment extends Fragment {
             //String ch=response;
              String ch=response;
             // mMapView.onResume();
-            Type listType = new TypeToken<ArrayList<LocationWifi>>(){}.getType();
-            List<LocationWifi> listlocations = new Gson().fromJson(ch, listType);
+            Type listType = new TypeToken<List<LocationWifi>>(){}.getType();
+            List<LocationWifi> locations = new Gson().fromJson(ch, listType);
 
-            locBDD = new FavouritesBDD(getActivity().getApplicationContext());
-            locBDD.open();
-            locBDD.removeAllLocations();
-            for ( LocationWifi l : listlocations) {
-                locBDD.insertTop(l);
+            int [] tab = new int[locations.size()];
+            JSONArray jsonArray = new JSONArray();
+            JSONObject objJson = new JSONObject();
+            try {
+                jsonArray = new JSONArray(ch);
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+
+                    objJson = jsonArray.getJSONObject(i);
+
+                    // here you can get id,name,city...
+                    int id = objJson.getInt("id_loc");
+                    tab[i]=id;
+
+                    LocationWifi test = locations.get(i);
+
+                    Log.d("test",test.toString());
+                    Wifi Stringtest = new Wifi(Integer.toString(test.getId()),test.getSsid(),test.getWifi_pass(),test.getLat(),test.getLng(),test.getImg(),test.getMac());
+                    listlocations2.add(Stringtest);
+                }
+
+                listlocations = locations;
+                int i =0;
+
+                for (LocationWifi l : listlocations){
+                    l.setId(tab[i]);
+                    i++;
+                }
+                i=0;
+                for (Wifi l : listlocations2){
+                    l.setId_loc(Integer.toString(tab[i]));
+                    i++;
+                }
+                Log.d("tab",tab.toString());
+                Log.d("test",listlocations.toString());
+
+
+
+
+
+
+            //listlocations = locations;
+
+
+
+
+
+
+            mAdapter = new ListViewAdapter(getContext(),listlocations2,getActivity().getSupportFragmentManager());
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-            locBDD.close();
-
-
-            Log.d("string fev ",ch);
-
-            Log.d("list fev ",listlocations.toString());
-
-            /*list.setAdapter(adapter);
-            list.setClickable(true);
-            list.setOnItemClickListener((parent, view, position, id) -> {
-                Object o = list.getItemAtPosition(position);
-                view.setBackgroundColor(Color.DKGRAY);
-
-                LocationWifi ch = (LocationWifi)o;
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                Fragment fragment = new FavouriteMapFragment();
-                Bundle bundle2 = new Bundle();
-                bundle2.putString("myObject", new Gson().toJson(ch));
-
-                fragment.setArguments(bundle2);
-
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.content_frame, fragment, "SC");
-                transaction.addToBackStack("fav");
-                transaction.commit();
-                Log.d("favourite",ch.toString());
-
-            });*/
-
-            mAdapter = new ListViewAdapter(getContext(),listlocations,getActivity().getSupportFragmentManager());
             list.setAdapter(mAdapter);
             mAdapter.setMode(Attributes.Mode.Single);
             list.setOnItemClickListener((parent, view1, position, id) -> ((SwipeLayout)(list.getChildAt(position - list.getFirstVisiblePosition()))).open(true));
@@ -267,6 +298,14 @@ public class SettingsFragment extends Fragment {
                 }
             });
 
+            locBDD = new FavouritesBDD(getActivity().getApplicationContext());
+
+            locBDD.open();
+            locBDD.removeAllLocations();
+            for ( LocationWifi l : listlocations) {
+                locBDD.insertTop(l);
+            }
+            locBDD.close();
         }
     };
 

@@ -66,6 +66,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 
 
 public class FavouriteMapFragment extends Fragment implements
@@ -102,22 +103,19 @@ public class FavouriteMapFragment extends Fragment implements
 
 
 
-    class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+    class CustomInfoWindowAdapter implements InfoWindowAdapter {
         private View popup=null;
         private LayoutInflater inflater=null;
 
         @Override
-        public View getInfoWindow(Marker marker) {
+        public View getInfoContents(Marker marker) {
             return null;
         }
 
         @Override
-        public View getInfoContents(Marker marker) {
+        public View getInfoWindow(Marker marker) {
 
-            String ch = marker.getTitle();
-            String d = ch.substring(0,ch.indexOf("/"));
-            String idloc = ch.substring(ch.indexOf("/")+1,ch.length());
-            Log.d("Strings",d+"   "+idloc);
+
 
 
             try {
@@ -127,10 +125,10 @@ public class FavouriteMapFragment extends Fragment implements
                 popup.setClickable(true);
                 // Getting reference to the TextView to set latitude
                 TextView wifiTxt = (TextView) popup.findViewById(R.id.titleWifi);
-                wifiTxt.setText(d);
+                wifiTxt.setText(p.getSsid());
 
                 TextView passTxt = (TextView) popup.findViewById(R.id.passworWifi);
-                passTxt.setText(marker.getSnippet());
+                passTxt.setText(p.getWifi_pass());
 
 
                /* heart.setOnClickListener(v -> {
@@ -162,6 +160,7 @@ public class FavouriteMapFragment extends Fragment implements
         }
         p= new Gson().fromJson(jsonMyObject, LocationWifi.class);
 
+        System.out.printf("favourite loc "+p);
 
         con = new ConnectionManager("selectloc");
         queue = Volley.newRequestQueue(getActivity().getApplicationContext());
@@ -440,11 +439,16 @@ public class FavouriteMapFragment extends Fragment implements
         });
 
         getDeviceLocation();
-        Log.d("current location",currentLocation.getLatitude()+""+currentLocation.getLongitude());
-        //origin= new LatLng( 36.170544, 10.170545);
-        origin= new LatLng( currentLocation.getLatitude(),currentLocation.getLongitude());
-        destination = marker.getPosition();
-        requestDirection();
+        if (currentLocation!=null) {
+            //origin= new LatLng( 36.170544, 10.170545);
+            origin = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+            destination = marker.getPosition();
+            requestDirection();
+        }
+        else {
+            Toast.makeText(getContext(), "Current Position unavailable!", Toast.LENGTH_SHORT).show();
+
+        }
         return false;
     }
 

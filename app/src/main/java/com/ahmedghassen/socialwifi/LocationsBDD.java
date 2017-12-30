@@ -37,7 +37,7 @@ public class LocationsBDD  {
     }
 
     public long insertTop(LocationWifi wifi){
-        Cursor cursor = bdd.rawQuery("select max("+ FavDBHelper.ID_LOC+") from "+ FavDBHelper.TABLE_LOCATIONS, null);
+        Cursor cursor = bdd.rawQuery("select max("+ DBHelper.ID_LOC+") from "+ DBHelper.TABLE_LOCATIONS, null);
         if (cursor.moveToFirst()) wifi.setId(cursor.getInt(0)+1);
         else wifi.setId(1);
 
@@ -49,19 +49,19 @@ public class LocationsBDD  {
         values.put(FavDBHelper.LNG, wifi.getLng());
         values.put(FavDBHelper.IMG, wifi.getImg());
         values.put(FavDBHelper.MAC, wifi.getMac());
-        return bdd.insert(FavDBHelper.TABLE_LOCATIONS, null, values);
+        return bdd.insert(DBHelper.TABLE_LOCATIONS, null, values);
     }
 
     public int removeAllLocations(){
-        return bdd.delete(FavDBHelper.TABLE_LOCATIONS,null,null);
+        return bdd.delete(DBHelper.TABLE_LOCATIONS,null,null);
     }
     public int removeLocation(int index){
-        return bdd.delete(FavDBHelper.TABLE_LOCATIONS, "`"+ FavDBHelper.ID_LOC+"`=?", new String[] {String.valueOf(index)});
+        return bdd.delete(DBHelper.TABLE_LOCATIONS, "`"+ DBHelper.ID_LOC+"`=?", new String[] {String.valueOf(index)});
     }
 
     public List<LocationWifi> selectAll() {
         List<LocationWifi> list = new ArrayList<LocationWifi>();
-        Cursor cursor = this.bdd.query(FavDBHelper.TABLE_LOCATIONS,new String[] {"*"},
+        Cursor cursor = this.bdd.query(DBHelper.TABLE_LOCATIONS,new String[] {"*"},
                 null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {

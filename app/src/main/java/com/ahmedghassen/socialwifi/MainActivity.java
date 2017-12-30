@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity
                 .load(prefs.getString("fb_profileURL",null))
                 .into(nav_pic);
 
+
     }
 
     @Override

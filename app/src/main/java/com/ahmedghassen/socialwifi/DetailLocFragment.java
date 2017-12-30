@@ -138,7 +138,7 @@ public class DetailLocFragment extends Fragment implements
         p= new Gson().fromJson(jsonMyObject, LocationWifi.class);
 
         Log.d("detail location",p.toString());
-
+        System.out.println(p);
         end_latitude = Double.parseDouble(p.getLat());
         end_longitude =  Double.parseDouble(p.getLng());
 
@@ -381,14 +381,14 @@ public class DetailLocFragment extends Fragment implements
     @Override
     public void onMapReady(GoogleMap mapboxMap) {
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(Double.parseDouble(p.getLng()), Double.parseDouble(p.getLng()))) // set the camera's center position
+                .target(new LatLng(Double.parseDouble(p.getLat()), Double.parseDouble(p.getLng()))) // set the camera's center position
                 .zoom(9)  // set the camera's zoom level
                 .tilt(20)  // set the camera's tilt
                 .build();
 
         // Move the camera to that position
         mapboxMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        MarkerOptions mark = new MarkerOptions().position(new LatLng(Double.parseDouble(p.getLng()), Double.parseDouble(p.getLng())));
+        MarkerOptions mark = new MarkerOptions().position(new LatLng(Double.parseDouble(p.getLat()), Double.parseDouble(p.getLng())));
         if (mLocationPermissionsGranted) {
             getDeviceLocation();
 
@@ -552,12 +552,18 @@ public class DetailLocFragment extends Fragment implements
             }
         });
         getDeviceLocation();
-        Log.d("current location",currentLocation.getLatitude()+""+currentLocation.getLongitude());
-        //origin= new LatLng( 36.170544, 10.170545);
-        origin= new LatLng( currentLocation.getLatitude(),currentLocation.getLongitude());
-        destination = marker.getPosition();
-        requestDirection();
+        if (currentLocation!=null) {
+            Log.d("current location",currentLocation.getLatitude()+""+currentLocation.getLongitude());
 
+            //origin= new LatLng( 36.170544, 10.170545);
+            origin = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+            destination = marker.getPosition();
+            requestDirection();
+        }
+        else {
+            Toast.makeText(getContext(), "Current Position unavailable!", Toast.LENGTH_SHORT).show();
+
+        }
         return false;
     }
 

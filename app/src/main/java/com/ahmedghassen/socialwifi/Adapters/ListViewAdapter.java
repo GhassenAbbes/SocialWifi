@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.ahmedghassen.socialwifi.ConnectionManager;
 import com.ahmedghassen.socialwifi.FavouriteMapFragment;
 import com.ahmedghassen.socialwifi.LocationWifi;
+import com.ahmedghassen.socialwifi.SettingsFragment;
+import com.ahmedghassen.socialwifi.Wifi;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -35,13 +37,14 @@ import java.util.List;
 
 
 public class ListViewAdapter extends BaseSwipeAdapter {
-    private List<LocationWifi> favourites ;
+    private List<Wifi> favourites ;
     private Context mContext;
     private FragmentManager manager;
     private ConnectionManager con;
     private RequestQueue queue ;
+    LocationWifi p ;
 
-    public ListViewAdapter(Context mContext,   List<LocationWifi> favourites, FragmentManager manager) {
+    public ListViewAdapter(Context mContext, List<Wifi> favourites, FragmentManager manager) {
         this.mContext = mContext;
         this.favourites = favourites;
         this.manager = manager;
@@ -65,7 +68,7 @@ public class ListViewAdapter extends BaseSwipeAdapter {
         });
 
 
-        Log.d("position",favourites.size()+"//////"+Integer.toString(position));
+        Log.d("position",favourites.toString());
 
 
 
@@ -74,7 +77,7 @@ public class ListViewAdapter extends BaseSwipeAdapter {
             @Override
             public void onClick(View view) {
                 Toast.makeText(mContext, "click delete", Toast.LENGTH_SHORT).show();
-                DelFavourite(Integer.toString(favourites.get(position).getId()));
+                DelFavourite(favourites.get(position).getId_loc());
                 v.refreshDrawableState();
             }
         });
@@ -86,10 +89,12 @@ public class ListViewAdapter extends BaseSwipeAdapter {
 
 
 
+                Wifi test = favourites.get(position);
+                p = new LocationWifi(Integer.parseInt(test.getId_loc()),test.getSsid(),test.getWifi_pass(),test.getLat(),test.getLng(),test.getImg(),test.getMac());
 
                 Fragment fragment = new FavouriteMapFragment();
                 Bundle bundle2 = new Bundle();
-                bundle2.putString("myObject", new Gson().toJson(favourites.get(position)));
+                bundle2.putString("myObject", new Gson().toJson(p));
 
                 fragment.setArguments(bundle2);
 
@@ -106,7 +111,7 @@ public class ListViewAdapter extends BaseSwipeAdapter {
     public void fillValues(int position, View convertView) {
         TextView t = (TextView)convertView.findViewById(R.id.position);
         t.setText((position + 1) + ".");
-        LocationWifi p =favourites.get(position);
+        Wifi p =favourites.get(position);
 
         TextView tvdesc = (TextView) convertView.findViewById(R.id.favdec_s);
         TextView tvpw = (TextView)convertView.findViewById(R.id.favpw_s);
@@ -165,5 +170,12 @@ public class ListViewAdapter extends BaseSwipeAdapter {
         queue.add(myReq);
         Log.d("requet",myReq.toString());
 
+
+        Fragment frag = new SettingsFragment();
+
+
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.content_frame, frag, "SC");
+        transaction.commit();
     }
 }
