@@ -31,6 +31,7 @@ import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,6 +123,9 @@ public class ListViewAdapter extends BaseSwipeAdapter {
         tvdesc.setText(p.getSsid());
         //tvHome.setImageResource(p.imageressource);
         tvpw.setText(p.getWifi_pass());
+        Picasso.with(mContext)
+                .load(p.getImg())
+                .into(tvHome);
     }
 
     @Override
@@ -175,7 +179,8 @@ public class ListViewAdapter extends BaseSwipeAdapter {
 
 
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.content_frame, frag, "SC");
+        transaction.replace(R.id.content_frame, frag, "dtv");
+        transaction.addToBackStack("fav");
         transaction.commit();
     }
 }

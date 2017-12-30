@@ -129,7 +129,11 @@ public class FavouriteMapFragment extends Fragment implements
 
                 TextView passTxt = (TextView) popup.findViewById(R.id.passworWifi);
                 passTxt.setText(p.getWifi_pass());
+                ImageView imgWifi = popup.findViewById(R.id.clientPic);
 
+                Picasso.with(getContext())
+                        .load(p.getImg())
+                        .into(imgWifi);
 
                /* heart.setOnClickListener(v -> {
                     DelFavourite(idloc);

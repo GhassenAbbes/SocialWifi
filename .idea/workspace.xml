@@ -39,11 +39,11 @@
       <file leaf-file-name="SettingsFragment.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/SettingsFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1915">
-              <caret line="124" column="13" lean-forward="false" selection-start-line="124" selection-start-column="13" selection-end-line="124" selection-end-column="13" />
+            <state relative-caret-position="293">
+              <caret line="69" column="35" lean-forward="false" selection-start-line="69" selection-start-column="35" selection-end-line="69" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="class#5568:6134" expanded="false" />
+                <element signature="class#5597:6163" expanded="false" />
                 <element signature="method#fetchLocations#0;class#SettingsFragment#0" expanded="false" />
               </folding>
             </state>
@@ -53,8 +53,8 @@
       <file leaf-file-name="ListViewAdapter.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Adapters/ListViewAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="92" column="115" lean-forward="false" selection-start-line="92" selection-start-column="115" selection-end-line="92" selection-end-column="115" />
+            <state relative-caret-position="351">
+              <caret line="182" column="39" lean-forward="false" selection-start-line="182" selection-start-column="39" selection-end-line="182" selection-end-column="39" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -62,14 +62,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Map_Fragment.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Map_Fragment.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Map_Fragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2114">
-              <caret line="69" column="53" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+            <state relative-caret-position="274">
+              <caret line="138" column="42" lean-forward="true" selection-start-line="138" selection-start-column="42" selection-end-line="138" selection-end-column="42" />
               <folding>
-                <element signature="e#4773#4779#0" expanded="true" />
-                <element signature="e#11175#16212#0" expanded="false" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#11152#16189#0" expanded="false" />
                 <element signature="method#addToFavourite#0;class#Map_Fragment#0" expanded="false" />
                 <element signature="method#connectToWifi#0;class#Map_Fragment#0" expanded="false" />
                 <element signature="method#getExistingNetworkId#0;class#Map_Fragment#0" expanded="false" />
@@ -87,11 +87,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FavouriteMapFragment.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="FavouriteMapFragment.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/FavouriteMapFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="113" column="0" lean-forward="true" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
+            <state relative-caret-position="136">
+              <caret line="127" column="45" lean-forward="false" selection-start-line="127" selection-start-column="45" selection-end-line="127" selection-end-column="45" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#onInfoWindowClick#0;class#FavouriteMapFragment#0" expanded="false" />
@@ -2819,14 +2819,14 @@
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Adapters/ListViewAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/LocationsBDD.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Map_Fragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_detail_loc.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/SettingsFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/DetailLocFragment.java" />
         <option value="$USER_HOME$/.gradle/caches/transforms-1/files-1.1/play-services-maps-11.8.0.aar/e5555b499ac06a80653d45d1551606d4/jars/classes.jar!/com/google/android/gms/maps/GoogleMap.class" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/FavouriteMapFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Adapters/ListViewAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/SettingsFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Map_Fragment.java" />
       </list>
     </option>
   </component>
@@ -2971,7 +2971,7 @@
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
     <property name="device.picker.selection" value="Nexus_4_API_23" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/Compressed/bottomnavigation-master" />
     <property name="android.project.structure.last.selected" value="app" />
     <property name="android.project.structure.proportion" value="0.15" />
   </component>
@@ -3073,7 +3073,7 @@
       <option name="DEEP_LINK" value="" />
       <option name="ACTIVITY_CLASS" value="" />
       <method>
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514664262970" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514671154959" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -3120,7 +3120,7 @@
         <option name="ADVANCED_PROFILING_ENABLED" value="false" />
       </Profilers>
       <method>
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514664262970" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514671154959" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -3302,7 +3302,7 @@
       <option name="DEEP_LINK" value="" />
       <option name="ACTIVITY_CLASS" value="" />
       <method>
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514664262971" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1514671154960" />
       </method>
     </configuration>
     <list size="1">
@@ -3600,6 +3600,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-918">
           <caret line="15" column="22" lean-forward="false" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -3694,14 +3695,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/ConnectionManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="25" lean-forward="false" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="386">
@@ -3719,16 +3712,6 @@
           <folding>
             <element signature="e#836#837#0" expanded="true" />
             <element signature="e#863#864#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Adapters/ListViewAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="92" column="115" lean-forward="false" selection-start-line="92" selection-start-column="115" selection-end-line="92" selection-end-column="115" />
-          <folding>
-            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -3807,18 +3790,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/SettingsFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1915">
-          <caret line="124" column="13" lean-forward="false" selection-start-line="124" selection-start-column="13" selection-end-line="124" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="class#5568:6134" expanded="false" />
-            <element signature="method#fetchLocations#0;class#SettingsFragment#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/play-services-maps-11.8.0.aar/e5555b499ac06a80653d45d1551606d4/jars/classes.jar!/com/google/android/gms/maps/GoogleMap.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -3827,13 +3798,60 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/ConnectionManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="25" lean-forward="false" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/FavouriteMapFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="127" column="45" lean-forward="false" selection-start-line="127" selection-start-column="45" selection-end-line="127" selection-end-column="45" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#onInfoWindowClick#0;class#FavouriteMapFragment#0" expanded="false" />
+            <element signature="method#connectToWifi#0;class#FavouriteMapFragment#0" expanded="false" />
+            <element signature="method#getExistingNetworkId#0;class#FavouriteMapFragment#0" expanded="false" />
+            <element signature="method#ExistingBSSID#0;class#FavouriteMapFragment#0" expanded="false" />
+            <element signature="method#askForLocationPermissions#0;class#FavouriteMapFragment#0" expanded="false" />
+            <element signature="method#isPermissionGranted#0;class#FavouriteMapFragment#0" expanded="false" />
+            <element signature="method#onRequestPermissionsResult#0;class#FavouriteMapFragment#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Adapters/ListViewAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="182" column="39" lean-forward="false" selection-start-line="182" selection-start-column="39" selection-end-line="182" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/SettingsFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="293">
+          <caret line="69" column="35" lean-forward="false" selection-start-line="69" selection-start-column="35" selection-end-line="69" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="class#5597:6163" expanded="false" />
+            <element signature="method#fetchLocations#0;class#SettingsFragment#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Map_Fragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2114">
-          <caret line="69" column="53" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+        <state relative-caret-position="274">
+          <caret line="138" column="42" lean-forward="true" selection-start-line="138" selection-start-column="42" selection-end-line="138" selection-end-column="42" />
           <folding>
-            <element signature="e#4773#4779#0" expanded="true" />
-            <element signature="e#11175#16212#0" expanded="false" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#11152#16189#0" expanded="false" />
             <element signature="method#addToFavourite#0;class#Map_Fragment#0" expanded="false" />
             <element signature="method#connectToWifi#0;class#Map_Fragment#0" expanded="false" />
             <element signature="method#getExistingNetworkId#0;class#Map_Fragment#0" expanded="false" />
@@ -3846,23 +3864,6 @@
             <element signature="method#onRequestPermissionsResult#0;class#Map_Fragment#0" expanded="false" />
             <element signature="method#CheckGooglePlayServices#0;class#Map_Fragment#0" expanded="false" />
             <element signature="method#checkLocationPermission#0;class#Map_Fragment#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/FavouriteMapFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="113" column="0" lean-forward="true" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#onInfoWindowClick#0;class#FavouriteMapFragment#0" expanded="false" />
-            <element signature="method#connectToWifi#0;class#FavouriteMapFragment#0" expanded="false" />
-            <element signature="method#getExistingNetworkId#0;class#FavouriteMapFragment#0" expanded="false" />
-            <element signature="method#ExistingBSSID#0;class#FavouriteMapFragment#0" expanded="false" />
-            <element signature="method#askForLocationPermissions#0;class#FavouriteMapFragment#0" expanded="false" />
-            <element signature="method#isPermissionGranted#0;class#FavouriteMapFragment#0" expanded="false" />
-            <element signature="method#onRequestPermissionsResult#0;class#FavouriteMapFragment#0" expanded="false" />
           </folding>
         </state>
       </provider>

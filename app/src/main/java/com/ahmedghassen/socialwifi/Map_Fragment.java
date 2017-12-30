@@ -135,7 +135,7 @@ public class Map_Fragment extends Fragment implements
     RequestQueue queue ;
     GsonBuilder gsonBuilder;
 
-    ArrayList<Wifi> listlocations2 = new ArrayList<Wifi>();
+    ArrayList<Wifi> listlocations2 ;
     List<LocationWifi> listlocations=null;
     int id_location=0;
     LocationWifi loca = new LocationWifi();
@@ -401,8 +401,8 @@ public class Map_Fragment extends Fragment implements
         fragment.setArguments(bundle2);
 
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.content_frame, fragment, "SC");
-        transaction.addToBackStack("fav");
+        transaction.replace(R.id.content_frame, fragment, "mp");
+        transaction.addToBackStack("all");
         transaction.commit();
 
     }
@@ -422,7 +422,7 @@ public class Map_Fragment extends Fragment implements
             Type listType = new TypeToken<List<LocationWifi>>(){}.getType();
             List<LocationWifi> locations = new Gson().fromJson(ch, listType);
             listlocations = locations;
-
+            listlocations2 = new ArrayList<Wifi>();
             Log.d("list all ",locations.toString());
 
             int [] tab = new int[locations.size()];
@@ -449,12 +449,14 @@ public class Map_Fragment extends Fragment implements
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
+            Log.d("listlocations",Integer.toString(listlocations.size()));
             int i =0;
             for (LocationWifi l : listlocations){
                 l.setId(tab[i]);
                 i++;
             }
+            Log.d("listlocations2",Integer.toString(listlocations2.size()));
+
             i=0;
             for (Wifi l : listlocations2){
                 l.setId_loc(Integer.toString(tab[i]));
@@ -700,6 +702,8 @@ public class Map_Fragment extends Fragment implements
             locBDD.open();
             listlocations = locBDD.selectAll();
             locBDD.close();
+            listlocations2 = new ArrayList<Wifi>();
+
             for (int i =0 ; i<listlocations.size();i++){
                 LocationWifi test = listlocations.get(i);
 

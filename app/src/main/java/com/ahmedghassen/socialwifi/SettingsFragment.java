@@ -67,7 +67,7 @@ public class SettingsFragment extends Fragment {
     private Context mContext = getContext();
     GsonBuilder gsonBuilder = new GsonBuilder();
     private Gson gson = gsonBuilder.create();
-    ArrayList<Wifi> listlocations2 = new ArrayList<Wifi>();
+    ArrayList<Wifi> listlocations2 ;
     List<LocationWifi> listlocations;
 
     public SettingsFragment() {
@@ -116,6 +116,7 @@ public class SettingsFragment extends Fragment {
             listlocations = locBDD.selectAll();
             locBDD.close();
 
+            listlocations2 = new ArrayList<Wifi>();
             for (int i =0 ; i<listlocations.size();i++){
                 LocationWifi test = listlocations.get(i);
 
@@ -198,6 +199,7 @@ public class SettingsFragment extends Fragment {
             // mMapView.onResume();
             Type listType = new TypeToken<List<LocationWifi>>(){}.getType();
             List<LocationWifi> locations = new Gson().fromJson(ch, listType);
+            listlocations2 = new ArrayList<Wifi>();
 
             int [] tab = new int[locations.size()];
             JSONArray jsonArray = new JSONArray();
