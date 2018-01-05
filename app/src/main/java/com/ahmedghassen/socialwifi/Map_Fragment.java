@@ -1,7 +1,6 @@
 package com.ahmedghassen.socialwifi;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -11,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -26,12 +24,12 @@ import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -46,12 +44,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.akexorcist.googledirection.DirectionCallback;
-import com.akexorcist.googledirection.GoogleDirection;
-import com.akexorcist.googledirection.constant.TransportMode;
-import com.akexorcist.googledirection.model.Direction;
-import com.akexorcist.googledirection.model.Route;
-import com.akexorcist.googledirection.util.DirectionConverter;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -59,36 +51,23 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.facebook.places.PlaceManager;
-import com.facebook.places.internal.LocationPackageRequestParams;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import android.location.Location;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
@@ -103,7 +82,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -258,6 +236,8 @@ public class Map_Fragment extends Fragment implements
         root.setScrollContainer(false);
         FloatingActionButton fab = root.findViewById(R.id.fabadd);
 
+            android.support.v7.app.ActionBar actionBar =((AppCompatActivity)getActivity()).getSupportActionBar();
+            actionBar.setTitle("Maps");
 
 
         con = new ConnectionManager("selectloc");
@@ -278,13 +258,10 @@ public class Map_Fragment extends Fragment implements
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
                 View mView = getLayoutInflater().inflate(R.layout.dialog_add_loc, null);
 
-                final EditText ssid = mView.findViewById(R.id.ssidadd_d);
+                final TextView ssid = mView.findViewById(R.id.ssidadd_d);
                 final EditText pw = mView.findViewById(R.id.pwadd_d);
                 final Button ajouter = mView.findViewById(R.id.ajouter_d);
-                final Button cancel = mView.findViewById(R.id.canceladd_d);
-                cancel.setOnClickListener(view1 -> {
-                    dialog.hide();
-                });
+
 
                 imageLoc =  mView.findViewById(R.id.addlocimage_d);
                 imageLoc.setOnClickListener(v -> showPictureDialog());
@@ -301,11 +278,6 @@ public class Map_Fragment extends Fragment implements
                             if (state == NetworkInfo.DetailedState.CONNECTED || state == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
                                 ssid.setText(wifiInfo.getSSID().replace("\"",""));
                                 ajouter.setOnClickListener(v -> {
-
-
-                                    if ( TextUtils.isEmpty(ssid.getText())||TextUtils.isEmpty(pw.getText()))
-                                        Toast.makeText(getActivity(),"You must complete the missing fields!",Toast.LENGTH_LONG).show();
-                                    else {
 
                                         if (ContextCompat.checkSelfPermission(getActivity(),
                                                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -376,8 +348,6 @@ public class Map_Fragment extends Fragment implements
                                                 //Toast.makeText(getContext(),"Invailed Wifi",Toast.LENGTH_LONG).show();
                                             }
                                         }
-
-                                    }
                                 });
                             }
                         }
@@ -553,10 +523,10 @@ public class Map_Fragment extends Fragment implements
 
             mWifiManager.disconnect();
             // giving time to disconnect here.
-            Thread.sleep(3*1000);
+            Thread.sleep(10*1000);
             mWifiManager.enableNetwork(networkId, true);
             mWifiManager.reconnect();
-            Thread.sleep(3*1000);
+            Thread.sleep(10*1000);
 
             if (mWifiManager.isWifiEnabled()) {
                 WifiInfo wifiInfo = mWifiManager.getConnectionInfo();

@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="#FF5534"
+        android:background="#fdd000"
         android:gravity="center"
         android:tag="Bottom3"
         android:weightSum="10"
@@ -32,7 +32,7 @@
             android:layout_weight="4"
             android:background="@drawable/white"
             android:text="Check"
-            android:textColor="#FF5534" />
+            android:textColor="#fdd000" />
 
         <Button
             android:id="@+id/delete"
@@ -41,7 +41,7 @@
             android:layout_weight="4"
             android:background="@drawable/white"
             android:text="Delete"
-            android:textColor="#FF5534" />
+            android:textColor="#fdd000" />
         <ImageView
             android:id="@+id/trash"
             android:layout_width="27dp"

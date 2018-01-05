@@ -50,12 +50,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -142,9 +139,7 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
                         getDeviceLocation();
                         Log.d("Image Path ",Double.toString(currentLocation.getLatitude()));
 
-                        if ( TextUtils.isEmpty(ssid.getText())||TextUtils.isEmpty(pw.getText()))
-                            Toast.makeText(getActivity(),"You must complete the missing fields!",Toast.LENGTH_LONG).show();
-                        else {
+
 
                             if (ContextCompat.checkSelfPermission(getActivity(),
                                     Manifest.permission.ACCESS_FINE_LOCATION)
@@ -217,7 +212,6 @@ public class AddLocFragment extends Fragment implements OnMapReadyCallback {
                                 }
                             }
 
-                        }
                     });
                 }
             }

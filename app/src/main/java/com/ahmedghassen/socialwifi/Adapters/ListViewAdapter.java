@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.ahmedghassen.socialwifi.ConnectionManager;
 import com.ahmedghassen.socialwifi.FavouriteMapFragment;
 import com.ahmedghassen.socialwifi.LocationWifi;
+import com.ahmedghassen.socialwifi.R;
 import com.ahmedghassen.socialwifi.SettingsFragment;
 import com.ahmedghassen.socialwifi.Wifi;
 import com.android.volley.Request;
@@ -26,14 +27,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.ahmedghassen.socialwifi.R;
 import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

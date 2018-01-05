@@ -1,7 +1,5 @@
 package com.ahmedghassen.socialwifi;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by DELL on 30/12/2017.
  */

@@ -2,10 +2,12 @@ package com.ahmedghassen.socialwifi;
 
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.NetworkInfo;
@@ -24,7 +26,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +34,6 @@ import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,24 +52,20 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -126,6 +123,8 @@ public class DetailLocFragment extends Fragment implements
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_detail_loc, null, false);
 
+        android.support.v7.app.ActionBar actionBar =((AppCompatActivity)getActivity()).getSupportActionBar();
+        actionBar.setTitle("Wifi Details");
          p = new LocationWifi();
         Bundle bundle = this.getArguments();
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -148,20 +147,9 @@ public class DetailLocFragment extends Fragment implements
         TextView ssid =  root.findViewById(R.id.ssiddet);
         TextView pw = root.findViewById(R.id.pwdet);
         FloatingActionButton fab = root.findViewById(R.id.fabdet);
-       // FloatingActionButton connecttowifi =root.findViewById(R.id.cnctwifi);
-
-       /* con = new ConnectionManager("selectloc");
-        queue = Volley.newRequestQueue(getActivity().getApplicationContext());*/
-        //gsonBuilder.setDateFormat("M/d/yy hh:mm a");
-
-        ssid.setText(p.getSsid());
-        pw.setText(p.getWifi_pass());
-        ImageView imgWifi = root.findViewById(R.id.detlocimg);
-        Picasso.with(getActivity())
-                .load(p.getImg())
-                .into(imgWifi);
-
-        Button connect = root.findViewById(R.id.toconnect);
+        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
+       FloatingActionButton connect =root.findViewById(R.id.toconnect);
+       connect.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
         connect.setOnClickListener(v -> {
 
             if (ContextCompat.checkSelfPermission(getActivity(),
@@ -183,6 +171,15 @@ public class DetailLocFragment extends Fragment implements
             }
 
         });
+
+        ssid.setText(p.getSsid());
+        pw.setText(p.getWifi_pass());
+        ImageView imgWifi = root.findViewById(R.id.detlocimg);
+        Picasso.with(getActivity())
+                .load(p.getImg())
+                .into(imgWifi);
+
+
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
