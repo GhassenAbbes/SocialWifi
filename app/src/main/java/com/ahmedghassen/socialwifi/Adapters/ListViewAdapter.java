@@ -19,7 +19,7 @@ import com.ahmedghassen.socialwifi.ConnectionManager;
 import com.ahmedghassen.socialwifi.FavouriteMapFragment;
 import com.ahmedghassen.socialwifi.LocationWifi;
 import com.ahmedghassen.socialwifi.R;
-import com.ahmedghassen.socialwifi.SettingsFragment;
+import com.ahmedghassen.socialwifi.FavouritesFragment;
 import com.ahmedghassen.socialwifi.Wifi;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -174,7 +174,7 @@ public class ListViewAdapter extends BaseSwipeAdapter {
         Log.d("requet",myReq.toString());
 
 
-        Fragment frag = new SettingsFragment();
+        Fragment frag = new FavouritesFragment();
 
 
         FragmentTransaction transaction = manager.beginTransaction();

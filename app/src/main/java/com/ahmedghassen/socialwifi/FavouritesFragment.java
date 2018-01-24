@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SettingsFragment extends Fragment {
+public class FavouritesFragment extends Fragment {
     ConnectionManager con;
     RequestQueue queue ;
 
@@ -56,7 +56,7 @@ public class SettingsFragment extends Fragment {
     ArrayList<Wifi> listlocations2 ;
     List<LocationWifi> listlocations;
 
-    public SettingsFragment() {
+    public FavouritesFragment() {
         // Required empty public constructor
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

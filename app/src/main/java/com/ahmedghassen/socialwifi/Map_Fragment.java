@@ -462,35 +462,6 @@ public class Map_Fragment extends Fragment implements
         }
     };
 
-    private void addToFavourite(String id){
-
-        con = new ConnectionManager("addfavourite");
-
-        queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-
-        SharedPreferences prefs = getActivity().getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        String id_user = prefs.getString("fb_id",null);
-        Log.d("id_user",id_user);
-        String s = con.getPath();
-        String uri = s+String.format("&id_user=%1$s&id_loc=%2$s",
-                id_user,id);
-
-        StringRequest myReq = new StringRequest(Request.Method.GET,
-                uri,
-                response -> {
-                    Toast.makeText(getActivity(),"Successful",Toast.LENGTH_LONG).show();
-                },
-                error -> {
-                    Toast.makeText(getActivity(),"Failed",Toast.LENGTH_LONG).show();
-
-                });
-        Log.d("requet",myReq.toString());
-
-        queue.add(myReq);
-        Log.d("requet",myReq.toString());
-
-    }
 
     public boolean connectToWifi(String SSID, String PASSWORD){
         try{
@@ -878,7 +849,8 @@ public class Map_Fragment extends Fragment implements
                                 choosePhotoFromGallary();
                                 break;
                             case 1:
-                                takePhotoFromCamera();
+                                if (getPermissionCamera())
+                                        takePhotoFromCamera();
                                 break;
                         }
                     }
@@ -893,11 +865,16 @@ public class Map_Fragment extends Fragment implements
         startActivityForResult(galleryIntent, GALLERY);
     }
 
-    private void takePhotoFromCamera() {
+    private boolean getPermissionCamera(){
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
+            return false;
         }
+        return true;
+    }
+    private void takePhotoFromCamera() {
+
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA);
     }

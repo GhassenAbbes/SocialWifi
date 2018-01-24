@@ -202,7 +202,7 @@ public class DetailLocFragment extends Fragment implements
 
         fab.setOnClickListener(v -> {
                 addToFavourite();
-                LocationsFragment locfrag = new LocationsFragment();
+                Map_Fragment locfrag = new Map_Fragment();
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.replace(R.id.content_frame, locfrag, "init");

@@ -36,14 +36,12 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager manager = getSupportFragmentManager();
 
-        LocationsFragment pf = new LocationsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt("container", R.id.content_frame);
-        pf.setArguments(bundle);
+        Map_Fragment pf = new Map_Fragment();
+
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.content_frame, pf, "init");
         transaction.addToBackStack("init");
-
+        transaction.commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -102,40 +100,22 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         Fragment fragment = null;
-        android.support.v4.app.Fragment fav = null;
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            fragment = new ProfilFragment();
-        } else if (id == R.id.nav_gallery) {
+         if (id == R.id.nav_gallery) {
             fragment = new Map_Fragment();
 
         } else if (id == R.id.nav_slideshow) {
-            fragment = new SettingsFragment();
+             fragment = new FavouritesFragment();
 
-        } else if (id == R.id.nav_manage) {
-            fragment = new FavFragment();
-        } else if (id == R.id.nav_send) {
+         }else if (id == R.id.nav_send) {
             LoginManager.getInstance().logOut();
             SharedPreferences pref = getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);
             SharedPreferences.Editor editor = pref.edit();
@@ -147,10 +127,7 @@ public class MainActivity extends AppCompatActivity
         if (fragment != null) {
             FragmentManager manager = getSupportFragmentManager();
 
-            Bundle bundle2 = new Bundle();
-            bundle2.putInt("container", R.id.content_frame);
 
-            fragment.setArguments(bundle2);
 
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.content_frame, fragment, "SC");
