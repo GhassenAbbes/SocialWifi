@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity
         transaction.addToBackStack("init");
         transaction.commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -64,15 +65,15 @@ public class MainActivity extends AppCompatActivity
                 "\nProfile Pic : "+prefs.getString("fb_profileURL",null));
 
         //Set Profile Name
-        TextView nav_user = (TextView)hView.findViewById(R.id.profile_name);
+        TextView nav_user = hView.findViewById(R.id.profile_name);
         nav_user.setText(prefs.getString("fb_first_name","Unknown")+ " " +prefs.getString("fb_last_name","Unknown") );
 
         //Set Profile Email
-        TextView nav_email = (TextView)hView.findViewById(R.id.profile_email);
+        TextView nav_email = hView.findViewById(R.id.profile_email);
         nav_email.setText(prefs.getString("fb_email","Unknown") );
 
         //Set Profile Picture
-        ImageView nav_pic = (ImageView) hView.findViewById(R.id.profile_pic);
+        ImageView nav_pic =  hView.findViewById(R.id.profile_pic);
         Picasso.with(this)
                 .load(prefs.getString("fb_profileURL",null))
                 .into(nav_pic);
@@ -115,6 +116,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_slideshow) {
              fragment = new FavouritesFragment();
 
+         }
+         else if (id == R.id.local) {
+             fragment = new NearByFragment();
          }else if (id == R.id.nav_send) {
             LoginManager.getInstance().logOut();
             SharedPreferences pref = getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);
@@ -142,5 +146,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-
+    /*@Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+*/
 }

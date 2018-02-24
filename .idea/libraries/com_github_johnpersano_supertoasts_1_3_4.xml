@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="com.github.johnpersano:supertoasts-1.3.4">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/supertoasts-1.3.4.aar/0da01ae084b1d473f33b765283779b86/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/supertoasts-1.3.4.aar/0da01ae084b1d473f33b765283779b86/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/supertoasts-1.3.4.aar/9a96059d33e8a8adf788ca30224e6c40/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/supertoasts-1.3.4.aar/9a96059d33e8a8adf788ca30224e6c40/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

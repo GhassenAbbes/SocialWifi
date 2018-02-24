@@ -13,6 +13,10 @@
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/likes"
             android:title="Favourites" />
+        <item
+            android:id="@+id/local"
+            android:icon="@drawable/locally"
+            android:title="Near By" />
 
     </group>
 

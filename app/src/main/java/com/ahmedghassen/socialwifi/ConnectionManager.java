@@ -6,7 +6,7 @@ package com.ahmedghassen.socialwifi;
 
 public class ConnectionManager {
     String path;
-    public static String ip = "http://172.18.17.122/";
+    public static String ip = " http://192.168.1.3/";
 
 
     public ConnectionManager(){

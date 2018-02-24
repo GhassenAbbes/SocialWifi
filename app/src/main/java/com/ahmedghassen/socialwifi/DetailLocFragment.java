@@ -5,12 +5,14 @@ import android.Manifest;
 import android.app.ActionBar;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
@@ -48,6 +50,21 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareContent;
+import com.facebook.share.model.ShareHashtag;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.ShareMediaContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareButton;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -69,6 +86,7 @@ import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -91,7 +109,6 @@ public class DetailLocFragment extends Fragment implements
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private static final float DEFAULT_ZOOM = 15f;
     private static final String TAG = "LocationPickerActivity";
 
     //vars
@@ -102,14 +119,10 @@ public class DetailLocFragment extends Fragment implements
     private LatLng origin = new LatLng(37.7849569, -122.4068855);
     private LatLng destination = new LatLng(37.7814432, -122.4460177);
 
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    Marker mCurrLocationMarker;
-    LocationRequest mLocationRequest;
-    int PROXIMITY_RADIUS = 10000;
-    double latitude, longitude;
-    double end_latitude, end_longitude;
 
+    double end_latitude, end_longitude;
+    ShareDialog shareDialog;
+    private CallbackManager callbackManager;
 
     public DetailLocFragment() {
         // Required empty public constructor
@@ -122,6 +135,9 @@ public class DetailLocFragment extends Fragment implements
         // Inflate the layout for this fragment
         super.onCreateView(inflater, container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_detail_loc, null, false);
+
+        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
 
         android.support.v7.app.ActionBar actionBar =((AppCompatActivity)getActivity()).getSupportActionBar();
         actionBar.setTitle("Wifi Details");
@@ -150,6 +166,10 @@ public class DetailLocFragment extends Fragment implements
         fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
        FloatingActionButton connect =root.findViewById(R.id.toconnect);
        connect.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
+
+        ShareButton share = root.findViewById(R.id.share);
+        share.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
+        //share.set
         connect.setOnClickListener(v -> {
 
             if (ContextCompat.checkSelfPermission(getActivity(),
@@ -175,9 +195,12 @@ public class DetailLocFragment extends Fragment implements
         ssid.setText(p.getSsid());
         pw.setText(p.getWifi_pass());
         ImageView imgWifi = root.findViewById(R.id.detlocimg);
-        Picasso.with(getActivity())
-                .load(p.getImg())
-                .into(imgWifi);
+        if (!p.getImg().equals("")) {
+            Picasso.with(getActivity())
+                    .load(p.getImg())
+                    .into(imgWifi);
+        }
+
 
 
 
@@ -193,8 +216,57 @@ public class DetailLocFragment extends Fragment implements
         else {
             Log.d("onCreate","Google Play Services available.");
         }
+       /* shareDialog = new ShareDialog(this);
+        shareDialog.registerCallback(callbackManager, callback);
+
+        SharedPreferences prefs =getActivity(). getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        String sharepermitted = prefs.getString("share",null);
+        //share.setReadPermissions("email");
+
+        //LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+           *//* if (sharepermitted==null){
+                Log.d("hhhhhhhhhh   hh",LoginActivity.presmissions.toString());
+
+                FragmentManager manager = getActivity().getSupportFragmentManager();
+                Fragment fragment = new SharePermActivity();
 
 
+                FragmentTransaction transaction = manager.beginTransaction();
+                transaction.replace(R.id.content_frame, fragment, "tp");
+                transaction.addToBackStack("tp");
+                transaction.commit();
+            }
+*//*
+
+        //share.setClickable(true);
+       // share.setOnClickListener(v -> {
+            if (appInstalledOrNot("com.facebook.katana")) {
+                Toast.makeText(getContext(), "share", Toast.LENGTH_SHORT).show();
+
+
+                //if (ShareDialog.canShow(ShareLinkContent.class)) {
+                    SharePhoto photo = new SharePhoto.Builder()
+                            .setImageUrl(Uri.parse(p.getImg()))
+                            .setCaption("StudyTutorial")
+                            .build();
+                    SharePhotoContent content = new SharePhotoContent.Builder()
+                            .addPhoto(photo).setShareHashtag(
+                                    new ShareHashtag.Builder()
+                                            .setHashtag("#SocialWifi")
+                                            .build()
+                            )
+                            .build();
+                    share.setShareContent(content);
+                   // shareDialog.show(content);
+              //  }
+
+            }
+            else
+                Toast.makeText(getContext(), "You need to Install Facebook Application!", Toast.LENGTH_SHORT).show();
+
+*/
+        //});
         mMapView =  root.findViewById(R.id.detmaplayout);
         mMapView.onCreate(savedInstanceState);
         //mMapView.getMapAsync(this);
@@ -364,6 +436,22 @@ public class DetailLocFragment extends Fragment implements
         }
     }
 
+    private boolean appInstalledOrNot(String uri)
+    {
+        PackageManager pm = getActivity().getPackageManager();
+        boolean app_installed = false;
+        try
+        {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        }
+        catch (PackageManager.NameNotFoundException e)
+        {
+            app_installed = false;
+        }
+        return app_installed ;
+    }
+
     public static boolean isPermissionGranted(@NonNull String[] grantPermissions, @NonNull int[] grantResults,
                                               @NonNull String permission) {
         for (int i = 0; i < grantPermissions.length; i++) {
@@ -434,10 +522,7 @@ public class DetailLocFragment extends Fragment implements
         }
     }
 
-    private void moveCamera(LatLng latLng, float zoom){
-        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-    }
+
 
     private void initMap(){
         Log.d(TAG, "initMap: initializing map");
@@ -659,6 +744,35 @@ public class DetailLocFragment extends Fragment implements
 
         mMapView.onLowMemory();
         super.onLowMemory();
+    }
+
+
+    private FacebookCallback<Sharer.Result> callback = new FacebookCallback<Sharer.Result>() {
+        @Override
+        public void onSuccess(Sharer.Result result) {
+            Log.v(TAG, "Successfully posted");
+            // Write some code to do some operations when you shared content successfully.
+        }
+
+        @Override
+        public void onCancel() {
+            Log.v(TAG, "Sharing cancelled");
+            // Write some code to do some operations when you cancel sharing content.
+        }
+
+        @Override
+        public void onError(FacebookException error) {
+            Log.v(TAG, error.getMessage());
+            // Write some code to do some operations when some error occurs while sharing content.
+        }
+    };
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Call callbackManager.onActivityResult to pass login result to the LoginManager via callbackManager.
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }
 
