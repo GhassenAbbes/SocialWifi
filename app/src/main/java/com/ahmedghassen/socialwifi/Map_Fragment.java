@@ -378,89 +378,89 @@ public class Map_Fragment extends Fragment implements
     }
 
 
-    private void fetchLocations() {
-        StringRequest request = new StringRequest(Request.Method.GET, con.getPath(), onPostsLoaded, onPostsError);
-        queue.add(request);
-
-    }
-
-    private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-             ch=response;
-           // mMapView.onResume();
-            Type listType = new TypeToken<List<LocationWifi>>(){}.getType();
-            List<LocationWifi> locations = new Gson().fromJson(ch, listType);
-            listlocations = locations;
-            listlocations2 = new ArrayList<Wifi>();
-            Log.d("list all ",locations.toString());
-
-            int [] tab = new int[locations.size()];
-            JSONArray jsonArray = new JSONArray();
-            JSONObject objJson = new JSONObject();
-            try {
-                jsonArray = new JSONArray(ch);
-
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-
-                objJson = jsonArray.getJSONObject(i);
-
-                // here you can get id,name,city...
-                int id = objJson.getInt("id_loc");
-                tab[i]=id;
-
-                LocationWifi test = locations.get(i);
-
-                Log.d("test",test.toString());
-                Wifi Stringtest = new Wifi(Integer.toString(test.getId()),test.getSsid(),test.getWifi_pass(),test.getLat(),test.getLng(),test.getImg(),test.getMac());
-                listlocations2.add(Stringtest);
-            }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Log.d("listlocations",Integer.toString(listlocations.size()));
-            int i =0;
-            for (LocationWifi l : listlocations){
-                l.setId(tab[i]);
-                i++;
-            }
-            Log.d("listlocations2",Integer.toString(listlocations2.size()));
-
-            i=0;
-            for (Wifi l : listlocations2){
-                l.setId_loc(Integer.toString(tab[i]));
-                i++;
-            }
-
-            i =0;
-            for (LocationWifi loc : locations) {
-                LatLng sydney = new LatLng(Double.parseDouble(loc.getLat()), Double.parseDouble(loc.getLng()));
-                googleMap.addMarker(new MarkerOptions().position(sydney)
-                        .title(loc.getSsid() + "/"+i)
-                        .snippet(loc.getWifi_pass())
-                );
-                i++;
-            }
-            locBDD = new LocationsBDD(getActivity().getApplicationContext());
-
-            locBDD.open();
-            locBDD.removeAllLocations();
-            for ( LocationWifi l : locations) {
-                locBDD.insertTop(l);
-            }
-            locBDD.close();
-
+        private void fetchLocations() {
+            StringRequest request = new StringRequest(Request.Method.GET, con.getPath(), onPostsLoaded, onPostsError);
+            queue.add(request);
 
         }
-    };
 
-    private final Response.ErrorListener onPostsError = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.e("PostActivity", error.toString());
-        }
-    };
+        private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                 ch=response;
+               // mMapView.onResume();
+                Type listType = new TypeToken<List<LocationWifi>>(){}.getType();
+                List<LocationWifi> locations = new Gson().fromJson(ch, listType);
+                listlocations = locations;
+                listlocations2 = new ArrayList<Wifi>();
+                Log.d("list all ",locations.toString());
+
+                int [] tab = new int[locations.size()];
+                JSONArray jsonArray = new JSONArray();
+                JSONObject objJson = new JSONObject();
+                try {
+                    jsonArray = new JSONArray(ch);
+
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+
+                    objJson = jsonArray.getJSONObject(i);
+
+                    // here you can get id,name,city...
+                    int id = objJson.getInt("id_loc");
+                    tab[i]=id;
+
+                    LocationWifi test = locations.get(i);
+
+                    Log.d("test",test.toString());
+                    Wifi Stringtest = new Wifi(Integer.toString(test.getId()),test.getSsid(),test.getWifi_pass(),test.getLat(),test.getLng(),test.getImg(),test.getMac());
+                    listlocations2.add(Stringtest);
+                }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("listlocations",Integer.toString(listlocations.size()));
+                int i =0;
+                for (LocationWifi l : listlocations){
+                    l.setId(tab[i]);
+                    i++;
+                }
+                Log.d("listlocations2",Integer.toString(listlocations2.size()));
+
+                i=0;
+                for (Wifi l : listlocations2){
+                    l.setId_loc(Integer.toString(tab[i]));
+                    i++;
+                }
+
+                i =0;
+                for (LocationWifi loc : locations) {
+                    LatLng sydney = new LatLng(Double.parseDouble(loc.getLat()), Double.parseDouble(loc.getLng()));
+                    googleMap.addMarker(new MarkerOptions().position(sydney)
+                            .title(loc.getSsid() + "/"+i)
+                            .snippet(loc.getWifi_pass())
+                    );
+                    i++;
+                }
+                locBDD = new LocationsBDD(getActivity().getApplicationContext());
+
+                locBDD.open();
+                locBDD.removeAllLocations();
+                for ( LocationWifi l : locations) {
+                    locBDD.insertTop(l);
+                }
+                locBDD.close();
+
+
+            }
+        };
+
+        private final Response.ErrorListener onPostsError = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("PostActivity", error.toString());
+            }
+        };
 
 
     public boolean connectToWifi(String SSID, String PASSWORD){
