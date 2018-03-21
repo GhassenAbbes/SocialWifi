@@ -1,13 +1,10 @@
-package com.ahmedghassen.socialwifi;
+package com.esprit.socialwifi;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,7 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.ahmedghassen.socialwifi.Adapters.ListViewAdapter;
+import com.esprit.socialwifi.Adapters.ListViewAdapter;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -45,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class NearByFragment extends Fragment {
+public class FavouritesFragment extends Fragment {
     ConnectionManager con;
     RequestQueue queue ;
 
@@ -58,32 +55,43 @@ public class NearByFragment extends Fragment {
     ArrayList<Wifi> listlocations2 ;
     List<LocationWifi> listlocations;
 
-    public NearByFragment() {
+    public FavouritesFragment() {
         // Required empty public constructor
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_near_by, container, false);
+        View view = inflater.inflate(R.layout.fragment_settings, container, false);
         ;
 
-        list = view.findViewById(R.id.flistnearby);
+        list = view.findViewById(R.id.flistfav);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             android.support.v7.app.ActionBar actionBar =((AppCompatActivity)getActivity()).getSupportActionBar();
-            actionBar.setTitle("NearBy Wifi");
+            actionBar.setTitle("Favourites Wifi");
         }
 
-        con = new ConnectionManager("selectloc");
+        SharedPreferences prefs = getActivity().getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        String id_user = prefs.getString("fb_id",null);
+        Log.d("id_user",id_user);
+
+        con = new ConnectionManager("selectfav");
         queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-        gsonBuilder = new GsonBuilder();
+
+
+
+
+        String s = con.getPath();
+        String uri = s + String.format("&id_user=%1$s",
+                id_user);
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        //gsonBuilder.setDateFormat("M/d/yy hh:mm a");
         gson = gsonBuilder.create();
+        Log.d("uri_fav", uri);
 
-
-/*
         if (isNetworkAvailable()) {
-*/
-            fetchLocations();
-       /* } else {
+            fetchLocations(uri);
+        } else {
             Toast.makeText(getContext(), "No Network Available", Toast.LENGTH_LONG).show();
 
             locBDD = new FavouritesBDD(getActivity().getApplicationContext());
@@ -99,13 +107,13 @@ public class NearByFragment extends Fragment {
                 Wifi Stringtest = new Wifi(Integer.toString(test.getId()),test.getSsid(),test.getWifi_pass(),test.getLat(),test.getLng(),test.getImg(),test.getMac());
                 listlocations2.add(Stringtest);
             }
-*//*
+/*
             ArrayList<LocationWifi> plist = new ArrayList<>(listlocations);
-*//*
+*/
             Log.d("offline list favs",listlocations.toString());
 
 
-            *//*SuperActivityToast.create(getActivity(), new Style(), Style.TYPE_BUTTON)
+            /*SuperActivityToast.create(getActivity(), new Style(), Style.TYPE_BUTTON)
                     .setButtonText("UNDO")
 
                     .setProgressBarColor(Color.WHITE)
@@ -114,7 +122,7 @@ public class NearByFragment extends Fragment {
                     .setFrame(Style.FRAME_LOLLIPOP)
                     .setColor(PaletteUtils.getSolidColor(PaletteUtils.MATERIAL_PURPLE))
                     .setAnimations(Style.ANIMATIONS_POP).show();
-*//*
+*/
             mAdapter = new ListViewAdapter(getContext(),listlocations2,getActivity().getSupportFragmentManager());
             list.setAdapter(mAdapter);
             mAdapter.setMode(Attributes.Mode.Single);
@@ -156,12 +164,12 @@ public class NearByFragment extends Fragment {
                 }
             });
         }
-*/
+
         return view;
     }
 
-    private void fetchLocations() {
-        StringRequest request = new StringRequest(Request.Method.GET, con.getPath(), onPostsLoaded, onPostsError);
+    private void fetchLocations(String ss) {
+        StringRequest request = new StringRequest(Request.Method.GET, ss, onPostsLoaded, onPostsError);
         queue.add(request);
 
     }
@@ -170,18 +178,15 @@ public class NearByFragment extends Fragment {
         @Override
         public void onResponse(String response) {
             //String ch=response;
-            String ch=response;
+             String ch=response;
             // mMapView.onResume();
             Type listType = new TypeToken<List<LocationWifi>>(){}.getType();
             List<LocationWifi> locations = new Gson().fromJson(ch, listType);
             listlocations2 = new ArrayList<Wifi>();
-            ArrayList<Wifi> listnearby = new ArrayList<>();
 
             int [] tab = new int[locations.size()];
             JSONArray jsonArray = new JSONArray();
             JSONObject objJson = new JSONObject();
-            List<ScanResult> nearbyssid = ExistingBSSID();
-
             try {
                 jsonArray = new JSONArray(ch);
 
@@ -199,12 +204,6 @@ public class NearByFragment extends Fragment {
                     Wifi Stringtest = new Wifi(Integer.toString(test.getId()),test.getSsid(),test.getWifi_pass(),test.getLat(),test.getLng(),test.getImg(),test.getMac());
                     listlocations2.add(Stringtest);
                 }
-                for (Wifi l : listlocations2){
-                        for (ScanResult s : nearbyssid){
-                            if (s.BSSID.equals(l.getMac()))
-                                listnearby.add(l);
-                        }
-                }
 
                 listlocations = locations;
                 int i =0;
@@ -214,26 +213,26 @@ public class NearByFragment extends Fragment {
                     i++;
                 }
                 i=0;
-                for (Wifi l : listnearby){
+                for (Wifi l : listlocations2){
                     l.setId_loc(Integer.toString(tab[i]));
                     i++;
                 }
-                Log.d("nearbyssid",nearbyssid.toString());
-                Log.d("test",listnearby.toString());
+                Log.d("tab",tab.toString());
+                Log.d("test",listlocations.toString());
 
 
 
 
 
 
-                //listlocations = locations;
+            //listlocations = locations;
 
 
 
 
 
 
-                mAdapter = new ListViewAdapter(getContext(),listnearby,getActivity().getSupportFragmentManager());
+            mAdapter = new ListViewAdapter(getContext(),listlocations2,getActivity().getSupportFragmentManager());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -284,14 +283,14 @@ public class NearByFragment extends Fragment {
                 }
             });
 
-           /* locBDD = new FavouritesBDD(getActivity().getApplicationContext());
+            locBDD = new FavouritesBDD(getActivity().getApplicationContext());
 
             locBDD.open();
             locBDD.removeAllLocations();
             for ( LocationWifi l : listlocations) {
                 locBDD.insertTop(l);
             }
-            locBDD.close();*/
+            locBDD.close();
         }
     };
 
@@ -309,19 +308,5 @@ public class NearByFragment extends Fragment {
         boolean test = activeNetworkInfo != null && activeNetworkInfo.isConnected();
         Log.d("CONNECTION TEST ",Boolean.toString(test));
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-    public List<ScanResult> ExistingBSSID () {
-
-        WifiManager mWifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(android.content.Context.WIFI_SERVICE);
-        List<ScanResult> mScanResults = mWifiManager.getScanResults();
-
-       /* for (ScanResult wifiInfo:mScanResults){
-            Log.d("Wifi ssid : ", wifiInfo.SSID);
-            if (wifiInfo.BSSID.equals(BSSID))
-                return true;
-        }*/
-
-        return mScanResults;
     }
 }

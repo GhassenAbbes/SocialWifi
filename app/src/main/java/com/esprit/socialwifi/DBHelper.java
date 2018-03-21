@@ -1,4 +1,4 @@
-package com.ahmedghassen.socialwifi;
+package com.esprit.socialwifi;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

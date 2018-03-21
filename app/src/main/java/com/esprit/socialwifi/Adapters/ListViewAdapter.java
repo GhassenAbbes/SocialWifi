@@ -1,4 +1,4 @@
-package com.ahmedghassen.socialwifi.Adapters;
+package com.esprit.socialwifi.Adapters;
 
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -15,12 +15,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ahmedghassen.socialwifi.ConnectionManager;
-import com.ahmedghassen.socialwifi.FavouriteMapFragment;
-import com.ahmedghassen.socialwifi.LocationWifi;
-import com.ahmedghassen.socialwifi.R;
-import com.ahmedghassen.socialwifi.FavouritesFragment;
-import com.ahmedghassen.socialwifi.Wifi;
+import com.esprit.socialwifi.ConnectionManager;
+import com.esprit.socialwifi.FavouriteMapFragment;
+import com.esprit.socialwifi.LocationWifi;
+import com.esprit.socialwifi.R;
+import com.esprit.socialwifi.FavouritesFragment;
+import com.esprit.socialwifi.Wifi;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;

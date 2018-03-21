@@ -1,4 +1,4 @@
-package com.ahmedghassen.socialwifi.Adapters.util;
+package com.esprit.socialwifi.Adapters.util;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
