@@ -1,5 +1,6 @@
 package com.esprit.socialwifi;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -17,7 +18,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.esprit.socialwifi.Adapters.ListViewAdapter;
+import com.esprit.socialwifi.Adapters.ListViewAdapter2;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -45,7 +46,7 @@ public class NearByFragment extends Fragment {
 
     ListView list;
     FavouritesBDD locBDD;
-    private ListViewAdapter mAdapter;
+    private ListViewAdapter2 mAdapter;
     private Context mContext = getContext();
     GsonBuilder gsonBuilder = new GsonBuilder();
     private Gson gson = gsonBuilder.create();
@@ -161,6 +162,7 @@ public class NearByFragment extends Fragment {
     }
 
     private final Response.Listener<String> onPostsLoaded = new Response.Listener<String>() {
+        @SuppressLint("ClickableViewAccessibility")
         @Override
         public void onResponse(String response) {
             //String ch=response;
@@ -227,17 +229,17 @@ public class NearByFragment extends Fragment {
 
 
 
-                mAdapter = new ListViewAdapter(getContext(),listnearby,getActivity().getSupportFragmentManager());
+                mAdapter = new ListViewAdapter2(getContext(),listnearby,getActivity().getSupportFragmentManager());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             list.setAdapter(mAdapter);
             mAdapter.setMode(Attributes.Mode.Single);
             list.setOnItemClickListener((parent, view1, position, id) -> ((SwipeLayout)(list.getChildAt(position - list.getFirstVisiblePosition()))).open(true));
-            list.setOnTouchListener((v, event) -> {
+            /*list.setOnTouchListener((v, event) -> {
                 Log.e("ListView", "OnTouch");
                 return false;
-            });
+            });*/
             list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {

@@ -11,36 +11,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e587aa01-e1d8-4a40-864c-8532f531f619" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/androidTest/java/com/ahmedghassen/socialwifi/ExampleInstrumentedTest.java" afterPath="$PROJECT_DIR$/app/src/androidTest/java/com/esprit/socialwifi/ExampleInstrumentedTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Adapters/ListViewAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Adapters/ListViewAdapter.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Adapters/util/DividerItemDecoration.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Adapters/util/DividerItemDecoration.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Adapters/util/RecyclerItemClickListener.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Adapters/util/RecyclerItemClickListener.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/ConnectionManager.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/ConnectionManager.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/DBHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/DBHelper.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/DetailLocFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/DetailLocFragment.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/FavDBHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/FavDBHelper.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/FavouriteMapFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/FavouriteMapFragment.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/FavouritesBDD.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/FavouritesBDD.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/FavouritesFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/FavouritesFragment.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/LocationWifi.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/LocationWifi.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/LocationsBDD.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/LocationsBDD.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/LoginActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/LoginActivity.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/MainActivity.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Map_Fragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Map_Fragment.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/NearByFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/NearByFragment.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/SharePermActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/SharePermActivity.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Wifi.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Wifi.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/test/java/com/ahmedghassen/socialwifi/ExampleUnitTest.java" afterPath="$PROJECT_DIR$/app/src/test/java/com/esprit/socialwifi/ExampleUnitTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Adapters/ListViewAdapter2.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/listview_item2.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/app_bar_main.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/app_bar_main.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/content_main.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/content_main.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_add_loc.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_add_loc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_detail_loc.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_detail_loc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_favouritemap.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_favouritemap.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_near_by.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_near_by.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/ConnectionManager.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/ConnectionManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Map_Fragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Map_Fragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/NearByFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/NearByFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/dialog_add_loc.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/dialog_add_loc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/library.iml" afterPath="$PROJECT_DIR$/library/library.iml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -71,8 +50,33 @@
       <file leaf-file-name="NearByFragment.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/NearByFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="45" column="18" lean-forward="false" selection-start-line="45" selection-start-column="18" selection-end-line="45" selection-end-column="18" />
+            <state relative-caret-position="136">
+              <caret line="62" column="9" lean-forward="false" selection-start-line="62" selection-start-column="9" selection-end-line="62" selection-end-column="9" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="listview_item2.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/listview_item2.xml">
+          <provider editor-type-id="android-designer2">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="36" column="33" lean-forward="false" selection-start-line="36" selection-start-column="33" selection-end-line="36" selection-end-column="33" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ListViewAdapter2.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Adapters/ListViewAdapter2.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="155">
+              <caret line="65" column="104" lean-forward="false" selection-start-line="65" selection-start-column="104" selection-end-line="65" selection-end-column="104" />
               <folding />
             </state>
           </provider>
@@ -119,66 +123,40 @@
       <file leaf-file-name="Map_Fragment.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Map_Fragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="296">
-              <caret line="414" column="17" lean-forward="false" selection-start-line="414" selection-start-column="17" selection-end-line="414" selection-end-column="17" />
+            <state relative-caret-position="277">
+              <caret line="345" column="48" lean-forward="false" selection-start-line="345" selection-start-column="48" selection-end-line="345" selection-end-column="48" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#onMarkerClick#0;class#Map_Fragment#0" expanded="false" />
                 <element signature="method#getInfoWindow#0;class#CustomInfoWindowAdapter#0;class#Map_Fragment#0" expanded="false" />
-                <marker date="1521593143316" expanded="true" signature="8626:9165" ph="{...}" />
-                <marker date="1521593143316" expanded="true" signature="38128:38136" ph="{...}" />
+                <element signature="class#16028:18752" expanded="false" />
+                <element signature="method#connectToWifi#0;class#Map_Fragment#0" expanded="false" />
+                <element signature="method#getExistingNetworkId#0;class#Map_Fragment#0" expanded="false" />
+                <element signature="method#ExistingBSSID#0;class#Map_Fragment#0" expanded="false" />
+                <element signature="method#askForLocationPermissions#0;class#Map_Fragment#0" expanded="false" />
+                <element signature="method#isPermissionGranted#0;class#Map_Fragment#0" expanded="false" />
+                <element signature="method#onMapReady#0;class#Map_Fragment#0" expanded="false" />
+                <element signature="method#isNetworkAvailable#0;class#Map_Fragment#0" expanded="false" />
+                <element signature="method#getDeviceLocation#0;class#Map_Fragment#0" expanded="false" />
+                <element signature="method#getLocationPermission#0;class#Map_Fragment#0" expanded="false" />
+                <element signature="method#onRequestPermissionsResult#0;class#Map_Fragment#0" expanded="false" />
+                <element signature="method#CheckGooglePlayServices#0;class#Map_Fragment#0" expanded="false" />
+                <element signature="method#checkLocationPermission#0;class#Map_Fragment#0" expanded="false" />
+                <marker date="1521657305070" expanded="true" signature="8658:9196" ph="{...}" />
+                <marker date="1521657305070" expanded="true" signature="38558:38566" ph="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="33" lean-forward="false" selection-start-line="5" selection-start-column="33" selection-end-line="5" selection-end-column="33" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="34" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="34" />
-              <folding>
-                <marker date="1521593141592" expanded="true" signature="3524:3541" ph="..." />
-              </folding>
-            </state>
-          </provider>
-          <provider editor-type-id="android-manifest">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LoginActivity.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/LoginActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="65" column="0" lean-forward="false" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="method#getFacebookData#0;class#LoginActivity#0" expanded="false" />
-                <element signature="method#deleteAccessToken#0;class#LoginActivity#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="fragment_detail_loc.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_detail_loc.xml">
+      <file leaf-file-name="dialog_add_loc.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_add_loc.xml">
           <provider editor-type-id="android-designer2">
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1139">
-              <caret line="67" column="16" lean-forward="false" selection-start-line="67" selection-start-column="16" selection-end-line="67" selection-end-column="16" />
+            <state relative-caret-position="148">
+              <caret line="76" column="24" lean-forward="false" selection-start-line="76" selection-start-column="24" selection-end-line="76" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -2857,11 +2835,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_map_.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/PopupAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/popup.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/popupadd.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/simple_list_item_1.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Adapters/util/RecyclerItemClickListener.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/settings.gradle" />
@@ -2877,12 +2850,10 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/LocationWifi.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Wifi.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/FavouritesBDD.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/LocationsBDD.java" />
         <option value="$USER_HOME$/.gradle/caches/transforms-1/files-1.1/play-services-maps-11.8.0.aar/e5555b499ac06a80653d45d1551606d4/jars/classes.jar!/com/google/android/gms/maps/GoogleMap.class" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Adapters/ListViewAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/AddLocFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/dialog_add_loc.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/SettingsFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/FavouriteMapFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/listview_item.xml" />
@@ -2906,8 +2877,15 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/DetailLocFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/LoginActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/Map_Fragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Map_Fragment.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/ConnectionManager.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/dialog_add_loc.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Map_Fragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/NearByFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Adapters/ListViewAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/listview_item2.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Adapters/ListViewAdapter2.java" />
       </list>
     </option>
   </component>
@@ -2945,7 +2923,7 @@
       <showMembers />
       <showModules />
       <showLibraryContents />
-      <hideEmptyPackages AndroidView="false" />
+      <hideEmptyPackages AndroidView="true" />
       <abbreviatePackageNames />
       <autoscrollToSource />
       <autoscrollFromSource />
@@ -2954,10 +2932,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="PackagesPane" />
-      <pane id="ProjectPane" />
+      <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -2979,6 +2955,64 @@
               <option name="myItemId" value="app" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SocialWifi" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SocialWifi" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="menu" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SocialWifi" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -3006,17 +3040,31 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="java" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="esprit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="socialwifi" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SocialWifi" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="socialwifi" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.android.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Adapters" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -3036,34 +3084,37 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="ProjectPane" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
-    <property name="device.picker.selection" value="Nexus_5_API_24" />
+    <property name="device.picker.selection" value="05157df5234be902" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="android.project.structure.last.selected" value="app" />
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/app/src/main/res/drawable-v21" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\DELL\Documents\GitHub\SocialWifi\app\src\main\java\com\ahmedghassen\socialwifi" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\USER\Documents\GitHub\SocialWifi\app\src\main\res\layout" />
+      <recent name="C:\Users\Ghassen\AndroidStudioProjects\SocialWifi\app\src\main\res\drawable-v21" />
+      <recent name="C:\Users\Ghassen\AndroidStudioProjects\SocialWifi\app\src\main\res\mipmap-hdpi" />
+      <recent name="C:\Users\Ghassen\AndroidStudioProjects\SocialWifi\app\src\main\res\drawable" />
+      <recent name="C:\Users\DELL\Documents\GitHub\SocialWifi\app\src\main\res\drawable" />
     </key>
     <key name="android.template.packageName">
       <recent name="com.ahmedghassen.socialwifi" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.esprit.socialwifi.Adapters" />
       <recent name="com.ahmedghassen.socialwifi" />
       <recent name="com.ahmedghassen.socialwifi.Adapters" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Ghassen\AndroidStudioProjects\SocialWifi\app\src\main\res\drawable-v21" />
-      <recent name="C:\Users\Ghassen\AndroidStudioProjects\SocialWifi\app\src\main\res\mipmap-hdpi" />
-      <recent name="C:\Users\Ghassen\AndroidStudioProjects\SocialWifi\app\src\main\res\drawable" />
-      <recent name="C:\Users\DELL\Documents\GitHub\SocialWifi\app\src\main\res\drawable" />
-      <recent name="white.xml item_selector.xml" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\DELL\Documents\GitHub\SocialWifi\app\src\main\java\com\ahmedghassen\socialwifi" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -3149,7 +3200,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521593429640" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521658152413" />
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -3197,7 +3248,7 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521593429640" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521658152414" />
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -3229,27 +3280,6 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
-      <method />
-    </configuration>
-    <configuration default="true" type="JUnit" factoryName="JUnit">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
       <method />
     </configuration>
     <configuration default="true" type="JarApplication" factoryName="JAR Application">
@@ -3380,7 +3410,7 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
-        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521593429641" />
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1521658152417" />
       </method>
     </configuration>
     <list size="1">
@@ -3434,7 +3464,7 @@
     <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3006135" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -3442,21 +3472,21 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290469" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26226994" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36503068" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="13" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20499243" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297546" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23298033" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39972144" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39972144" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -3464,7 +3494,7 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3290469" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3297546" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -3510,33 +3540,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_add_loc.xml">
-      <provider selected="true" editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_add_loc.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="16" column="42" lean-forward="false" selection-start-line="16" selection-start-column="42" selection-end-line="16" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable-v24/ic_launcher_foreground.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_launcher_background.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
@@ -3564,16 +3567,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/listview_item.xml">
-      <provider editor-type-id="android-designer2">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2442">
-          <caret line="84" column="43" lean-forward="false" selection-start-line="83" selection-start-column="34" selection-end-line="84" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -3582,13 +3575,6 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/wifilogo.png">
       <provider selected="true" editor-type-id="images">
         <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Adapters/ListViewAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="59" column="69" lean-forward="false" selection-start-line="59" selection-start-column="69" selection-end-line="59" selection-end-column="69" />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/ahmedghassen/socialwifi/ProfilFragment.java" />
@@ -3773,13 +3759,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="50" lean-forward="false" selection-start-line="8" selection-start-column="35" selection-end-line="8" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_detail_loc.xml">
       <provider editor-type-id="android-designer2">
         <state />
@@ -3787,14 +3766,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1139">
           <caret line="67" column="16" lean-forward="false" selection-start-line="67" selection-start-column="16" selection-end-line="67" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/ConnectionManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="50" lean-forward="false" selection-start-line="8" selection-start-column="50" selection-end-line="8" selection-end-column="50" />
           <folding />
         </state>
       </provider>
@@ -3829,9 +3800,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="476">
           <caret line="75" column="37" lean-forward="false" selection-start-line="75" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -3854,28 +3822,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/NearByFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="45" column="18" lean-forward="false" selection-start-line="45" selection-start-column="18" selection-end-line="45" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Map_Fragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="414" column="17" lean-forward="false" selection-start-line="414" selection-start-column="17" selection-end-line="414" selection-end-column="17" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#onMarkerClick#0;class#Map_Fragment#0" expanded="false" />
-            <element signature="method#getInfoWindow#0;class#CustomInfoWindowAdapter#0;class#Map_Fragment#0" expanded="false" />
-            <marker date="1521593143316" expanded="true" signature="8626:9165" ph="{...}" />
-            <marker date="1521593143316" expanded="true" signature="38128:38136" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
@@ -3886,7 +3832,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
+        <state relative-caret-position="17">
           <caret line="2" column="34" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="34" />
           <folding>
             <marker date="1521593141592" expanded="true" signature="3524:3541" ph="..." />
@@ -3895,6 +3841,108 @@
       </provider>
       <provider editor-type-id="android-manifest">
         <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/ConnectionManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="50" lean-forward="false" selection-start-line="8" selection-start-column="50" selection-end-line="8" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/dialog_add_loc.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="148">
+          <caret line="76" column="24" lean-forward="false" selection-start-line="76" selection-start-column="24" selection-end-line="76" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="51" lean-forward="false" selection-start-line="8" selection-start-column="51" selection-end-line="8" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Map_Fragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="277">
+          <caret line="345" column="48" lean-forward="false" selection-start-line="345" selection-start-column="48" selection-end-line="345" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#onMarkerClick#0;class#Map_Fragment#0" expanded="false" />
+            <element signature="method#getInfoWindow#0;class#CustomInfoWindowAdapter#0;class#Map_Fragment#0" expanded="false" />
+            <element signature="class#16028:18752" expanded="false" />
+            <element signature="method#connectToWifi#0;class#Map_Fragment#0" expanded="false" />
+            <element signature="method#getExistingNetworkId#0;class#Map_Fragment#0" expanded="false" />
+            <element signature="method#ExistingBSSID#0;class#Map_Fragment#0" expanded="false" />
+            <element signature="method#askForLocationPermissions#0;class#Map_Fragment#0" expanded="false" />
+            <element signature="method#isPermissionGranted#0;class#Map_Fragment#0" expanded="false" />
+            <element signature="method#onMapReady#0;class#Map_Fragment#0" expanded="false" />
+            <element signature="method#isNetworkAvailable#0;class#Map_Fragment#0" expanded="false" />
+            <element signature="method#getDeviceLocation#0;class#Map_Fragment#0" expanded="false" />
+            <element signature="method#getLocationPermission#0;class#Map_Fragment#0" expanded="false" />
+            <element signature="method#onRequestPermissionsResult#0;class#Map_Fragment#0" expanded="false" />
+            <element signature="method#CheckGooglePlayServices#0;class#Map_Fragment#0" expanded="false" />
+            <element signature="method#checkLocationPermission#0;class#Map_Fragment#0" expanded="false" />
+            <marker date="1521657305070" expanded="true" signature="8658:9196" ph="{...}" />
+            <marker date="1521657305070" expanded="true" signature="38558:38566" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/listview_item.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="84" column="43" lean-forward="false" selection-start-line="83" selection-start-column="34" selection-end-line="84" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Adapters/ListViewAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="59" column="77" lean-forward="false" selection-start-line="59" selection-start-column="77" selection-end-line="59" selection-end-column="77" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/NearByFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="62" column="9" lean-forward="false" selection-start-line="62" selection-start-column="9" selection-end-line="62" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/listview_item2.xml">
+      <provider editor-type-id="android-designer2">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="36" column="33" lean-forward="false" selection-start-line="36" selection-start-column="33" selection-end-line="36" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/esprit/socialwifi/Adapters/ListViewAdapter2.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="155">
+          <caret line="65" column="104" lean-forward="false" selection-start-line="65" selection-start-column="104" selection-end-line="65" selection-end-column="104" />
+          <folding />
+        </state>
       </provider>
     </entry>
   </component>

@@ -93,7 +93,7 @@ public class Map_Fragment extends Fragment implements
 
 
 
-
+    boolean image_uploaded=true;
     private ImageView imageLoc;
     private int GALLERY = 1, CAMERA = 2;
 
@@ -259,7 +259,6 @@ public class Map_Fragment extends Fragment implements
                 final EditText pw = mView.findViewById(R.id.pwadd_d);
                 final Button ajouter = mView.findViewById(R.id.ajouter_d);
 
-
                 imageLoc =  mView.findViewById(R.id.addlocimage_d);
                 imageLoc.setOnClickListener(v -> showPictureDialog());
 
@@ -275,7 +274,11 @@ public class Map_Fragment extends Fragment implements
                             if (state == NetworkInfo.DetailedState.CONNECTED || state == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
                                 ssid.setText(wifiInfo.getSSID().replace("\"",""));
                                 ajouter.setOnClickListener(v -> {
-
+                                    if (!image_uploaded)
+                                    {
+                                        Toast.makeText(root.getContext(),"Please wait until Image is uploaded", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else {
                                         if (ContextCompat.checkSelfPermission(getActivity(),
                                                 Manifest.permission.ACCESS_FINE_LOCATION)
                                                 != PackageManager.PERMISSION_GRANTED
@@ -286,13 +289,13 @@ public class Map_Fragment extends Fragment implements
                                             askForLocationPermissions();
                                         } else {
                                             Log.d("OUr BSSID ", wifiInfo.getBSSID());
-                                            if (ExistingBSSID(wifiInfo.getBSSID())==true) {
+                                            if (ExistingBSSID(wifiInfo.getBSSID()) == true) {
 
 
-                                                if( connectToWifi(ssid.getText().toString(), pw.getText().toString()))
-                                                {
+                                                if (connectToWifi(ssid.getText().toString(), pw.getText().toString())) {
+
                                                     getDeviceLocation();
-                                                    Log.d("currentLocation",Double.toString(currentLocation.getLatitude()));
+                                                    Log.d("currentLocation", Double.toString(currentLocation.getLatitude()));
 
                                                     con = new ConnectionManager("addloc");
 
@@ -303,14 +306,13 @@ public class Map_Fragment extends Fragment implements
 
                                                     String s = con.getPath();
                                                     String uri = s + String.format("&desc=%1$s&pw=%2$s&lat=%3$s&lng=%4$s&img=%5$s&mac=%6$s",
-                                                            ssid.getText().toString().replace(" ","_"),
+                                                            ssid.getText().toString().replace(" ", "_"),
                                                             pw.getText().toString(),
                                                             Double.toString(currentLocation.getLatitude()),
                                                             Double.toString(currentLocation.getLongitude()),
                                                             imagePath,
                                                             wifiInfo.getBSSID()
                                                     );
-
 
 
                                                     // Request a string response
@@ -320,7 +322,7 @@ public class Map_Fragment extends Fragment implements
                                                                 public void onResponse(String response) {
 
                                                                     // Result handling
-                                                                    Toast.makeText(root.getContext(), ""+response, Toast.LENGTH_SHORT).show();
+                                                                    Toast.makeText(root.getContext(), "" + response, Toast.LENGTH_SHORT).show();
 
                                                                 }
                                                             }, new Response.ErrorListener() {
@@ -337,14 +339,15 @@ public class Map_Fragment extends Fragment implements
                                                     Log.d("requet", stringRequest.toString());
 
                                                     dialog.hide();
+                                                } else {
+                                                    Toast.makeText(getContext(), "Invailed password", Toast.LENGTH_LONG).show();
                                                 }
-                                                else {
-                                                    Toast.makeText(getContext(),"Invailed password",Toast.LENGTH_LONG).show();
-                                                }
-                                            }else{
-                                                //Toast.makeText(getContext(),"Invailed Wifi",Toast.LENGTH_LONG).show();
+                                            } else {
+                                                Toast.makeText(getContext(),"Invailed Wifi",Toast.LENGTH_LONG).show();
                                             }
                                         }
+                                        ////
+                                    }
                                 });
                             }
                         }
@@ -930,7 +933,7 @@ public class Map_Fragment extends Fragment implements
 
     public void uploaduserimage(Bitmap bitmap){
 
-
+        image_uploaded=false;
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, myurl, new Response.Listener<String>() {
@@ -939,6 +942,7 @@ public class Map_Fragment extends Fragment implements
 
                 Log.i("Myresponse",""+response);
                 imagePath = response;
+                image_uploaded=true;
                 Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
 
             }
@@ -946,7 +950,7 @@ public class Map_Fragment extends Fragment implements
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("Mysmart",""+error);
-                Toast.makeText(getActivity().getApplicationContext(), ""+error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Image upload failed"/*+error*/, Toast.LENGTH_SHORT).show();
 
             }
         }){
