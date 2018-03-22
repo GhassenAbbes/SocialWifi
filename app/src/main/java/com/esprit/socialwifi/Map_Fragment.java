@@ -122,6 +122,12 @@ public class Map_Fragment extends Fragment implements
     LocationsBDD locBDD;
 
     //vars
+    boolean image_taken = false;
+    Bitmap imageToupload;
+    TextView ssid ;
+     EditText pw;
+    WifiInfo wifiInfo;
+
     private Boolean mLocationPermissionsGranted = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     Location currentLocation;boolean locationfound=false;
@@ -268,7 +274,7 @@ public class Map_Fragment extends Fragment implements
 
                     WifiManager mWifiManager = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                     if (mWifiManager.isWifiEnabled()) {
-                        WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
+                        wifiInfo = mWifiManager.getConnectionInfo();
                         if (wifiInfo != null) {
                             NetworkInfo.DetailedState state = WifiInfo.getDetailedStateOf(wifiInfo.getSupplicantState());
                             if (state == NetworkInfo.DetailedState.CONNECTED || state == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
@@ -293,50 +299,12 @@ public class Map_Fragment extends Fragment implements
 
 
                                                 if (connectToWifi(ssid.getText().toString(), pw.getText().toString())) {
-
-                                                    getDeviceLocation();
-                                                    Log.d("currentLocation", Double.toString(currentLocation.getLatitude()));
-
-                                                    con = new ConnectionManager("addloc");
-
-                                                    queue = Volley.newRequestQueue(getActivity().getApplicationContext());
-
-
-                                                    Log.d("Image Path ", imagePath);
-
-                                                    String s = con.getPath();
-                                                    String uri = s + String.format("&desc=%1$s&pw=%2$s&lat=%3$s&lng=%4$s&img=%5$s&mac=%6$s",
-                                                            ssid.getText().toString().replace(" ", "_"),
-                                                            pw.getText().toString(),
-                                                            Double.toString(currentLocation.getLatitude()),
-                                                            Double.toString(currentLocation.getLongitude()),
-                                                            imagePath,
-                                                            wifiInfo.getBSSID()
-                                                    );
-
-
-                                                    // Request a string response
-                                                    StringRequest stringRequest = new StringRequest(Request.Method.GET, uri,
-                                                            new Response.Listener<String>() {
-                                                                @Override
-                                                                public void onResponse(String response) {
-
-                                                                    // Result handling
-                                                                    Toast.makeText(root.getContext(), "" + response, Toast.LENGTH_SHORT).show();
-
-                                                                }
-                                                            }, new Response.ErrorListener() {
-                                                        @Override
-                                                        public void onErrorResponse(VolleyError error) {
-
-                                                            // Error handling
-                                                            Toast.makeText(getActivity(), "Something went wrong!", Toast.LENGTH_SHORT).show();
-                                                            error.printStackTrace();
-
-                                                        }
-                                                    });
-                                                    queue.add(stringRequest);
-                                                    Log.d("requet", stringRequest.toString());
+                                                    if (image_taken){
+                                                        uploaduserimage(imageToupload);
+                                                    }
+                                                    else {
+                                                        AddWifi();
+                                                    }
 
                                                     dialog.hide();
                                                 } else {
@@ -358,7 +326,46 @@ public class Map_Fragment extends Fragment implements
         return root;
     }
 
+    void AddWifi(){
+        getDeviceLocation();
+        Log.d("currentLocation", Double.toString(currentLocation.getLatitude()));
 
+        con = new ConnectionManager("addloc");
+
+        queue = Volley.newRequestQueue(getActivity().getApplicationContext());
+
+
+        Log.d("Image Path ", imagePath);
+
+        String s = con.getPath();
+        String uri = s + String.format("&desc=%1$s&pw=%2$s&lat=%3$s&lng=%4$s&img=%5$s&mac=%6$s",
+                ssid.getText().toString().replace(" ", "_"),
+                pw.getText().toString(),
+                Double.toString(currentLocation.getLatitude()),
+                Double.toString(currentLocation.getLongitude()),
+                imagePath,
+                wifiInfo.getBSSID()
+        );
+
+
+        // Request a string response
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, uri,
+                response -> {
+
+                    // Result handling
+                    //Toast.makeText(getContext(), "" + response, Toast.LENGTH_SHORT).show();
+
+                }, error -> {
+
+                    // Error handling
+                    Toast.makeText(getActivity(), "Something went wrong!", Toast.LENGTH_SHORT).show();
+                    error.printStackTrace();
+
+                });
+
+        queue.add(stringRequest);
+        Log.d("requet", stringRequest.toString());
+    }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
@@ -894,7 +901,10 @@ public class Map_Fragment extends Fragment implements
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
                 imageLoc.setImageBitmap(bitmap);
-                uploaduserimage(bitmap);
+                /////////
+                image_taken=true;
+                imageToupload=bitmap;
+                //uploaduserimage(bitmap);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -926,7 +936,10 @@ public class Map_Fragment extends Fragment implements
         }
         Log.d( "File Path: ",thumbnail.toString());
         imageLoc.setImageBitmap(thumbnail);
-        uploaduserimage(thumbnail);
+        /////////
+        image_taken=true;
+        imageToupload=thumbnail;
+        //uploaduserimage(thumbnail);
 
     }
 
@@ -944,15 +957,12 @@ public class Map_Fragment extends Fragment implements
                 imagePath = response;
                 image_uploaded=true;
                 Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
-
+                AddWifi();
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i("Mysmart",""+error);
-                Toast.makeText(getActivity().getApplicationContext(), "Image upload failed"/*+error*/, Toast.LENGTH_SHORT).show();
+        }, error -> {
+            Log.i("Mysmart",""+error);
+            Toast.makeText(getActivity().getApplicationContext(), "Image upload failed"/*+error*/, Toast.LENGTH_SHORT).show();
 
-            }
         }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
