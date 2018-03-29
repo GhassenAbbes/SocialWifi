@@ -1,88 +1,97 @@
 
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-
-        android:layout_margin="5dp"
-        android:layout_gravity="center">
-
+        android:layout_gravity="center"
+        android:layout_margin="5dp">
 
 
         <ImageView
             android:id="@+id/addlocimage_d"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:src="@drawable/gallery"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_width="158dp"
+            android:layout_height="76dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_add_a_photo_black_24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="8dp" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/ssidadd_d"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="24dp"
-            android:text="SSID"
 
-            android:hint="ssid"
-            android:textColor="#fdd000"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="5dp"/>
+    <TextView
+        android:id="@+id/ssidadd_d"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/wifi_signal_tower"/>
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:hint="ssid"
+        android:text="SSID"
+        android:textColor="@color/yellow"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addlocimage_d" />
 
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_wifi_yellow_900_24dp"
+        app:layout_constraintStart_toEndOf="@+id/ssidadd_d"
+        app:layout_constraintTop_toTopOf="@+id/ssidadd_d" />
 
-            <EditText
-                android:id="@+id/pwadd_d"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="24dp"
-                android:shadowColor="#fdd000"
-                android:gravity="center"
-                android:ems="10"
-                android:layout_centerInParent="true"
-                android:hint="PASSWORD"
-                android:textColorHint="#fdd000"
-                android:layout_gravity="center"
-                android:inputType="textPersonName"
-                android:layout_marginBottom="5dp"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/key"/>
+    <EditText
+        android:id="@+id/pwadd_d"
+        style="@style/titetextstyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="PASSWORD"
+        android:inputType="textPersonName"
+        android:shadowColor="@color/yellow"
+        android:textColorHint="@color/yellow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ssidadd_d" />
 
-        </RelativeLayout>>
 
-        <Button
-            android:id="@+id/ajouter_d"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add access point"
-            android:background="#000000"
-            android:textColor="#fdd000"
-            android:padding="5dp"
-            android:layout_marginBottom="10dp"
-            android:layout_gravity="center"/>
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="29dp"
+        android:src="@drawable/ic_lock_outline_green_700_24dp"
+        app:layout_constraintStart_toEndOf="@+id/pwadd_d"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-</LinearLayout>
+        >
+
+    <Button
+        android:id="@+id/ajouter_d"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:background="@color/colorPrimary"
+        android:padding="5dp"
+        android:text="Add access point"
+        android:textColor="@color/yellow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pwadd_d" />
+
+    </android.support.constraint.ConstraintLayout>
 

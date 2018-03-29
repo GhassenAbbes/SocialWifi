@@ -123,6 +123,7 @@ public class FavouriteMapFragment extends Fragment implements
                 ImageView imgWifi = popup.findViewById(R.id.clientPic);
 
                 Picasso.with(getContext())
+
                         .load(p.getImg())
                         .into(imgWifi);
 

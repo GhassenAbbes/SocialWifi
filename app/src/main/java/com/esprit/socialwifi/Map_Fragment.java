@@ -3,6 +3,7 @@ package com.esprit.socialwifi;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,10 +12,12 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -48,6 +51,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.dd.processbutton.iml.ActionProcessButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -62,7 +66,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -130,15 +137,44 @@ public class Map_Fragment extends Fragment implements
 
     private Boolean mLocationPermissionsGranted = false;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    Location currentLocation;boolean locationfound=false;
+    Location currentLocation=null ;boolean locationfound=false;
     private String serverKey = "AIzaSyCw125M5v_sa7jtKYAdYFVXYASws5RPvT4";
     private LatLng origin = new LatLng(37.7849569, -122.4068855);
     private LatLng destination = new LatLng(37.7814432, -122.4460177);
     // ADD LOCATION VARIABLES
 
-    String myurl = con.ip+"AndroidUploadImage/uploadImage.php";
+    String myurl = con.ip+"/AndroidUploadImage/uploadImage.php";
     String imagePath="null";
+    public final String UPLOAD_URL = myurl;
+    public static final String UPLOAD_KEY = "image";
+    //public static final String TAG = "MY MESSAGE";
+    private Bitmap bitmap;
 
+    private Uri filePath;
+
+    public void uploadimg(Uri datauri){
+        Log.e(TAG,"uploadennam "+filePath);
+        Log.e(TAG,"uploadennam");
+        UploadTask uploadTask = MainActivity.storageRef.child(ssid.getText().toString()).putFile(datauri);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Log.e(TAG,"uploadennam fail"+ exception.getMessage());
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+
+                imagePath=taskSnapshot.getMetadata().getDownloadUrl().toString();
+                Log.e(TAG,"uploadennam success"+taskSnapshot.getMetadata().getDownloadUrl());
+                AddWifi();
+            }
+        });
+    }
     /////////////////////////////
     @Override
     public boolean onMarkerClick(Marker marker) {
@@ -261,9 +297,9 @@ public class Map_Fragment extends Fragment implements
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
                 View mView = getLayoutInflater().inflate(R.layout.dialog_add_loc, null);
 
-                final TextView ssid = mView.findViewById(R.id.ssidadd_d);
-                final EditText pw = mView.findViewById(R.id.pwadd_d);
-                final Button ajouter = mView.findViewById(R.id.ajouter_d);
+                 ssid = mView.findViewById(R.id.ssidadd_d);
+                 pw = mView.findViewById(R.id.pwadd_d);
+                final Button ajouter =(Button)  mView.findViewById(R.id.ajouter_d);
 
                 imageLoc =  mView.findViewById(R.id.addlocimage_d);
                 imageLoc.setOnClickListener(v -> showPictureDialog());
@@ -280,12 +316,13 @@ public class Map_Fragment extends Fragment implements
                             if (state == NetworkInfo.DetailedState.CONNECTED || state == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
                                 ssid.setText(wifiInfo.getSSID().replace("\"",""));
                                 ajouter.setOnClickListener(v -> {
-                                    if (!image_uploaded)
+                                    ajouter.setEnabled(false);
+                                    /*if (!image_uploaded)
                                     {
                                         Toast.makeText(root.getContext(),"Please wait until Image is uploaded", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else {
-                                        if (ContextCompat.checkSelfPermission(getActivity(),
+                                    }*/
+                                    //else {
+                                    if (ContextCompat.checkSelfPermission(getActivity(),
                                                 Manifest.permission.ACCESS_FINE_LOCATION)
                                                 != PackageManager.PERMISSION_GRANTED
                                                 &&
@@ -293,29 +330,37 @@ public class Map_Fragment extends Fragment implements
                                                         Manifest.permission.ACCESS_COARSE_LOCATION)
                                                         != PackageManager.PERMISSION_GRANTED) {
                                             askForLocationPermissions();
-                                        } else {
+
+                                    } else {
                                             Log.d("OUr BSSID ", wifiInfo.getBSSID());
                                             if (ExistingBSSID(wifiInfo.getBSSID()) == true) {
 
 
                                                 if (connectToWifi(ssid.getText().toString(), pw.getText().toString())) {
-                                                    if (image_taken){
-                                                        uploaduserimage(imageToupload);
+
+                                                    if (currentLocation==null){
+                                                        Toast.makeText(getContext(), "You need to able your GPS to add WIFI", Toast.LENGTH_LONG).show();
+
                                                     }
                                                     else {
-                                                        AddWifi();
+                                                        if (image_taken) {
+                                                            //uploadImage();
+                                                            uploadimg(filePath);
+                                                        } else {
+                                                            AddWifi();
+                                                        }
                                                     }
 
-                                                    dialog.hide();
                                                 } else {
                                                     Toast.makeText(getContext(), "Invailed password", Toast.LENGTH_LONG).show();
                                                 }
                                             } else {
                                                 Toast.makeText(getContext(),"Invailed Wifi",Toast.LENGTH_LONG).show();
                                             }
+
                                         }
-                                        ////
-                                    }
+                                    dialog.hide();
+
                                 });
                             }
                         }
@@ -896,7 +941,7 @@ public class Map_Fragment extends Fragment implements
         }
     }
 
-    private void onSelectFromGalleryResult(Intent data) {
+    /*private void onSelectFromGalleryResult(Intent data) {
         if (data != null) {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), data.getData());
@@ -914,8 +959,26 @@ public class Map_Fragment extends Fragment implements
 
 
     }
+*/
+    private void onSelectFromGalleryResult(Intent data) {
 
-    private void onCaptureImageResult(Intent data) {
+        if (data != null) {
+            filePath = data.getData();
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+                imageLoc.setImageBitmap(bitmap);
+                //uploadImage();
+                image_taken=true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+    }
+
+   /* private void onCaptureImageResult(Intent data) {
 
         Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -941,9 +1004,76 @@ public class Map_Fragment extends Fragment implements
         imageToupload=thumbnail;
         //uploaduserimage(thumbnail);
 
+    }*/
+
+    private void onCaptureImageResult(Intent data) {
+        filePath = data.getData();
+        bitmap = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        File destination = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+        FileOutputStream fo;
+        try {
+            destination.createNewFile();
+            fo = new FileOutputStream(destination);
+            fo.write(bytes.toByteArray());
+            fo.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.d( "File Path: ",bitmap.toString());
+        imageLoc.setImageBitmap(bitmap);
+        //uploadImage();
+        image_taken=true;
     }
 
+    private void uploadImage(){
+        class UploadImage extends AsyncTask<Bitmap,Void,String> {
 
+            ProgressDialog loading;
+            RequestHandler rh = new RequestHandler();
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                loading = ProgressDialog.show(getActivity(), "Uploading Image", "Please wait...",true,true);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                loading.dismiss();
+                if (!s.equals(""))
+                    imagePath=s;
+                AddWifi();
+                Toast.makeText(getContext(),s,Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            protected String doInBackground(Bitmap... params) {
+                Bitmap bitmap = params[0];
+                String uploadImage = getStringImage(bitmap);
+
+                HashMap<String,String> data = new HashMap<>();
+                data.put(UPLOAD_KEY, uploadImage);
+
+                String result = rh.sendPostRequest(UPLOAD_URL,data);
+                Log.d("UPLOAD_KEY",uploadImage);
+
+                Log.d("UPLOAD_URL",UPLOAD_URL);
+                return result;
+            }
+
+        }
+        UploadImage ui = new UploadImage();
+        ui.execute(bitmap);
+    }
+
+/*
     public void uploaduserimage(Bitmap bitmap){
 
         image_uploaded=false;
@@ -961,7 +1091,9 @@ public class Map_Fragment extends Fragment implements
             }
         }, error -> {
             Log.i("Mysmart",""+error);
-            Toast.makeText(getActivity().getApplicationContext(), "Image upload failed"/*+error*/, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Image upload failed"*/
+/*+error*//*
+, Toast.LENGTH_SHORT).show();
 
         }){
             @Override
@@ -981,6 +1113,7 @@ public class Map_Fragment extends Fragment implements
 
 
     }
+*/
 
     public String getStringImage(Bitmap bitmap){
         Log.i("MyHitesh",""+bitmap);

@@ -1,51 +1,50 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
 
-    android:padding="10dp"
-    android:background="#F0F0F0"
-    android:orientation="horizontal">
+    android:layout_margin="10dp"
+    android:background="#F0F0F0">
 
     <ImageView
         android:id="@+id/favimg"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="left"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/ic_launcher" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/favdec"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        >
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Nom"
+        android:drawableLeft="@drawable/ic_wifi_yellow_900_24dp"
+        android:textColor="#686868"
+        style="@style/titetextstyle"
+        android:drawablePadding="4dp"
+        app:layout_constraintStart_toEndOf="@+id/favimg"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/favdec"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:text="Nom"
-            android:textColor="#686868"
-            android:textSize="24sp"
-            android:layout_marginBottom="30dp"/>
-
-        <TextView
-            android:id="@+id/favpw"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:text="Nom"
-            android:textColor="#686868"
-            android:textSize="24sp"
-            android:layout_marginBottom="30dp"/>
+    <TextView
+        android:id="@+id/favpw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:drawablePadding="4dp"
+        style="@style/subtitetextstyle"
+        android:text="Nom"
+        android:drawableLeft="@drawable/ic_lock_outline_green_700_24dp"
+        android:textColor="#686868"
+        app:layout_constraintStart_toStartOf="@+id/favdec"
+        app:layout_constraintTop_toBottomOf="@+id/favdec" />
 
 
-    </LinearLayout>
-
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

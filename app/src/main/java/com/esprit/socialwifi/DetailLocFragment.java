@@ -153,9 +153,9 @@ public class DetailLocFragment extends Fragment implements
        FloatingActionButton connect =root.findViewById(R.id.toconnect);
        connect.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
 
-        ShareButton share = root.findViewById(R.id.share);
+       /* ShareButton share = root.findViewById(R.id.share);
         share.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.yellow)));
-        //share.set
+        *///share.set
         connect.setOnClickListener(v -> {
 
             if (ContextCompat.checkSelfPermission(getActivity(),
@@ -202,57 +202,7 @@ public class DetailLocFragment extends Fragment implements
         else {
             Log.d("onCreate","Google Play Services available.");
         }
-       /* shareDialog = new ShareDialog(this);
-        shareDialog.registerCallback(callbackManager, callback);
 
-        SharedPreferences prefs =getActivity(). getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        String sharepermitted = prefs.getString("share",null);
-        //share.setReadPermissions("email");
-
-        //LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
-           *//* if (sharepermitted==null){
-                Log.d("hhhhhhhhhh   hh",LoginActivity.presmissions.toString());
-
-                FragmentManager manager = getActivity().getSupportFragmentManager();
-                Fragment fragment = new SharePermActivity();
-
-
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.content_frame, fragment, "tp");
-                transaction.addToBackStack("tp");
-                transaction.commit();
-            }
-*//*
-
-        //share.setClickable(true);
-       // share.setOnClickListener(v -> {
-            if (appInstalledOrNot("com.facebook.katana")) {
-                Toast.makeText(getContext(), "share", Toast.LENGTH_SHORT).show();
-
-
-                //if (ShareDialog.canShow(ShareLinkContent.class)) {
-                    SharePhoto photo = new SharePhoto.Builder()
-                            .setImageUrl(Uri.parse(p.getImg()))
-                            .setCaption("StudyTutorial")
-                            .build();
-                    SharePhotoContent content = new SharePhotoContent.Builder()
-                            .addPhoto(photo).setShareHashtag(
-                                    new ShareHashtag.Builder()
-                                            .setHashtag("#SocialWifi")
-                                            .build()
-                            )
-                            .build();
-                    share.setShareContent(content);
-                   // shareDialog.show(content);
-              //  }
-
-            }
-            else
-                Toast.makeText(getContext(), "You need to Install Facebook Application!", Toast.LENGTH_SHORT).show();
-
-*/
-        //});
         mMapView =  root.findViewById(R.id.detmaplayout);
         mMapView.onCreate(savedInstanceState);
         //mMapView.getMapAsync(this);

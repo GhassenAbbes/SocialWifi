@@ -64,15 +64,15 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setReadPermissions("public_profile");
         loginButton.setReadPermissions("email");
 
-
+        Log.d("KeyHash:","Ghassen");
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.ahmedghassen.socialwifi",
+                    "com.esprit.socialwifi",
                     PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+                Log.d("KeyHash Facebook:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
         } catch (PackageManager.NameNotFoundException e) {
 

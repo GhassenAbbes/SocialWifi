@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "65337096902",
+    "firebase_url": "https://socialwifi-bc4d9.firebaseio.com",
+    "project_id": "socialwifi-bc4d9",
+    "storage_bucket": "socialwifi-bc4d9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65337096902:android:d7fc24a7351ef2eb",
+        "android_client_info": {
+          "package_name": "com.esprit.socialwifi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "65337096902-bpgo4je1qbv5i7sujsn8odcsu7m1mvin.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.esprit.socialwifi",
+            "certificate_hash": "1302b3c7586dc267d4b086c772bf1fa05fb919dc"
+          }
+        },
+        {
+          "client_id": "65337096902-31e36763psuuq1pdbhunhjs8lvmu78km.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfH-tFoTtbGWu8AdDCI-93lRZlysB1MO4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "65337096902-31e36763psuuq1pdbhunhjs8lvmu78km.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
