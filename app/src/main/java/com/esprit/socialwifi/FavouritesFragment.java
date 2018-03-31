@@ -73,7 +73,7 @@ public class FavouritesFragment extends Fragment {
         SharedPreferences prefs = getActivity().getSharedPreferences("FacebookProfile", ContextWrapper.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         String id_user = prefs.getString("fb_id",null);
-        Log.d("id_user",id_user);
+
 
         con = new ConnectionManager("selectfav");
         queue = Volley.newRequestQueue(getActivity().getApplicationContext());
