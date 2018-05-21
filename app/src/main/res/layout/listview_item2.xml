@@ -57,8 +57,8 @@
 
         <ImageView
             android:id="@+id/favimg_s2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_marginBottom="4dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="4dp"
@@ -77,7 +77,7 @@
             android:layout_marginTop="16dp"
             android:drawableLeft="@drawable/ic_wifi_yellow_900_24dp"
             android:drawablePadding="4dp"
-            android:text="Nom"
+            android:text="WifiName"
             android:textColor="#686868"
             swipe:layout_constraintStart_toEndOf="@+id/favimg_s2"
             swipe:layout_constraintTop_toTopOf="parent" />
@@ -91,7 +91,7 @@
             android:layout_marginStart="16dp"
             android:drawableLeft="@drawable/ic_lock_outline_green_700_24dp"
             android:drawablePadding="4dp"
-            android:text="Nom"
+            android:text="WifiPassword"
             android:textColor="#686868"
             swipe:layout_constraintBottom_toBottomOf="parent"
             swipe:layout_constraintStart_toEndOf="@+id/favimg_s2" />
